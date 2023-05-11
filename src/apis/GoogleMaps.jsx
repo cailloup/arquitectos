@@ -1,105 +1,124 @@
 "use client"
-import React, { useState, lazy } from 'react';
+import React, { useState, lazy, useRef  } from 'react';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 
 const LoadScript = lazy(() => import('@react-google-maps/api').then(module => ({ default: module.LoadScript })));
 
-export function Map({ apiKey, mapStyles, defaultCenter, options, onMarkerChange }) {
- 
-    const [markerPosition, setMarkerPosition] = useState(null);
-    const [markerAddress, setMarkerAddress] = useState(null);
+export function Map({ apiKey, mapStyles, defaultCenter, options, onMarkerChange,limitBounds }){
     const [autocomplete, setAutocomplete] = useState(null);
-    const [selectedAddress, setSelectedAddress] = useState('');
+    const [markerState, setMarkerState] = useState({});
+    const inputRef = useRef(null);
+
+    function updateMarker(newMarker){
+      
+      setMarkerState(newMarker)   
+      
+      if(onMarkerChange){
+          onMarkerChange(newMarker);
+      }
+
+      inputRef.current.value= newMarker.address
+    }
+
+
+    function formattedAddress(address){
+      const addressComponents = address.address_components;
+      const streetNumber = addressComponents.find(comp => comp.types.includes('street_number')).long_name;
+      const streetName = addressComponents.find(comp => comp.types.includes('route')).long_name;
+      return `${streetNumber} ${streetName}`;
+    }
+
     const handleMapClick = (event) => {
-    
-    const newPosition = event.latLng.toJSON()
-    setMarkerPosition(newPosition);
-    if (onMarkerChange) {
-       
         const geocoder = new window.google.maps.Geocoder();
 
         geocoder.geocode({ location: event.latLng }, (results, status) => {
-                if (status === 'OK') {
-                setMarkerAddress(results[0].formatted_address);
-                const markerNew = { position: newPosition, address: results[0].formatted_address }
-                
-                onMarkerChange(markerNew);
-                } else {
-                console.error('Geocode was not successful for the following reason: ' + status);
-                }})
-        
-    }
-  }
 
-  const handleInputChange = (event) => {
-    const inputValue = event.target.value;
-    setSelectedAddress(inputValue);
-  
-    if (inputValue) {
-      const geocoder = new window.google.maps.Geocoder();
-      geocoder.geocode({ address: inputValue }, (results, status) => {
-        if (status === 'OK') {
-          const newPosition = results[0].geometry.location.toJSON();
-          setMarkerPosition(newPosition);
-          setSelectedAddress(results[0].formatted_address);
+                if (status === 'OK') {
+                  updateMarker({ position: event.latLng.toJSON(), address: formattedAddress(results[0]) }) 
+                } else {
+                  console.error('Geocode was not successful for the following reason: ' + status);
+                }
+        })
+    }
+
+    const handleInputChange = (event) => {
+      
+      const inputValue = event.target.value;
+    
+      if (inputValue) {
+          const geocoder = new window.google.maps.Geocoder();
+          
+          geocoder.geocode({ address: inputValue }, (results, status) => {
+
+              if (status === 'OK') {
+                updateMarker({ position: event.latLng.toJSON(), address: formattedAddress(results[0]) }) 
+              } else {
+                  console.error('Geocode was not successful for the following reason: ' + status);
+              }
+          });
+      }
+    };
+
+    function HandleplaceChaged() {
+      return () => {
+        const place = autocomplete.getPlace();
+        if (place.geometry) {
+          const newPosition = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          };
+          const markerNew = { position: newPosition, address: place.formatted_address };
+          setMarkerState(markerNew);
           if (onMarkerChange) {
-            onMarkerChange({ position: newPosition, address: results[0].formatted_address });
+            onMarkerChange(markerNew);
           }
         } else {
-          console.error('Geocode was not successful for the following reason: ' + status);
+          console.error('No se ha encontrado la dirección seleccionada');
         }
-      });
+      };
     }
-  };
 
-  return (
-    <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
-      <GoogleMap
-        mapContainerStyle={mapStyles}
-        zoom={13}
-        center=  {markerPosition?markerPosition:defaultCenter}
-        options={options}
-        onClick={handleMapClick}
-        onMarkerChange={onMarkerChange}
-      >
-        {markerPosition && (    
+    return (
+      <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
+        
+        <div>
+          <Autocomplete
+                bounds={limitBounds}
+                onLoad={(auto) =>  setAutocomplete(auto)}
+                onPlaceChanged={HandleplaceChaged()}
+                options={{strictBounds: true}}  
+          >
+
+            <input
+              ref={inputRef}
+              type="text"
+              placeholder="Ingrese una dirección y presione Enter para actualizar el marcador"
+              onKeyPress={(event) => {
+                if (event.key === "Enter") {
+                  handleInputChange(event);
+                }
+              }}
+            />
+          </Autocomplete>
+        </div>
+        
+        <GoogleMap
+          bounds={limitBounds}
+          mapContainerStyle={mapStyles}
+          zoom={14}
+          center=  {markerState.position?markerState.position:defaultCenter}
+          options={options}
+          onClick={handleMapClick}
+          onMarkerChange={onMarkerChange}
+        >
+
+        {markerState.position && (    
           <Marker
-            position={markerPosition}
+            position={markerState.position}
           />
         )}
-      </GoogleMap>
-      <div>
-      <Autocomplete
-  onLoad={(auto) => setAutocomplete(auto)}
-  onPlaceChanged={() => {
-    const place = autocomplete.getPlace();
-    if (place.geometry) {
-      const newPosition = {
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      };
-      setMarkerPosition(newPosition);
-      setMarkerAddress(place.formatted_address);
-      setSelectedAddress(place.formatted_address);
-      if (onMarkerChange) {
-        onMarkerChange({ position: newPosition, address: place.formatted_address });
-      }
-    } else {
-      console.error('No se ha encontrado la dirección seleccionada');
-    }
-  }}
->
-        <input
-          type="text"
-          placeholder="Ingrese una dirección y presione Enter para actualizar el marcador"
-          onKeyPress={(event) => {
-            if (event.key === "Enter") {
-              handleInputChange(event);
-            }
-          }}
-        />
-        </Autocomplete>
-      </div>
-    </LoadScript>
-  );
+
+        </GoogleMap>
+      </LoadScript>
+    );
 }
