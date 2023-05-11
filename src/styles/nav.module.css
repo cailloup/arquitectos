@@ -1,0 +1,132 @@
+.nav{
+    width: 100%;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    box-shadow: 2px 3px 14px 0px rgba(0,0,0,0.56);
+    -webkit-box-shadow: 2px 3px 14px 0px rgba(0,0,0,0.56);
+    -moz-box-shadow: 2px 3px 14px 0px rgba(0,0,0,0.56);
+}
+
+.container{
+    justify-content: space-between;
+    padding-left: 1rem/* 16px */;
+    padding-right: 1rem/* 16px */;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.logoContainer{
+    display: flex;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 0.75rem/* 12px */;
+    padding-bottom: 0.75rem/* 12px */;
+}
+
+.logo{
+    font-size: 1.5rem/* 24px */;
+    line-height: 2rem/* 32px */;
+    --tw-text-opacity: 1;
+    color: rgb(0 0 0 / var(--tw-text-opacity));
+    font-weight: 700;
+}
+
+.button{
+    padding: 0.5rem;
+    --tw-text-opacity: 1;
+    color: rgb(55 65 81 / var(--tw-text-opacity));
+    border-radius: 0.375rem/* 6px */;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+}
+.button:focus{
+    border-color: rgb(156 163 175 / var(--tw-border-opacity));
+    border-width: 1px;
+}
+.hamburgerButton :focus{
+    border-style: none;
+}
+.hamburgerButton :active{
+    border-style: none;
+}
+
+
+.menuOption{
+    padding-bottom: 1.5rem/* 24px */;
+    font-size: 1.25rem/* 20px */;
+    line-height: 1.75rem/* 28px */;
+    color: rgb(0 0 0 / var(--tw-text-opacity));
+    padding-top: 0.5rem/* 8px */;
+    padding-bottom: 0.5rem/* 8px */;
+    padding-left: 1.5rem/* 24px */;
+    padding-right: 1.5rem/* 24px */;
+    text-align: center;
+    border-bottom-width: 2px;
+    transition-duration: 200ms;
+    list-style-type: none;
+}
+
+.selected{
+    color: rgb(10, 80, 117);
+}
+
+.hideMenu{
+    display: none;
+}
+
+.showMenu{
+    padding: 3rem;
+}
+
+.menuOption:hover{
+    border-bottom-width: 4px;
+    color: rgb(3 105 161);
+}
+
+.optionsContainer{
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (min-width: 1024px) {
+    .container{
+        max-width: 80rem;
+    }
+    .hideMenu{
+        display: block;
+    }
+}
+
+@media (min-width: 768px) {
+
+    .container{
+        align-items: center;
+        display: flex;
+        padding-left: 2rem/* 32px */;
+        padding-right: 2rem/* 32px */;
+    }
+
+    .logoContainer{
+        padding-top: 1.25rem/* 20px */;
+        padding-bottom: 1.25rem/* 20px */;
+        display: block;
+    }
+    .hamburgerButton{
+        display: none;
+    }
+    .menuOption:hover{
+        background-color: transparent;
+    }
+    .optionsContainer{
+        height: auto;
+        display: flex
+    }
+    .showMenu{
+        padding: 0;
+    }
+}
