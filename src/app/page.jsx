@@ -5,9 +5,6 @@ import Link from 'next/link';
 import { Map } from '@/apis/GoogleMaps';
 import { useState } from 'react';
 
-export const metadata = {
-  title: 'inicio',
-};
 
 export default function Home() {
   const [markerPosition, setMarkerPosition] = useState({

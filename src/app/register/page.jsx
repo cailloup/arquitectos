@@ -4,10 +4,6 @@ import styles from './register.module.css';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import { useState, useRef } from 'react';
 
-export const metadata = {
-  title: 'register',
-};
-
 const containerStyle = {
   width: '100%',
   height: '800px',
