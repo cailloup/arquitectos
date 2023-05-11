@@ -1,10 +1,11 @@
 "use client"
+import { libraries } from './googleMapsConfig';
 import React, { useState, lazy, useRef  } from 'react';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 
 const LoadScript = lazy(() => import('@react-google-maps/api').then(module => ({ default: module.LoadScript })));
 
-export function Map({ apiKey, mapStyles, defaultCenter, options, onMarkerChange,limitBounds }){
+export function Map({ apiKey, mapStyles, defaultCenter, options, radio, limitArea, onMarkerChange}){
     const [autocomplete, setAutocomplete] = useState(null);
     const [markerState, setMarkerState] = useState({});
     const inputRef = useRef(null);
@@ -20,7 +21,13 @@ export function Map({ apiKey, mapStyles, defaultCenter, options, onMarkerChange,
       inputRef.current.value= newMarker.address
     }
 
-
+    const limitBounds = limitArea && { 
+      north: defaultCenter.lat + radio * 0.0089,
+      south: defaultCenter.lat - radio * 0.0089,
+      east: defaultCenter.lng + radio * 0.0089,
+      west: defaultCenter.lng - radio * 0.0089, 
+    };
+    
     function formattedAddress(address){
       const addressComponents = address.address_components;
       const streetNumber = addressComponents.find(comp => comp.types.includes('street_number')).long_name;
@@ -59,34 +66,30 @@ export function Map({ apiKey, mapStyles, defaultCenter, options, onMarkerChange,
       }
     };
 
-    function HandleplaceChaged() {
-      return () => {
-        const place = autocomplete.getPlace();
-        if (place.geometry) {
-          const newPosition = {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng(),
-          };
-          const markerNew = { position: newPosition, address: place.formatted_address };
-          setMarkerState(markerNew);
-          if (onMarkerChange) {
-            onMarkerChange(markerNew);
-          }
-        } else {
-          console.error('No se ha encontrado la dirección seleccionada');
-        }
-      };
-    }
-
     return (
-      <LoadScript googleMapsApiKey={apiKey} libraries={['places']}>
+      <LoadScript googleMapsApiKey={apiKey} libraries={libraries}>
         
         <div>
           <Autocomplete
-                bounds={limitBounds}
+                bounds={!limitArea ? undefined : limitBounds}
                 onLoad={(auto) =>  setAutocomplete(auto)}
-                onPlaceChanged={HandleplaceChaged()}
-                options={{strictBounds: true}}  
+                onPlaceChanged={() => {
+                  const place = autocomplete.getPlace();
+                  if (place.geometry) {
+                    const newPosition = {
+                      lat: place.geometry.location.lat(),
+                      lng: place.geometry.location.lng(),
+                    };
+                    const markerNew = { position: newPosition, address: place.formatted_address };
+                    setMarkerState(markerNew);
+                    if (onMarkerChange) {
+                      onMarkerChange(markerNew);
+                    }
+                  } else {
+                    console.error('No se ha encontrado la dirección seleccionada');
+                  }
+                }}
+                options={!limitArea? undefined:{strictBounds: true}}  
           >
 
             <input
@@ -103,11 +106,11 @@ export function Map({ apiKey, mapStyles, defaultCenter, options, onMarkerChange,
         </div>
         
         <GoogleMap
-          bounds={limitBounds}
+          bounds={!limitArea ? undefined : limitBounds}
           mapContainerStyle={mapStyles}
           zoom={14}
           center=  {markerState.position?markerState.position:defaultCenter}
-          options={options}
+          options={!limitArea ? options:{... options,restriction: { latLngBounds: limitBounds,strictBounds: false}}}
           onClick={handleMapClick}
           onMarkerChange={onMarkerChange}
         >
