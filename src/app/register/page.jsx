@@ -1,10 +1,13 @@
 "use client"
 import { GOOGLE_MAPS_API_KEY, LIBRARIES, MAP_OPTIONS_DEFAULT,GESELL } from "@/apis/googleMapsConfig"; 
 import {useRef,useState,useEffect } from "react";
-import { GoogleMap,useLoadScript,Marker,Autocomplete,useGoogleMap } from "@react-google-maps/api";
+import {useLoadScript} from "@react-google-maps/api";
 import styles from './register.module.css';
+import { Map,InputMap,limitArea } from "@/apis/GoogleMaps";
+
 
 export default function Register() {
+
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES,
@@ -15,7 +18,7 @@ export default function Register() {
   const [geocoder, setGeocoder] = useState(null);
   const inputRef = useRef(null)
 
-
+  //Cuando cambio el marcador de lugar centro el mapa
   useEffect(() => {
     if(map){
       map.panTo(marKerPosition)
@@ -23,7 +26,6 @@ export default function Register() {
         map.setZoom(18)
       }
     }
-    
   }, [marKerPosition]);
 
 
@@ -33,13 +35,7 @@ export default function Register() {
   }
 
   const handleMapChanges = (location) => {
-    //map.panTo(location.position);
-    map.panTo(location.position)
-    if(map.getZoom !=18){
-      map.setZoom(18)
-    }
     setMarkerPosition(location.position)
-    
   
     if(!location.address){
       geocoder.geocode({ location: location.position }, (results, status) => {
@@ -54,23 +50,7 @@ export default function Register() {
         }
       })
     }
-    
-    
-    
   };
-
-
-  function limitArea(location,radioKm){
-    const bounds = {
-      north: location.lat + radioKm * 0.0089,
-      south: location.lat - radioKm * 0.0089,
-      east: location.lng + radioKm * 0.0089,
-      west: location.lng - radioKm * 0.0089 
-    }
-  
-    return bounds
-  }
-
 
   if(!isLoaded) return (
     <main className={styles.mainLoad}>
@@ -79,11 +59,9 @@ export default function Register() {
   )
 
   return (
-
-
     <main className={styles.main}>
       <section className={styles.mapSection}>
-        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={limitArea(GESELL,10)} />
+        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={limitArea(GESELL,10)} options={{... MAP_OPTIONS_DEFAULT, center:GESELL}} />
       </section>
       <section className={styles.formSection}>
         <label> Direccion</label><br/>
@@ -99,65 +77,6 @@ export default function Register() {
         <input type="text" className={styles.input} placeholder="decime el nombre" />
         <br/>
       </section>
-      
     </main>
-
-    
    )
-
-
- 
 }
-
-
-export function InputMap({onTextChange,children,bounds}){
-
-  const [autocomplete, setAutocomplete] = useState(null);
-
-  return(
-    <Autocomplete
-                bounds={!bounds ? undefined : bounds}
-                onLoad={(auto) =>  setAutocomplete(auto)}
-                onPlaceChanged={() => {
-                  const place = autocomplete.getPlace();
-                  if (place.geometry) {
-                    const newPosition = {
-                      lat: place.geometry.location.lat(),
-                      lng: place.geometry.location.lng(),
-                    };
-                    const location = { position: newPosition, address: place.formatted_address };
-                    onTextChange(location);
-                  } else {
-                    console.error('No se ha encontrado la dirección seleccionada');
-                  }
-                }}
-                options={!bounds? undefined:{strictBounds: true}}  
-                
-          >
-          {children}
-            
-          </Autocomplete>
-  )
-}
-
-function Map({onLoad,handleMapChanges,marKerPosition,bounds}){
-  
-  const handleMapClick = (event) => {
-    const location = {position: event.latLng.toJSON()};
-    handleMapChanges(location)
-  }
-
-  return (
-    <GoogleMap 
-    onLoad={map => {onLoad(map) }}
-      mapContainerClassName={styles.mapContainer}
-      options={!bounds? MAP_OPTIONS_DEFAULT:{...MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: bounds,strictBounds: false}}}
-      onClick={handleMapClick}
-      >
-      <Marker
-        position={marKerPosition}
-      />
-    </GoogleMap>
-  )
-}
-
