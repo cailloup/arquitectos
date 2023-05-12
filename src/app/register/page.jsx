@@ -1,85 +1,82 @@
-"use client";
-import { libraries } from '@/apis/googleMapsConfig';
-import '@/styles/register.css';
+"use client"
+import { GOOGLE_MAPS_API_KEY, LIBRARIES, MAP_OPTIONS_DEFAULT,GESELL } from "@/apis/googleMapsConfig"; 
+import {useRef,useState,useEffect } from "react";
+import {useLoadScript} from "@react-google-maps/api";
 import styles from './register.module.css';
-import {LoadScript } from '@react-google-maps/api';
-import { useState, useRef } from 'react';
-import { Map, InputMap } from '@/apis/GoogleMaps';
+import { Map,InputMap,limitArea } from "@/apis/GoogleMaps";
+
 
 export default function Register() {
-  const [markerState, setMarkerState] = useState({
-    position: { lat: -37.266919903698266, lng: -56.9869653399663462 },
-    address: 'Villa Gesell, Provincia de Buenos Aires',
+
+  const {isLoaded } = useLoadScript({
+    googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
+    libraries: LIBRARIES,
   });
-  const inputRef = useRef(null);
+
+  const [map, setMap] = useState(/** @type google.maps.Map */ (null))
+  const [marKerPosition,setMarkerPosition] = useState()
   const [geocoder, setGeocoder] = useState(null);
+  const inputRef = useRef(null)
+
+  //Cuando cambio el marcador de lugar centro el mapa
+  useEffect(() => {
+    if(map){
+      map.panTo(marKerPosition)
+      if(map.getZoom !=18){
+        map.setZoom(18)
+      }
+    }
+  }, [marKerPosition]);
 
 
-  const handleMarkerChange = (newMarker) => {
-    setMarkerState(newMarker);
-  };
+  function onLoad(mapa){
+    setGeocoder(new window.google.maps.Geocoder())
+    setMap(mapa)
+  }
+
+  const handleMapChanges = (location) => {
+    setMarkerPosition(location.position)
   
+    if(!location.address){
+      geocoder.geocode({ location: location.position }, (results, status) => {
+        if (status === 'OK') {
+          const number = results[0].address_components[0].long_name
+          const street = results[0].address_components[1].long_name
+          const city = results[0].address_components[2].long_name
+          const streetNCity =  ` ${street} ${number}, (${city})`
+          inputRef.current.value=streetNCity;
+        } else {
+          console.error('Geocode was not successful for the following reason: ' + status);
+        }
+      })
+    }
+  };
+
+  if(!isLoaded) return (
+    <main className={styles.mainLoad}>
+      Cargando mister ... 
+    </main>
+  )
+
   return (
-    <LoadScript googleMapsApiKey="AIzaSyATNDswrRQLqhoxDwYh9B9W0Jp90NVGcEY" libraries={libraries} onLoad={()=> setGeocoder(new window.google.maps.Geocoder()) }>
-      <main className={styles.main}>
-        
-        <section className={styles.mapSection}>
-        <Map defaultCenter={markerState.position}
-          mapStyles={mapStyle}
-          options={mapOptions}
-          onMarkerChange={handleMarkerChange}
-          limitArea={true}
-          radio={10} 
-          geocoder={geocoder}
-          markerState={markerState}
-          inputRef={inputRef}
-        />
-        </section>
+    <main className={styles.main}>
+      <section className={styles.mapSection}>
+        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={limitArea(GESELL,10)} options={{... MAP_OPTIONS_DEFAULT, center:GESELL}} />
+      </section>
+      <section className={styles.formSection}>
+        <label> Direccion</label><br/>
+        <InputMap 
+            onTextChange={handleMapChanges}
+            bounds={limitArea(GESELL,10)}
+        >
+          <input ref={inputRef} type="text" className={styles.input} placeholder="Mete la direccion" />
+        </InputMap>
 
-        <section className={styles.formSection}>
-        <label className={styles.label} for="text-input">Direccion</label>
-          <InputMap 
-            defaultCenter={markerState.position}
-            limitArea={true}
-            radio={10} 
-            onMarkerChange={handleMarkerChange}
-          >
-          <input
-                className={styles.input}
-                ref={inputRef}
-                type="text"
-                placeholder="Ingrese una dirección y presione Enter para actualizar el marcador"
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    handleInputChange(event);
-                  }
-                }}
-              />
-          </InputMap>
-        </section>
-
-      </main>
-    </LoadScript>
-  );
-}
-
-const mapOptions = {
-  mapTypeControl: false,
-  streetViewControl: false,
-  fullscreenControl: false,
-  zoomControl: true,
-  mapTypeId: 'roadmap',
-  zoom: 14,
-  styles: [
-    {
-      featureType: "poi",
-      elementType: "labels",
-      stylers: [{ visibility: "off" }]
-    }]
-}
-
-const mapStyle = { 
-width: '100%', 
-height: '100%', 
-
+        <br/>
+        <label> Arquitecto</label><br/>
+        <input type="text" className={styles.input} placeholder="decime el nombre" />
+        <br/>
+      </section>
+    </main>
+   )
 }

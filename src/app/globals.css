@@ -28,3 +28,36 @@ a {
     color-scheme: dark;
   }
 }
+
+input:focus, textarea:focus, select:focus{
+  outline: none;
+}
+
+label{
+  padding: 0;
+}
+
+input {
+  font-size: 16px;
+  font-size: Max(16px, 1em);
+  font-family: inherit;
+  padding: 0.25em 0.5em;
+  background-color: #fff;
+  border: 2px solid rgb(187 187 187 / 75%);
+  border-radius: 4px;
+  transition: 180ms box-shadow ease-in-out;
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 25px;
+}
+
+input:hover {
+  border: 2px solid #888484;
+  outline: none;
+}
+
+input:focus {
+  border: 2px solid rgb(47, 129, 223);
+  outline: none;
+}
+

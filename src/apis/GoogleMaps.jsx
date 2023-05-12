@@ -1,56 +1,39 @@
 "use client"
-import { libraries } from './googleMapsConfig';
-import React, { useState, lazy, useRef  } from 'react';
-import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
+import { MAP_OPTIONS_DEFAULT} from "@/apis/googleMapsConfig"; 
+import {useState} from "react";
+import { GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
+import styles from './map.module.css';
 
-const LoadScript = lazy(() => import('@react-google-maps/api').then(module => ({ default: module.LoadScript })));
 
-export function Map({mapStyles, defaultCenter, options, radio, limitArea, onMarkerChange,geocoder,markerState,inputRef}){
 
-  function updateMarker(newMarker){
-    inputRef.current.value= newMarker.address
-    onMarkerChange(newMarker);
-  }
-
+export function Map({onLoad,handleMapChanges,marKerPosition,bounds,options}){
   const handleMapClick = (event) => {
-      geocoder.geocode({ location: event.latLng }, (results, status) => {
-
-              if (status === 'OK') {
-                updateMarker({ position: event.latLng.toJSON(), address: formattedAddress(results[0]) }) 
-              } else {
-                console.error('Geocode was not successful for the following reason: ' + status);
-              }
-      })
+    const location = {position: event.latLng.toJSON()};
+    handleMapChanges(location)
   }
 
-  return(
-    <GoogleMap
-    mapContainerStyle={mapStyles}
-    zoom={14}
-    center=  {markerState.position}
-    options={!limitArea ? options:{... options,restriction: { latLngBounds: limitBounds(defaultCenter,radio),strictBounds: false}}}
-    onClick={handleMapClick}
-    onMarkerChange={onMarkerChange}
-  >
-
-  {markerState.position && (    
-    <Marker
-      position={markerState.position}
-    />
-  )}
-
-  </GoogleMap>
+  return (
+    <GoogleMap 
+    onLoad={map => {onLoad(map) }}
+      mapContainerClassName={styles.mapContainer}
+      options={!bounds? options:{...options,restriction: { latLngBounds: bounds,strictBounds: false}}}
+      onClick={handleMapClick}
+      >
+      <Marker
+        position={marKerPosition}
+      />
+    </GoogleMap>
   )
 }
 
-export function InputMap({defaultCenter, radio, limitArea, onMarkerChange,children}){
-  
-  const [autocomplete, setAutocomplete] = useState(null);
 
+
+export function InputMap({onTextChange,children,bounds}){
+  const [autocomplete, setAutocomplete] = useState(null);
 
   return(
     <Autocomplete
-                bounds={!limitArea ? undefined : limitBounds(defaultCenter,radio)}
+                bounds={!bounds ? undefined : bounds}
                 onLoad={(auto) =>  setAutocomplete(auto)}
                 onPlaceChanged={() => {
                   const place = autocomplete.getPlace();
@@ -59,13 +42,14 @@ export function InputMap({defaultCenter, radio, limitArea, onMarkerChange,childr
                       lat: place.geometry.location.lat(),
                       lng: place.geometry.location.lng(),
                     };
-                    const markerNew = { position: newPosition, address: place.formatted_address };
-                    onMarkerChange(markerNew);
+                    const location = { position: newPosition, address: place.formatted_address };
+                    onTextChange(location);
                   } else {
                     console.error('No se ha encontrado la dirección seleccionada');
                   }
                 }}
-                options={!limitArea? undefined:{strictBounds: true}}  
+                options={!bounds? undefined:{strictBounds: true}}  
+                
           >
           {children}
             
@@ -73,20 +57,12 @@ export function InputMap({defaultCenter, radio, limitArea, onMarkerChange,childr
   )
 }
 
-const limitBounds = (center,radio) => { 
+export function limitArea(location,radioKm){
   const bounds = {
-    north: center.lat + radio * 0.0089,
-    south: center.lat - radio * 0.0089,
-    east: center.lng + radio * 0.0089,
-    west: center.lng - radio * 0.0089 
+    north: location.lat + radioKm * 0.0089,
+    south: location.lat - radioKm * 0.0089,
+    east: location.lng + radioKm * 0.0089,
+    west: location.lng - radioKm * 0.0089 
   }
-
   return bounds
-}
-
-function formattedAddress(address){
-  const addressComponents = address.address_components;
-  const streetNumber = addressComponents.find(comp => comp.types.includes('street_number')).long_name;
-  const streetName = addressComponents.find(comp => comp.types.includes('route')).long_name;
-  return `${streetNumber} ${streetName}`;
 }
