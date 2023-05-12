@@ -57,7 +57,22 @@ input:hover {
 }
 
 input:focus {
-  border: 2px solid rgb(47, 129, 223);
+  border: 2px solid #2f81df;
   outline: none;
 }
 
+.send-button{
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+  font-size: Max(16px, 1em);
+  color:white;
+  font-weight: 600;
+  padding: 10px 15px;
+  background-color: #2f81df;
+  border: none;
+  border-radius: 5px;
+  float:right
+}
+.send-button:hover{
+  background-color: #478ddd;
+  cursor: pointer;
+}

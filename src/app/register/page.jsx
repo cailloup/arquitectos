@@ -6,6 +6,7 @@ import styles from './register.module.css';
 import { Map,InputMap,limitArea } from "@/apis/GoogleMaps";
 
 
+
 export default function Register() {
 
   const {isLoaded } = useLoadScript({
@@ -71,6 +72,8 @@ export default function Register() {
     }
   };
 
+
+
   return (
     <main className={styles.main}>
       <section className={styles.mapSection}>
@@ -89,6 +92,11 @@ export default function Register() {
         <label> Arquitecto</label><br/>
         <input type="text" className={styles.input} placeholder="decime el nombre" />
         <br/>
+        <label> Fotitos</label><br/>
+        <input type="file" accept="image/*" title="Seleccionar imagen" />
+        <br/>
+        <button className="send-button" onClick={()=> alert("Agarrame la vela nena")}>Agregar edificio</button>
+
       </section>
     </main>
    )
