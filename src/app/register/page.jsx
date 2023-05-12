@@ -6,6 +6,7 @@ import styles from './register.module.css';
 import { Map,InputMap,limitArea } from "@/apis/GoogleMaps";
 
 
+
 export default function Register() {
 
   const {isLoaded } = useLoadScript({
@@ -58,6 +59,21 @@ export default function Register() {
     </main>
   )
 
+  const handleEnterPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const address = inputRef.current.value;
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          const  location  = {position: results[0].geometry.location};
+          handleMapChanges(location);
+        }
+      });
+    }
+  };
+
+
+
   return (
     <main className={styles.main}>
       <section className={styles.mapSection}>
@@ -69,13 +85,18 @@ export default function Register() {
             onTextChange={handleMapChanges}
             bounds={limitArea(GESELL,10)}
         >
-          <input ref={inputRef} type="text" className={styles.input} placeholder="Mete la direccion" />
+          <input onKeyPress={handleEnterPress} ref={inputRef} type="text" className={styles.input} placeholder="Mete la direccion" onkeydown="detectarEnter(event)" />
         </InputMap>
 
         <br/>
         <label> Arquitecto</label><br/>
         <input type="text" className={styles.input} placeholder="decime el nombre" />
         <br/>
+        <label> Fotitos</label><br/>
+        <input type="file" accept="image/*" title="Seleccionar imagen" />
+        <br/>
+        <button className="send-button" onClick={()=> alert("Agarrame la vela nena")}>Agregar edificio</button>
+
       </section>
     </main>
    )
