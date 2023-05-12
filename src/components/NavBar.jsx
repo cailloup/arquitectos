@@ -14,8 +14,8 @@ export default function NavBar() {
     route:"register"},
     {name:"Contacto",
     route:"contact"},
-    {name:"Iniciar Sesion",
-    route:"login"}]
+    {name:"dibujando con caillou",
+    route:"city-draw"}]
 
   function buttonClass(id) {
     return `pb-6 text-xl ${

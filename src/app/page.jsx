@@ -5,8 +5,7 @@ import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL } from '@/apis
 import { GoogleMap,Marker,useLoadScript,InfoWindow } from "@react-google-maps/api";
 import { limitArea } from '@/apis/GoogleMaps';
 import { useState } from 'react';
-import Autosuggest
- from 'react-autosuggest';
+import Autosuggest from 'react-autosuggest';
 
 
 

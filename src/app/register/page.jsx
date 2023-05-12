@@ -7,6 +7,7 @@ import { Map,InputMap,limitArea } from "@/apis/GoogleMaps";
 
 
 
+
 export default function Register() {
 
   const {isLoaded } = useLoadScript({
@@ -29,6 +30,17 @@ export default function Register() {
     }
   }, [marKerPosition]);
 
+  const handleButton = async () => {
+      const res = await fetch("https://architectgallery.herokuapp.com/api/v1/ok/buildings", {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json"
+      }
+    });
+    const datos = await res.json();
+    console.log()
+    alert("un arquitecto: " + datos.buildings[0].architect)
+  };
 
   function onLoad(mapa){
     setGeocoder(new window.google.maps.Geocoder())
@@ -95,7 +107,7 @@ export default function Register() {
         <label> Fotitos</label><br/>
         <input className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
         <br/>
-        <button className="send-button" onClick={()=> alert("Agarrame la vela nena")}>Agregar edificio</button>
+        <button className="send-button" onClick={handleButton}>Agregar edificio</button>
 
       </section>
     </main>
