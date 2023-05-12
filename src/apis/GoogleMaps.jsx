@@ -1,11 +1,19 @@
 "use client"
 import { libraries } from './googleMapsConfig';
-import React, { useState, lazy, useRef  } from 'react';
+import React, { useState, lazy, useRef, useEffect  } from 'react';
 import { GoogleMap, Marker, Autocomplete } from '@react-google-maps/api';
 
 const LoadScript = lazy(() => import('@react-google-maps/api').then(module => ({ default: module.LoadScript })));
 
 export function Map({mapStyles, defaultCenter, options, radio, limitArea, onMarkerChange,geocoder,markerState,inputRef}){
+  const [map, setMap] = useState(null);
+  const mapRef = useRef(null);
+  
+  useEffect(() => {
+    if (mapRef.current) {
+      setMap(mapRef.current.getMap());
+    }
+  }, [mapRef]);
 
   function updateMarker(newMarker){
     inputRef.current.value= newMarker.address
@@ -22,7 +30,25 @@ export function Map({mapStyles, defaultCenter, options, radio, limitArea, onMark
               }
       })
   }
+  const handleMarkerDragEnd = () => {
+      if (map && marker) {
+        const newMarker = {
+          position: {
+            lat: marker.position.lat(),
+            lng: marker.position.lng(),
+          },
+          address: marker.address,
+        };
 
+        if (onMarkerChange) {
+          onMarkerChange(newMarker);
+        }
+
+        // Move the map to the new marker position
+        map.panTo(newMarker.position);
+        map.setZoom(2);
+      }
+  };
   return(
     <GoogleMap
     mapContainerStyle={mapStyles}
@@ -31,11 +57,15 @@ export function Map({mapStyles, defaultCenter, options, radio, limitArea, onMark
     options={!limitArea ? options:{... options,restriction: { latLngBounds: limitBounds(defaultCenter,radio),strictBounds: false}}}
     onClick={handleMapClick}
     onMarkerChange={onMarkerChange}
+    ref={mapRef}
+
   >
 
   {markerState.position && (    
     <Marker
       position={markerState.position}
+      draggable
+      onDragEnd={handleMarkerDragEnd}
     />
   )}
 
