@@ -1,11 +1,16 @@
 .main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
-  padding: 6rem;
+  padding: 0;
   min-height: 100vh;
   background-color: rgb(0, 162, 255);
+}
+
+.main h1{
+  font-size: 45px;
+  color: red;
 }
 
 .description {
@@ -243,4 +248,38 @@
   box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.75) inset;
 -webkit-box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.75) inset;
 -moz-box-shadow: 0px 0px 3px 1px rgba(0,0,0,0.75) inset;
+}
+
+
+.buildingCard{
+  background-color: white;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap:10px;
+  padding:10px 5px;
+  border-radius: 5px;
+  align-items: center;
+}
+.buildingCard h2{
+  text-align: start;
+  width: 80%;
+  font-weight: 300;
+}
+.buildingPicture{
+  width: 80%;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
+}
+
+.buildingDescription{
+  width: 80%;
+  background-color: rgb(249 249 249);
+  padding: 5px;
+  border-radius: 5px;
+}
+.buildingDescription p{
+
+  color: rgb(43, 43, 43);
+  font-weight: 400;
 }

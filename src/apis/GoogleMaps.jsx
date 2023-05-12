@@ -1,5 +1,4 @@
 "use client"
-import { MAP_OPTIONS_DEFAULT} from "@/apis/googleMapsConfig"; 
 import {useState} from "react";
 import { GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
 import styles from './map.module.css';
@@ -14,7 +13,7 @@ export function Map({onLoad,handleMapChanges,marKerPosition,bounds,options}){
 
   return (
     <GoogleMap 
-    onLoad={map => {onLoad(map) }}
+      onLoad={map => {onLoad(map) }}
       mapContainerClassName={styles.mapContainer}
       options={!bounds? options:{...options,restriction: { latLngBounds: bounds,strictBounds: false}}}
       onClick={handleMapClick}
