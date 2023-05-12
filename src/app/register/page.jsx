@@ -85,15 +85,15 @@ export default function Register() {
             onTextChange={handleMapChanges}
             bounds={limitArea(GESELL,10)}
         >
-          <input onKeyPress={handleEnterPress} ref={inputRef} type="text" className={styles.input} placeholder="Mete la direccion" onkeydown="detectarEnter(event)" />
+          <input className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Mete la direccion" onkeydown="detectarEnter(event)" />
         </InputMap>
 
         <br/>
         <label> Arquitecto</label><br/>
-        <input type="text" className={styles.input} placeholder="decime el nombre" />
+        <input className="formInput" type="text"  placeholder="decime el nombre" />
         <br/>
         <label> Fotitos</label><br/>
-        <input type="file" accept="image/*" title="Seleccionar imagen" />
+        <input className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
         <br/>
         <button className="send-button" onClick={()=> alert("Agarrame la vela nena")}>Agregar edificio</button>
 

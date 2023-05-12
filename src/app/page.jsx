@@ -5,8 +5,12 @@ import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL } from '@/apis
 import { GoogleMap,Marker,useLoadScript,InfoWindow } from "@react-google-maps/api";
 import { limitArea } from '@/apis/GoogleMaps';
 import { useState } from 'react';
+import Autosuggest
+ from 'react-autosuggest';
 
-export default function Home() {
+
+
+ export default function Home() {
 
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
@@ -14,7 +18,8 @@ export default function Home() {
   });
 
   const [selectedPlace, setSelectedPlace] = useState(null);
-  
+  const [map,setMap] = useState(null)
+
   const InfoWindowContent = ( {place} ) => (
     <div className={styles.buildingCard}>
       <h2>  {place.name} </h2>
@@ -29,8 +34,9 @@ export default function Home() {
 
   return (
     <main className={styles.main}>
-
+      <SearchBar map={map} setSelectedPlace={setSelectedPlace} ></SearchBar>
       <GoogleMap 
+      onLoad={(map)=>setMap(map)}
         options={{...MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: limitArea(GESELL,10),strictBounds: false}}}
         mapContainerStyle={{width: "100%",height: "100vh"}}
       >
@@ -57,3 +63,93 @@ export default function Home() {
     </main>
   );
 }
+
+
+
+
+
+const SearchBar = ({map,setSelectedPlace}) => {
+  const [value, setValue] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+
+  const getSuggestions = (inputValue) => {
+    const inputValueLowerCase = inputValue.toLowerCase();
+    return buildings.filter(
+      (building) =>
+        building.name.toLowerCase().includes(inputValueLowerCase)
+    );
+  };
+
+  
+  const getSuggestionValue = (suggestion) => suggestion.name;
+
+  const renderSuggestion = (suggestion) => <div>{suggestion.name}</div>;
+
+  const onSuggestionSelected = (event, { suggestion }) => {
+    console.log(suggestion); // Aquí se imprime el objeto de la lista que coincide con la sugerencia seleccionada
+    map.panTo(suggestion.position);
+    map.setZoom(18)
+    setSelectedPlace(suggestion)
+  };
+
+
+  const onChange = (event, { newValue }) => {
+    setValue(newValue);
+    buildings.find( build )
+  };
+
+  const onSuggestionsFetchRequested = ({ value }) => {
+    setSuggestions(getSuggestions(value));
+  };
+
+  const onSuggestionsClearRequested = () => {
+    setSuggestions([]);
+  };
+
+  const inputProps = {
+    placeholder: 'yo solo soy uno mas en la tierra',
+     value,
+    onChange: (_, { newValue }) => {
+      setValue(newValue);
+    },
+  };
+
+  const myTheme = {
+    container: {
+      position: 'absolute',
+      top: '150px',
+      zIndex:'15',
+      width:'80%'
+    },
+    suggestionsContainerOpen: {
+      position: 'absolute',
+      zIndex: '1',
+      marginTop: '10',
+      left: '0',
+      right: '0',
+      listStyle: "none"
+
+    },
+    suggestion: {
+      backgroundColor: 'white',
+      cursor: 'pointer',
+      padding: '0.5rem 1rem'
+    },
+    suggestionHighlighted: {
+      backgroundColor: '#ddd'
+    }
+  };
+
+  return (
+    <Autosuggest  
+      suggestions={suggestions}
+      onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+      onSuggestionsClearRequested={onSuggestionsClearRequested}
+      getSuggestionValue={getSuggestionValue}
+      renderSuggestion={renderSuggestion}
+      inputProps={inputProps}
+      theme={myTheme}
+      onSuggestionSelected={onSuggestionSelected} // Agregamos el evento onSuggestionSelected
+    />
+  );
+};
