@@ -38,7 +38,7 @@ import Autosuggest
       <GoogleMap 
       onLoad={(map)=>setMap(map)}
         options={{...MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: limitArea(GESELL,10),strictBounds: false}}}
-        mapContainerStyle={{width: "100%",height: "100vh"}}
+        mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
 
         {buildings.map( (buildig) => (

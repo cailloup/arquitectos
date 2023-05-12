@@ -2,7 +2,7 @@ export const LIBRARIES = ['places'];
 export const GOOGLE_MAPS_API_KEY="AIzaSyATNDswrRQLqhoxDwYh9B9W0Jp90NVGcEY"
 
 export const MAP_OPTIONS_DEFAULT = {
-    mapTypeControl: false,
+    mapTypeControl: true,
     streetViewControl: false,
     fullscreenControl: false,
     zoomControl: true,
