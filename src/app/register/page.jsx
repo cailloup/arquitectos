@@ -58,6 +58,19 @@ export default function Register() {
     </main>
   )
 
+  const handleEnterPress = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const address = inputRef.current.value;
+      geocoder.geocode({ address }, (results, status) => {
+        if (status === 'OK' && results[0]) {
+          const  location  = {position: results[0].geometry.location};
+          handleMapChanges(location);
+        }
+      });
+    }
+  };
+
   return (
     <main className={styles.main}>
       <section className={styles.mapSection}>
@@ -69,7 +82,7 @@ export default function Register() {
             onTextChange={handleMapChanges}
             bounds={limitArea(GESELL,10)}
         >
-          <input ref={inputRef} type="text" className={styles.input} placeholder="Mete la direccion" />
+          <input onKeyPress={handleEnterPress} ref={inputRef} type="text" className={styles.input} placeholder="Mete la direccion" onkeydown="detectarEnter(event)" />
         </InputMap>
 
         <br/>
