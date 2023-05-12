@@ -9,7 +9,7 @@ import Autosuggest from 'react-autosuggest';
 
 
 
- export default function Home() {
+ export default function Drawing() {
 
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GOOGLE_MAPS_API_KEY,

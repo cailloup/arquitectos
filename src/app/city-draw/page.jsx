@@ -3,8 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Polygon,useLoadScript } from '@react-google-maps/api';
 import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL } from '@/apis/googleMapsConfig';
 import styles from '../page.module.css'
+import { roberto } from './polly';
+const city = 'Villa gesell'; // Nombre de la ciudad que deseas dibujar en el mapa
 
-const city = 'New York'; // Nombre de la ciudad que deseas dibujar en el mapa
+
 
 function Map() {
   const [bounds, setBounds] = useState(null);
@@ -32,24 +34,21 @@ function Map() {
       }
     });
   }, [isLoaded]);
-  
+
+
+
   if(!isLoaded) return <main className={styles.main}><h1>y si la luna nos obseva a vos y yo?...</h1></main>
+  
   return (
-    <LoadScript
-      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-    >
+    <main>
       <GoogleMap
-        center={{ lat: 40.712776, lng: -74.005974 }} // Centro del mapa en Nueva York
+        options={{...MAP_OPTIONS_DEFAULT,center: GESELL}}
         zoom={10}
+        mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
         {bounds && (
           <Polygon
-            path={[
-              { lat: bounds.north, lng: bounds.west },
-              { lat: bounds.north, lng: bounds.east },
-              { lat: bounds.south, lng: bounds.east },
-              { lat: bounds.south, lng: bounds.west },
-            ]}
+            path ={roberto}
             options={{
               strokeColor: '#FF0000',
               strokeOpacity: 0.8,
@@ -60,7 +59,7 @@ function Map() {
           />
         )}
       </GoogleMap>
-    </LoadScript>
+      </main>
   );
 }
 
