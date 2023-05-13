@@ -4,6 +4,7 @@ import { GoogleMap, LoadScript, Polygon,useLoadScript,Marker } from '@react-goog
 import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL,MADARIAGA } from '@/apis/googleMapsConfig';
 import styles from '../page.module.css'
 import { counties } from '@/data/counties';
+import { limitArea } from '@/apis/GoogleMaps';
 const city = 'Villa gesell'; // Nombre de la ciudad que deseas dibujar en el mapa
 
 
@@ -46,17 +47,19 @@ function Map() {
   const handleNamedPolygonClick = (polygonName) => (event) => {
     handlePolygonClick(event, polygonName);
   };
-  
-
+const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
   return (
     <main>
       <GoogleMap
-        options={{...MAP_OPTIONS_DEFAULT,styles: [
+        options={{...MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
             {
               featureType: "*",
               elementType: "labels",
               stylers: [{ visibility: "off" }]
-            }],center: GESELL,zoom:10}}
+            }],center: center, restriction: {
+              latLngBounds: limitArea(center,400),
+              strictBounds: true
+            },}}
 
         mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
