@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Polygon,useLoadScript,Marker } from '@react-google-maps/api';
 import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL,MADARIAGA } from '@/apis/googleMapsConfig';
 import styles from '../page.module.css'
-import { gesellPath,madariagaPath } from './polly';
+import { counties } from '@/data/counties';
 const city = 'Villa gesell'; // Nombre de la ciudad que deseas dibujar en el mapa
 
 
@@ -60,53 +60,36 @@ function Map() {
 
         mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
-        <Marker
-          key={"a"}
-          position={GESELL}
-          label={{
-            text: "Villa Gesell",
-            fontSize: '24px', // Aumenta el tamaño de la fuente
-            color:"white"
-          }}
-          icon= {{
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 0}
-        }
-        />
-        <Marker
-          key={"a"}
-          position={MADARIAGA}
-          label={{
-            text: "General Madariaga",
-            fontSize: '24px', // Aumenta el tamaño de la fuente
-          }}
-          icon= {{
-            path: google.maps.SymbolPath.CIRCLE,
-            scale: 0}
-        }
-        />
-          <Polygon
-            path ={gesellPath}
-            onClick={handleNamedPolygonClick('Villa Gesell')}
-            options={{
-              strokeColor: 'black',
-              strokeOpacity: 1,
-              strokeWeight: 2,
-              fillColor: 'blue',
-              fillOpacity: 0.35,
-            }}
-          />
-        <Polygon
-        onClick={handleNamedPolygonClick('General Madariaga')}
-            path ={madariagaPath}
-            options={{
-              strokeColor: 'black',
-              strokeOpacity: 1,
-              strokeWeight: 2,
-              fillColor: 'red',
-              fillOpacity: 1,
-            }}
-          />
+
+            {counties.map((countie) => (
+              
+              <Marker
+
+                key={countie.name}
+                position={countie.center}
+                label={{
+                  text: countie.name,
+                  fontSize: '24px', // Aumenta el tamaño de la fuente
+                  color:"black"
+                }}
+                icon= {{
+                  path: google.maps.SymbolPath.CIRCLE,
+                  scale: 0}
+                }
+              > 
+                <Polygon
+                  path ={countie.paths}
+                  onClick={handleNamedPolygonClick(countie.name)}
+                  options={{
+                    strokeColor: 'black',
+                    strokeOpacity: 1,
+                    strokeWeight: 2,
+                    fillColor: countie.color,
+                    fillOpacity: 0.88,
+                  }}
+                />
+              </Marker>
+            ))}
       </GoogleMap>
       </main>
   );
