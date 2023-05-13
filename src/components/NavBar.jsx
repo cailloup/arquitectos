@@ -1,7 +1,7 @@
 "use client";
 import styles from "../styles/nav.module.css";
 import Link from "next/link";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Image from "next/image";
 export default function NavBar() {
   const [navbar, setNavbar] = useState(true);
@@ -16,7 +16,7 @@ export default function NavBar() {
     route:"contact"},
     {name:"dibujando con caillou",
     route:"city-draw"}]
-
+    
   function buttonClass(id) {
     return `pb-6 text-xl ${
       selected == id ? "text-sky-700" : "text-black"
@@ -27,6 +27,19 @@ export default function NavBar() {
     
     setSelected(id);
   }
+  useEffect(() => {
+    const pathname = window.location.pathname;
+    const segment = pathname.split('/')[1];
+    const index = options.findIndex( (option) => segment==option.route )
+    if (index ==-1){
+      setSelected(0)
+    }
+      
+    setSelected(index)
+
+  }, []);
+
+
   return (
     <nav className={styles.nav}>
       <div className={styles.container}>
