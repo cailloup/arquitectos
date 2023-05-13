@@ -17,3 +17,4 @@ export const MAP_OPTIONS_DEFAULT = {
       }]
   }
 export const GESELL = { lat: -37.266919903698266, lng: -56.9869653399663462 }
+export const MADARIAGA ={ lat: -37.001944, lng: -57.136111}
