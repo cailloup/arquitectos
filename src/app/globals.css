@@ -39,7 +39,11 @@ label{
 ul {
   list-style: none;
 }
-input {
+
+
+
+/*forms */
+input , select {
   font-size: 16px;
   font-size: Max(16px, 1em);
   font-family: inherit;
@@ -51,22 +55,21 @@ input {
   width: 100%;
 
 }
-.formInput{
+.formInput, .formSelect{
   margin-top: 5px;
-  margin-bottom: 25px;
+  
 }
-input:hover {
+input:hover , select:hover {
   border: 2px solid #888484;
   outline: none;
 }
 
-input:focus {
+input:focus , select:focus {
   border: 2px solid #2f81df;
   outline: none;
 }
 
 .send-button{
-  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
   font-size: Max(16px, 1em);
   color:white;
   font-weight: 600;
@@ -74,9 +77,21 @@ input:focus {
   background-color: #2f81df;
   border: none;
   border-radius: 5px;
-  float:right
+  float:right;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75),
+  -1px -1px 11px 3px rgb(54 148 228) inset;
+  transition: 250ms;
+
 }
+
+.form-row-2Columns{
+  display: grid;
+  grid-template-columns: 1fr 1fr ;
+  column-gap: 25px;
+}
+
+
 .send-button:hover{
-  background-color: #478ddd;
+  background-color: #5b9be4;
   cursor: pointer;
 }

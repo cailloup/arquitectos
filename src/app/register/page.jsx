@@ -97,16 +97,42 @@ export default function Register() {
             onTextChange={handleMapChanges}
             bounds={limitArea(GESELL,10)}
         >
-          <input className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Mete la direccion" onkeydown="detectarEnter(event)" />
+          <input className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion" onkeydown="detectarEnter(event)" />
         </InputMap>
 
         <br/>
         <label> Arquitecto</label><br/>
-        <input className="formInput" type="text"  placeholder="decime el nombre" />
+        <div className="form-row-2Columns">
+          <input className="formInput" type="text"  placeholder="nombre" />
+          <input className="formInput" type="text"  placeholder="apellido" />
+        </div>
+        
         <br/>
-        <label> Fotitos</label><br/>
+        
+        <label> Imagen del edificio</label><br/>
         <input className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
-        <br/>
+        
+        <br/><br/>
+       
+        <div className="form-row-2Columns">
+        <label> Tipo de edificio</label>
+        <label> Estilo de arquitectonico</label>
+          <select className="formSelect" name="tipo de edificio" id="buildType">
+            <option value="sabatica">sectario</option>
+            <option value="religiosa">asuntos oficiales</option>
+            <option value="andaluz">andaluz</option>
+            <option value="empirica">empirica</option>
+          </select>
+
+          <select className="formSelect" name="estilo de edificio" id="style">
+            <option value="gotico">gotico</option>
+            <option value="verano">verano</option>
+            <option value="salado">salado</option>
+            <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional de los pelados por el calentamiento de global</option>
+          </select>
+        </div>
+        <br />
+
         <button className="send-button" onClick={handleButton}>Agregar edificio</button>
 
       </section>
