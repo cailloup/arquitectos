@@ -90,7 +90,7 @@ function Map() {
             onClick={handleNamedPolygonClick('Villa Gesell')}
             options={{
               strokeColor: 'black',
-              strokeOpacity: 0.8,
+              strokeOpacity: 1,
               strokeWeight: 2,
               fillColor: 'blue',
               fillOpacity: 0.35,
@@ -101,10 +101,10 @@ function Map() {
             path ={madariagaPath}
             options={{
               strokeColor: 'black',
-              strokeOpacity: 0.8,
+              strokeOpacity: 1,
               strokeWeight: 2,
               fillColor: 'red',
-              fillOpacity: 0.35,
+              fillOpacity: 1,
             }}
           />
       </GoogleMap>
