@@ -92,6 +92,7 @@ export default function Register() {
         <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={limitArea(GESELL,10)} options={{... MAP_OPTIONS_DEFAULT, center:GESELL}} />
       </section>
       <section className={styles.formSection}>
+        <h1>Registrar edificio</h1><br/><br/>
         <label> Direccion</label><br/>
         <InputMap 
             onTextChange={handleMapChanges}
@@ -116,7 +117,7 @@ export default function Register() {
        
         <div className="form-row-2Columns">
         <label> Tipo de edificio</label>
-        <label> Estilo de arquitectonico</label>
+        <label> Estilo arquitectonico</label>
           <select className="formSelect" name="tipo de edificio" id="buildType">
             <option value="sabatica">sectario</option>
             <option value="religiosa">asuntos oficiales</option>
