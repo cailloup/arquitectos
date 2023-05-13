@@ -61,6 +61,11 @@ input , select {
   width: 100%;
 
 }
+.redOnly{
+  background-color: #d9d9d9;
+    color: black;
+    font-weight: 500;
+}
 .formInput, .formSelect{
   margin-top: 5px;
   
@@ -89,7 +94,21 @@ input:focus , select:focus {
   transition: 250ms;
 
 }
+.secondary-button{
+  font-size: Max(16px, 1em);
+  color:white;
+  font-weight: 600;
+  padding: 10px 15px;
+  background-color: #2f81df;
+  border: none;
+  border-radius: 5px;
+  float:left;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75),
+  -1px -1px 11px 3px rgb(54 148 228) inset;
+  transition: 250ms;
+ 
 
+}
 .form-row-2Columns{
   display: grid;
   grid-template-columns: 1fr 1fr ;
@@ -97,7 +116,7 @@ input:focus , select:focus {
 }
 
 
-.send-button:hover{
+.send-button:hover, .secondary-button:hover{
   background-color: #5b9be4;
   cursor: pointer;
 }

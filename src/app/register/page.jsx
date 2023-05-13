@@ -93,6 +93,13 @@ export default function Register() {
       </section>
       <section className={styles.formSection}>
         <h1>Registrar edificio</h1><br/><br/>
+        
+        <label> Partido</label><br/>
+        <input className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readonly="readonly"/> <br/><br/>
+        <button className="secondary-button" onClick={handleButton}>Cambiar</button><br/>
+        
+        <br/><br/>
+        
         <label> Direccion</label><br/>
         <InputMap 
             onTextChange={handleMapChanges}
