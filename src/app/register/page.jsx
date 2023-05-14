@@ -2,10 +2,11 @@
 import styles from '@/styles/pages/register.module.css';
 import LoadScreen from '@/components/LoadScreen';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
+import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
 import {useLoadScript,GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
 import { BuildingAPI } from "@/apis/archytectApi";
-
+import "react-toastify/dist/ReactToastify.css";
 export default function Register() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [marKerPosition,setMarkerPosition] = useState()
@@ -13,7 +14,6 @@ export default function Register() {
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
   
-
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
     libraries: GoogleMapsConfig.LIBRARIES,
@@ -49,6 +49,7 @@ export default function Register() {
   function onLoad(mapa){
     setGeocoder(new window.google.maps.Geocoder())
     setMap(mapa)
+    
   }
 
   const handleMapChanges = (location) => {
@@ -82,6 +83,10 @@ export default function Register() {
     }
   };
 
+  const sendBuild = () =>{
+    return BuildingAPI.endPonts.postBuilding(formData) 
+  }
+  
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -99,26 +104,29 @@ export default function Register() {
     formData.style = event.target.elements.buildStyle.value
     formData.type = event.target.elements.buildType.value
 
-    const resolution = (success)=> {
-      if(success){
-        alert("edificio agregado correctamete")
-      }else{
-        alert("hubo un error al agregar el edificio")
+    toast.promise(
+      sendBuild,
+      {
+        pending: 'Agregando edificio',
+        success: 'Edificio agregado correctamente 👌',
+        error: 'Hubo un error al agregar el edificio 🤯'
       }
-    }
-    
-    BuildingAPI.endPonts.postBuilding(formData,resolution) 
-    
+    )
+
   }
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
+  function notify(){
+    
+  }
+
   if (!isLoaded) return <LoadScreen/>
  
   return (
-    <main className={styles.main}>
+    <>    <main className={styles.main}>
       <section className={styles.mapSection}>
         <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
       </section>
@@ -129,7 +137,7 @@ export default function Register() {
           
           <label> Partido</label><br/>
           <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>
-          <button className="secondary-button" >Cambiar</button><br/>
+          <button type='button' className="secondary-button" onClick={notify}> Cambiar</button><br/>
           
           <br/><br/>
           
@@ -180,6 +188,19 @@ export default function Register() {
         </form>
       </section>
     </main>
+    <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+          />
+    </>
    )
 }
 

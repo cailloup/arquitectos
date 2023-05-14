@@ -35,9 +35,8 @@ const utils ={
 
 const endPoints = {
 
-    postBuilding: function(building,resolution) {
-
-        uploadImage(building.image)
+    postBuilding: function(building) {
+        return uploadImage(building.image)
         .then(url =>{
             const requestBody = JSON.stringify({...building,image:url});
     
@@ -57,12 +56,11 @@ const endPoints = {
               })
               .then(data => {
                 if(data.response == "Building added successfully."){
-                    return { success: true };
+                    return  'success';
                 }else{
-                    return { success: false };
+                    return  'error';
                 }
               })
-              .then((data)=> resolution(data.success))
               .catch(error => {
                 return { success: false, error: error.message };
               });
