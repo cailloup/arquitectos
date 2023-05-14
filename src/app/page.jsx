@@ -1,16 +1,17 @@
 "use client"
 import styles from './page.module.css';
-import { buildings } from '@/data/builds';
 import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL } from '@/apis/googleMapsConfig';
 import { GoogleMap,Marker,useLoadScript,InfoWindow } from "@react-google-maps/api";
 import { limitArea } from '@/apis/GoogleMaps';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Autosuggest from 'react-autosuggest';
 
 
 
  export default function Drawing() {
 
+  
+ 
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES,
@@ -18,38 +19,50 @@ import Autosuggest from 'react-autosuggest';
 
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [map,setMap] = useState(null)
-
+  const [buildings,setBuildings] = useState(null)
+  const [loaded,setLoaded] = useState(false)
   const InfoWindowContent = ( {place} ) => (
     <div className={styles.buildingCard}>
       <h2>  {place.name} </h2>
-      <img className={styles.buildingPicture} src={place.picture} alt="" />
+      <img className={styles.buildingPicture} src={place.image} alt="" />
       <div className={styles.buildingDescription}>
-        <p>{place.description}</p>
+      <p>partido: {place.city}</p>
+      <p>arquitecto: {place.architect}</p>
+      <p>estilo: {place.style}</p>
+      <p>tipo: {place.type}</p>
       </div>
     </div>
   );
 
+  useEffect(() => {
+    fetch('https://architectgallery.herokuapp.com/api/v1/buildings')
+      .then(response => response.json())
+      .then(data => {setBuildings(data.buildings);setLoaded(true);  console.log(data);});
+  }, []);
+
+ 
   if(!isLoaded) return <main className={styles.main}><h1>y si la luna nos obseva a vos y yo?...</h1></main>
 
   return (
     <main className={styles.main}>
-      <SearchBar map={map} setSelectedPlace={setSelectedPlace} ></SearchBar>
+      
       <GoogleMap 
-      onLoad={(map)=>setMap(map)}
+        onLoad={(map)=>setMap(map)}
         options={{...MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: limitArea(GESELL,10),strictBounds: false}}}
         mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
 
-        {buildings.map( (buildig) => (
+        {loaded?buildings.map( (buildig) => (
           <Marker
-            position={buildig.position}
+            key={buildig.uuid}
+            position={{lat:parseFloat(buildig.lat),lng: parseFloat(buildig.longitude)}}
             onClick={() => setSelectedPlace(buildig)}
           />
-        ) )}
+        ) ):''}
         
         {selectedPlace && (
           <InfoWindow
-            position={selectedPlace.position}
+            position={{lat:parseFloat(selectedPlace.lat),lng: parseFloat(selectedPlace.longitude)}}
             onCloseClick={() => setSelectedPlace(null)}
           >
             <InfoWindowContent place={selectedPlace} />
@@ -58,7 +71,7 @@ import Autosuggest from 'react-autosuggest';
 
 
       </GoogleMap>
-
+      <SearchBar map={map} setSelectedPlace={setSelectedPlace} buildings={buildings} ></SearchBar>
     </main>
   );
 }
@@ -67,7 +80,7 @@ import Autosuggest from 'react-autosuggest';
 
 
 
-const SearchBar = ({map,setSelectedPlace}) => {
+const SearchBar = ({map,setSelectedPlace,buildings}) => {
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 

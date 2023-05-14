@@ -15,6 +15,23 @@ export default function Register() {
     libraries: LIBRARIES,
   });
 
+  const formData ={
+      image:"",
+      period:"",
+      city:"",
+      architect:"",
+      type:"",
+      longitude:"",
+      builtDate:"",
+      isProtected:"",
+      name:"",
+      location:"",
+      style:"",
+      state:"",
+      lat:"",
+      enabled:true
+  }
+
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [marKerPosition,setMarkerPosition] = useState()
   const [geocoder, setGeocoder] = useState(null);
@@ -30,17 +47,13 @@ export default function Register() {
     }
   }, [marKerPosition]);
 
-  const handleButton = async () => {
-      const res = await fetch("https://architectgallery.herokuapp.com/api/v1/ok/buildings", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json"
-      }
-    });
-    const datos = await res.json();
-    console.log()
-    alert("un arquitecto: " + datos.buildings[0].architect)
-  };
+  function handleChange(event) {
+    const { name, value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  }
 
   function onLoad(mapa){
     setGeocoder(new window.google.maps.Geocoder())
@@ -84,7 +97,50 @@ export default function Register() {
     }
   };
 
+  function handleSubmit(event) {
+    event.preventDefault();
 
+    formData.architect= `${event.target.elements.archytectName.value}  ${event.target.elements.archytectSurname.value}`
+    formData.city = event.target.elements.county.value
+    formData.location = event.target.elements.address.value
+    formData.longitude = String(marKerPosition.lng)
+    formData.lat = String(marKerPosition.lat)
+    formData.isProtected = "false"
+    formData.name = event.target.elements.buildName.value
+    formData.builtDate = "15/10/1997"
+    formData.image = event.target.elements.image.value
+    formData.period = "15/10/1997"
+    formData.state = "0km"
+    formData.style = event.target.elements.buildStyle.value
+    formData.type = event.target.elements.buildType.value
+    console.log(formData);
+
+    const requestBody = JSON.stringify(formData);
+    fetch('https://architectgallery.herokuapp.com/api/v1/building', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: requestBody,
+    })
+    .then(response => {
+      if (response.ok) {
+        return response.text();
+      } else {
+        throw new Error('Ocurrió un error al enviar la solicitud.');
+      }
+    })
+    .then(data => {
+      if (data === 'Building added successfully') {
+        console.log('La solicitud se procesó correctamente.');
+      } else {
+        throw new Error('El servidor respondió con un mensaje inesperado:' + data);
+      }
+    })
+    .catch(error => {
+      console.error(error);
+    });
+  }
 
   return (
     <main className={styles.main}>
@@ -94,55 +150,59 @@ export default function Register() {
       <section className={styles.formSection}>
         <h1>Registrar edificio</h1><br/><br/>
         
-        <label> Partido</label><br/>
-        <input className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readonly="readonly"/> <br/><br/>
-        <button className="secondary-button" onClick={handleButton}>Cambiar</button><br/>
+        <form onSubmit={handleSubmit}>
+          
+          <label> Partido</label><br/>
+          <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>
+          <button className="secondary-button" >Cambiar</button><br/>
+          
+          <br/><br/>
+          
+          <label> Direccion</label><br/>
+          <InputMap 
+              onTextChange={handleMapChanges}
+              bounds={limitArea(GESELL,10)}
+          >
+            <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion"  />
+          </InputMap>
+          <br/>
+          <label> Nombre</label><br/>
+          <input id="buildName" className="formInput" type="text"  placeholder="ingrese nombre del edificio" />
+          <br/><br/>
+          <label> Arquitecto</label><br/>
+          <div className="form-row-2Columns">
+            <input id="archytectName" className="formInput" type="text"  placeholder="nombre" />
+            <input id="archytectSurname" className="formInput" type="text"  placeholder="apellido" />
+          </div>
+          
+          <br/>
+          
+          <label> Imagen del edificio</label><br/>
+          <input id="image" className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
+          
+          <br/><br/>
         
-        <br/><br/>
-        
-        <label> Direccion</label><br/>
-        <InputMap 
-            onTextChange={handleMapChanges}
-            bounds={limitArea(GESELL,10)}
-        >
-          <input className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion" onkeydown="detectarEnter(event)" />
-        </InputMap>
+          <div className="form-row-2Columns">
+          <label> Tipo de edificio</label>
+          <label> Estilo arquitectonico</label>
+            <select className="formSelect" name="tipo de edificio" id="buildType">
+              <option value="sabatica">sectario</option>
+              <option value="religiosa">asuntos oficiales</option>
+              <option value="andaluz">andaluz</option>
+              <option value="empirica">empirica</option>
+            </select>
 
-        <br/>
-        <label> Arquitecto</label><br/>
-        <div className="form-row-2Columns">
-          <input className="formInput" type="text"  placeholder="nombre" />
-          <input className="formInput" type="text"  placeholder="apellido" />
-        </div>
-        
-        <br/>
-        
-        <label> Imagen del edificio</label><br/>
-        <input className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
-        
-        <br/><br/>
-       
-        <div className="form-row-2Columns">
-        <label> Tipo de edificio</label>
-        <label> Estilo arquitectonico</label>
-          <select className="formSelect" name="tipo de edificio" id="buildType">
-            <option value="sabatica">sectario</option>
-            <option value="religiosa">asuntos oficiales</option>
-            <option value="andaluz">andaluz</option>
-            <option value="empirica">empirica</option>
-          </select>
+            <select className="formSelect" name="estilo de edificio" id="buildStyle">
+              <option value="gotico">gotico</option>
+              <option value="verano">verano</option>
+              <option value="salado">salado</option>
+              <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional de los pelados por el calentamiento de global</option>
+            </select>
+          </div>
+          <br />
 
-          <select className="formSelect" name="estilo de edificio" id="style">
-            <option value="gotico">gotico</option>
-            <option value="verano">verano</option>
-            <option value="salado">salado</option>
-            <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional de los pelados por el calentamiento de global</option>
-          </select>
-        </div>
-        <br />
-
-        <button className="send-button" onClick={handleButton}>Agregar edificio</button>
-
+          <button type="submit" className="send-button" >Agregar edificio</button>
+        </form>
       </section>
     </main>
    )
