@@ -1,5 +1,5 @@
 "use client"
-import styles from './register.module.css';
+import styles from '@/styles/pages/register.module.css';
 import LoadScreen from '@/components/LoadScreen';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import {useRef,useState,useEffect } from "react";

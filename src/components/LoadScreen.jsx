@@ -1,4 +1,5 @@
-import styles from './LoadScreen.module.css';
+"use client";
+import styles from "@/styles/components/LoadScreen.module.css";
 export default function LoadScreen(){
     return(
         <main className={styles.main}>

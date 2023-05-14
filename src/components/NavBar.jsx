@@ -1,5 +1,5 @@
 "use client";
-import styles from "../styles/nav.module.css";
+import styles from "@/styles/components/nav.module.css";
 import Link from "next/link";
 import { useState,useEffect } from "react";
 import Image from "next/image";

@@ -1,5 +1,5 @@
 "use client"
-import styles from './page.module.css';
+import styles from '@/styles/pages/map.module.css';
 import Autosuggest from 'react-autosuggest';
 import LoadScreen from '@/components/LoadScreen';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';

@@ -25,11 +25,6 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
 
 input:focus, textarea:focus, select:focus{
   outline: none;
@@ -41,6 +36,7 @@ label{
 ul {
   list-style: none;
 }
+
 
 /*Contenedor de google */
 .gm-style .gm-style-iw-c{
@@ -56,22 +52,20 @@ ul {
   right: 0!important;
   top:0!important;
   opacity: .4 !important;
-  /*background-color: red!important;*/
   height: 33px!important;
 }
+
 .gm-ui-hover-effect>span { /*la cruz*/
   background-color: white !important;
- 
   width: 30px !important;
   height: 30px !important;
   background-repeat: no-repeat !important;
   margin:0!important;
 }
 .gm-ui-hover-effect:hover{
-
   opacity: 1 !important;
-
 }
+
 /*forms */
 select {
   transition: 250ms;
