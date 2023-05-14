@@ -26,10 +26,10 @@ import { BuildingAPI,Building } from '@/apis/archytectApi';
       <h2>  {place.name} </h2>
       <img className={styles.buildingPicture} src={place.image} alt="" />
       <div className={styles.buildingDescription}>
-      <p>partido: {place.city}</p>
-      <p>arquitecto: {place.architect}</p>
-      <p>estilo: {place.style}</p>
-      <p>tipo: {place.type}</p>
+      <p>Partido: {place.city}</p>
+      <p>Arquitecto: {place.architect}</p>
+      <p>Estilo: {place.style}</p>
+      <p>Tipo: {place.type}</p>
       </div>
     </div>
   );

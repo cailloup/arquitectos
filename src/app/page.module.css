@@ -257,32 +257,38 @@
   width: 300px;
   display: flex;
   flex-direction: column;
-  gap:10px;
-  padding:10px 5px;
+  gap:0px;
+  padding:0px 0px;
   border-radius: 5px;
   align-items: center;
 }
 .buildingCard h2{
-  text-align: start;
-  width: 80%;
-  font-weight: 300;
+  text-align: center;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  width: 100%;
+  font-weight: 500;
+  background-color: rgb(19, 18, 18);
+  color: white;
 }
 .buildingPicture{
-  width: 80%;
+  width: 100%;
   aspect-ratio: 1/1;
-  border-radius: 5px;
+  /*border-radius: 5px;*/
 }
 
 .buildingDescription{
-  width: 80%;
-  background-color: rgb(249 249 249);
+  width: 90%;
+  /*background-color: rgb(249 249 249);*/
+  margin-top: 5px;
+  margin-bottom: 5px;
   padding: 5px;
   border-radius: 5px;
 }
 .buildingDescription p{
-
-  color: rgb(43, 43, 43);
-  font-weight: 400;
+  font-size: 15px;
+  color: black;
+  font-weight: 500;
 }
 
 .SearchBar{
