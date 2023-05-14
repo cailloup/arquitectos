@@ -1,0 +1,24 @@
+.main {
+    position: absolute;
+    top: 72px;
+    height: calc(100vh -72px);
+    width: 100%;  
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 100px;
+    padding-right: 150px;
+    padding-left: 150px;
+    min-height: calc(100vh -72px);
+    background-color: white;
+    overflow: hidden;
+  }
+
+  .titleContainer{
+    width: 100%;
+    text-align: start;
+    font-size: 25px;
+    font-weight: 100;
+  }
+
+

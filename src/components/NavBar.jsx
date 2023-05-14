@@ -15,7 +15,9 @@ export default function NavBar() {
     {name:"Contacto",
     route:"contact"},
     {name:"Poligonos",
-    route:"city-draw"}]
+    route:"city-draw"},
+    {name:"Panel",
+    route:"dashBoard"}]
     
   function buttonClass(id) {
     return `pb-6 text-xl ${

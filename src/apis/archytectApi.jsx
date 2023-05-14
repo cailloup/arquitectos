@@ -116,9 +116,9 @@ const endPoints = {
           })
           .then(response => {
             if (response.ok) {
-                return { success: true };
-            } else {
-                throw new Error('Ocurrió un error al enviar la solicitud.');
+                return  'success';
+            }else{
+                return  'error';
             }
           })
           .catch(error => {
