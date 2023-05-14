@@ -3,12 +3,12 @@ import { useState,useEffect } from "react"
 import { BuildingAPI,Building } from "@/apis/archytectApi"
 import {toast,ToastContainer} from "react-toastify"
 import LoadScreen from "@/components/LoadScreen"
-import styles from '@/styles/pages/DashBoard.module.css' 
+
 import "react-toastify/dist/ReactToastify.css";
 export default function DashBoard(){
     const [buildings,setBuildings] = useState((/** @type [Building] */ (null))) 
     useEffect(() => { //onPageLoad
-        
+
         BuildingAPI.endPonts.getBuildings(setBuildings)
       }, []);
 
