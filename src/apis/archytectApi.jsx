@@ -18,7 +18,22 @@
 
 const apiUrl='https://architectgallery.herokuapp.com/api/v1/'
 
-export const BuildingAPI = {
+const utils ={
+  limitArea: function(position,radioKm){
+    const bounds = {
+      north: position.lat + radioKm * 0.0089,
+      south: position.lat - radioKm * 0.0089,
+      east: position.lng + radioKm * 0.0089,
+      west: position.lng - radioKm * 0.0089 
+    }
+    return bounds
+  },
+  getPosition: function getPosition(building){
+    return ({lat:parseFloat(building.lat),lng: parseFloat(building.longitude)})
+  }
+}
+
+const endPoints = {
 
     postBuilding: function(building,resolution) {
 
@@ -132,4 +147,9 @@ function uploadImage(image){
         return { success: false, error: error.message };
       });
 
+  }
+
+  export const BuildingAPI ={
+    endPonts:endPoints,
+    utils:utils
   }

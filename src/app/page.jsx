@@ -2,21 +2,12 @@
 import styles from './page.module.css';
 import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL } from '@/apis/googleMapsConfig';
 import { GoogleMap,Marker,useLoadScript,InfoWindow } from "@react-google-maps/api";
-import { limitArea } from '@/apis/GoogleMaps';
 import { useState,useEffect } from 'react';
 import Autosuggest from 'react-autosuggest';
 import { BuildingAPI,Building } from '@/apis/archytectApi';
 
-
-
-function getPosition(place){
-  return ({lat:parseFloat(place.lat),lng: parseFloat(place.longitude)})
-}
-
  export default function Drawing() {
 
-  
- 
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES,
@@ -40,11 +31,11 @@ function getPosition(place){
   );
 
   useEffect(() => {
-    BuildingAPI.getBuildings(setBuildings)
+    BuildingAPI.endPonts.getBuildings(setBuildings)
   }, []);
   useEffect(() => {
     if(map && selectedPlace ){
-      map.panTo(getPosition(selectedPlace))
+      map.panTo(BuildingAPI.utils.getPosition(selectedPlace))
       if(map.getZoom!=17){
         map.setZoom(17)
       }
@@ -61,7 +52,7 @@ function getPosition(place){
       
       <GoogleMap 
         onLoad={(map)=>setMap(map)}
-        options={{...MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: limitArea(GESELL,10),strictBounds: false}}}
+        options={{...MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: BuildingAPI.utils.limitArea(GESELL,10),strictBounds: false}}}
         mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
 

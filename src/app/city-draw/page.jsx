@@ -4,7 +4,7 @@ import { GoogleMap, LoadScript, Polygon,useLoadScript,Marker } from '@react-goog
 import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL,MADARIAGA } from '@/apis/googleMapsConfig';
 import styles from '../page.module.css'
 import { counties } from '@/data/counties';
-import { limitArea } from '@/apis/GoogleMaps';
+import { BuildingAPI } from '@/apis/archytectApi';
 
 
 const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
@@ -17,7 +17,7 @@ const defaultOptions={...MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
   }],
     center: center, 
     restriction: {
-    latLngBounds: limitArea(center,400),
+    latLngBounds: BuildingAPI.utils.limitArea(center,400),
     strictBounds: true
   }}
 
@@ -53,7 +53,7 @@ function Map() {
             }],
               center: county.center, 
               restriction: {
-              latLngBounds: limitArea(county.center,50),
+              latLngBounds: BuildingAPI.utils.limitArea(county.center,50),
               strictBounds: true
             }})
       }

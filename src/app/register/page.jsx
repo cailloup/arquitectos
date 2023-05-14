@@ -1,9 +1,8 @@
 "use client"
 import { GOOGLE_MAPS_API_KEY, LIBRARIES, MAP_OPTIONS_DEFAULT,GESELL } from "@/apis/googleMapsConfig"; 
 import {useRef,useState,useEffect } from "react";
-import {useLoadScript} from "@react-google-maps/api";
+import {useLoadScript,GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
 import styles from './register.module.css';
-import { Map,InputMap,limitArea } from "@/apis/GoogleMaps";
 import { BuildingAPI } from "@/apis/archytectApi";
 
 
@@ -38,7 +37,7 @@ export default function Register() {
   const [geocoder, setGeocoder] = useState(null);
   const inputRef = useRef(null)
   const [file, setFile] = useState(null);
-  //Cuando cambio el marcador de lugar centro el mapa
+
   useEffect(() => {
     if(map){
       map.panTo(marKerPosition)
@@ -47,14 +46,6 @@ export default function Register() {
       }
     }
   }, [marKerPosition]);
-
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-  }
 
   function onLoad(mapa){
     setGeocoder(new window.google.maps.Geocoder())
@@ -79,12 +70,6 @@ export default function Register() {
     }
   };
 
-  if(!isLoaded) return (
-    <main className={styles.mainLoad}>
-      Cargando mister ... 
-    </main>
-  )
-
   const handleEnterPress = (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
@@ -98,11 +83,8 @@ export default function Register() {
     }
   };
 
-  
-
-  function handleSubmit(event) {
+    function handleSubmit(event) {
     event.preventDefault();
-
 
     formData.architect= `${event.target.elements.archytectName.value}  ${event.target.elements.archytectSurname.value}`
     formData.city = event.target.elements.county.value
@@ -125,19 +107,25 @@ export default function Register() {
         alert("hubo un error al agregar el edificio")
       }
     }
-
-
-    
-    BuildingAPI.postBuilding(formData,resolution) 
+   
+    BuildingAPI.endPonts.postBuilding(formData,resolution) 
       
   }
+
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
+
+  if(!isLoaded) return (
+    <main className={styles.mainLoad}>
+      Cargando mister ... 
+    </main>
+  )
+ 
   return (
     <main className={styles.main}>
       <section className={styles.mapSection}>
-        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={limitArea(GESELL,10)} options={{... MAP_OPTIONS_DEFAULT, center:GESELL}} />
+        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GESELL,10)} options={{... MAP_OPTIONS_DEFAULT, center:GESELL}} />
       </section>
       <section className={styles.formSection}>
         <h1>Registrar edificio</h1><br/><br/>
@@ -153,7 +141,7 @@ export default function Register() {
           <label> Direccion</label><br/>
           <InputMap 
               onTextChange={handleMapChanges}
-              bounds={limitArea(GESELL,10)}
+              bounds={BuildingAPI.utils.limitArea(GESELL,10)}
           >
             <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion"  />
           </InputMap>
@@ -198,4 +186,55 @@ export default function Register() {
       </section>
     </main>
    )
+}
+
+function Map({onLoad,handleMapChanges,marKerPosition,bounds,options}){
+  const handleMapClick = (event) => {
+    const location = {position: event.latLng.toJSON()};
+    handleMapChanges(location)
+  }
+
+  return (
+    <GoogleMap 
+      onLoad={map => {onLoad(map) }}
+      mapContainerClassName={styles.mapContainer}
+      options={!bounds? options:{...options,restriction: { latLngBounds: bounds,strictBounds: false}}}
+      onClick={handleMapClick}
+      >
+      <Marker
+        position={marKerPosition}
+      />
+    </GoogleMap>
+  )
+}
+
+
+
+function InputMap({onTextChange,children,bounds}){
+  const [autocomplete, setAutocomplete] = useState(null);
+
+  return(
+    <Autocomplete
+                bounds={!bounds ? undefined : bounds}
+                onLoad={(auto) =>  setAutocomplete(auto)}
+                onPlaceChanged={() => {
+                  const place = autocomplete.getPlace();
+                  if (place.geometry) {
+                    const newPosition = {
+                      lat: place.geometry.location.lat(),
+                      lng: place.geometry.location.lng(),
+                    };
+                    const location = { position: newPosition, address: place.formatted_address };
+                    onTextChange(location);
+                  } else {
+                    console.error('No se ha encontrado la dirección seleccionada');
+                  }
+                }}
+                options={!bounds? undefined:{strictBounds: true}}  
+                
+          >
+          {children}
+            
+          </Autocomplete>
+  )
 }
