@@ -1,15 +1,15 @@
 "use client"
+import LoadScreen from '@/components/LoadScreen';
+import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, LoadScript, Polygon,useLoadScript,Marker } from '@react-google-maps/api';
-import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL,MADARIAGA } from '@/apis/googleMapsConfig';
-import styles from '../page.module.css'
+import { GoogleMap, Polygon,useLoadScript,Marker } from '@react-google-maps/api';
 import { counties } from '@/data/counties';
 import { BuildingAPI } from '@/apis/archytectApi';
 
 
 const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
 
-const defaultOptions={...MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
+const defaultOptions={...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
   {
     featureType: "*",
     elementType: "labels",
@@ -27,8 +27,8 @@ function Map() {
   const [options,setOptions] = useState(defaultOptions)
 
   const {isLoaded} = useLoadScript({
-    googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
-    libraries: LIBRARIES,
+    googleMapsApiKey:   GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
+    libraries: GoogleMapsConfig.LIBRARIES,
   });
   useEffect(() => {
     if(county==null){
@@ -45,7 +45,7 @@ function Map() {
         }
 
         setOptions(
-          {...MAP_OPTIONS_DEFAULT,minZoom: 10,zoom:14,styles: [
+          {...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,minZoom: 10,zoom:14,styles: [
             {
               featureType: "poi",
               elementType: "labels",
@@ -74,7 +74,7 @@ function Map() {
     return () => {
       document.removeEventListener('keydown', handleEscapeKeyPress);
     };
-  }, []); // El arreglo vacío como segundo argumento garantiza que el efecto se ejecute solo una vez al montar el componente
+  }, []); 
 
   const handlePolygonClick = (event, county) => {
     setCounty(county)
@@ -84,7 +84,8 @@ function Map() {
     handlePolygonClick(event, county);
   };
 
-  if(!isLoaded) return <main className={styles.main}><h1>y si la luna nos obseva a vos y yo?...</h1></main>
+  if (!isLoaded) return <LoadScreen/>
+
   return (
     <main>
       <GoogleMap

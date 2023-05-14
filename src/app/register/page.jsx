@@ -1,18 +1,22 @@
 "use client"
-import { GOOGLE_MAPS_API_KEY, LIBRARIES, MAP_OPTIONS_DEFAULT,GESELL } from "@/apis/googleMapsConfig"; 
+import styles from './register.module.css';
+import LoadScreen from '@/components/LoadScreen';
+import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import {useRef,useState,useEffect } from "react";
 import {useLoadScript,GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
-import styles from './register.module.css';
 import { BuildingAPI } from "@/apis/archytectApi";
 
-
-
-
 export default function Register() {
+  const [map, setMap] = useState(/** @type google.maps.Map */ (null))
+  const [marKerPosition,setMarkerPosition] = useState()
+  const [geocoder, setGeocoder] = useState(null);
+  const [file, setFile] = useState(null);
+  const inputRef = useRef(null)
+  
 
   const {isLoaded } = useLoadScript({
-    googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
-    libraries: LIBRARIES,
+    googleMapsApiKey:   GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
+    libraries: GoogleMapsConfig.LIBRARIES,
   });
 
   const formData ={
@@ -32,11 +36,6 @@ export default function Register() {
       enabled:true
   }
 
-  const [map, setMap] = useState(/** @type google.maps.Map */ (null))
-  const [marKerPosition,setMarkerPosition] = useState()
-  const [geocoder, setGeocoder] = useState(null);
-  const inputRef = useRef(null)
-  const [file, setFile] = useState(null);
 
   useEffect(() => {
     if(map){
@@ -83,7 +82,7 @@ export default function Register() {
     }
   };
 
-    function handleSubmit(event) {
+  function handleSubmit(event) {
     event.preventDefault();
 
     formData.architect= `${event.target.elements.archytectName.value}  ${event.target.elements.archytectSurname.value}`
@@ -107,25 +106,21 @@ export default function Register() {
         alert("hubo un error al agregar el edificio")
       }
     }
-   
+    
     BuildingAPI.endPonts.postBuilding(formData,resolution) 
-      
+    
   }
 
   const handleFileChange = (event) => {
     setFile(event.target.files[0]);
   };
 
-  if(!isLoaded) return (
-    <main className={styles.mainLoad}>
-      Cargando mister ... 
-    </main>
-  )
+  if (!isLoaded) return <LoadScreen/>
  
   return (
     <main className={styles.main}>
       <section className={styles.mapSection}>
-        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GESELL,10)} options={{... MAP_OPTIONS_DEFAULT, center:GESELL}} />
+        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
       </section>
       <section className={styles.formSection}>
         <h1>Registrar edificio</h1><br/><br/>
@@ -141,7 +136,7 @@ export default function Register() {
           <label> Direccion</label><br/>
           <InputMap 
               onTextChange={handleMapChanges}
-              bounds={BuildingAPI.utils.limitArea(GESELL,10)}
+              bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)}
           >
             <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion"  />
           </InputMap>
@@ -235,6 +230,6 @@ function InputMap({onTextChange,children,bounds}){
           >
           {children}
             
-          </Autocomplete>
+    </Autocomplete>
   )
 }

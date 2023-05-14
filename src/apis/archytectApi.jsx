@@ -66,11 +66,7 @@ const endPoints = {
               .catch(error => {
                 return { success: false, error: error.message };
               });
-        } )
-
-       
-
-        
+        } )   
       },
 
       getBuildings: function(setBuildings) {
@@ -79,6 +75,7 @@ const endPoints = {
             .then(data => setBuildings(data.buildings))
             .catch(error => console.error(error));
       },
+      
       getBuildingsByCity: function(city,setBuildings) {
         const requestBody = JSON.stringify( {city:city} );
         fetch(`${apiUrl}buildings`, {
@@ -92,6 +89,7 @@ const endPoints = {
         .then(data => setBuildings(data.buildings)) 
         .catch(error => console.error(error));
       },
+
       deleteBuilding: function(id) {
         return fetch(`${apiUrl}buildings/${id}`, {
             method: 'DELETE'
@@ -129,8 +127,6 @@ const endPoints = {
             return { success: false, error: error.message };
           });
       },
-      
-
 }
 
 function uploadImage(image){

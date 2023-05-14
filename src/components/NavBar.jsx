@@ -14,7 +14,7 @@ export default function NavBar() {
     route:"register"},
     {name:"Contacto",
     route:"contact"},
-    {name:"dibujando con caillou",
+    {name:"Poligonos",
     route:"city-draw"}]
     
   function buttonClass(id) {
