@@ -8,6 +8,11 @@ import Autosuggest from 'react-autosuggest';
 import { BuildingAPI,Building } from '@/apis/archytectApi';
 
 
+
+function getPosition(place){
+  return ({lat:parseFloat(place.lat),lng: parseFloat(place.longitude)})
+}
+
  export default function Drawing() {
 
   
@@ -18,7 +23,7 @@ import { BuildingAPI,Building } from '@/apis/archytectApi';
   });
 
   const [selectedPlace, setSelectedPlace] = useState((/** @type Building */ (null)));
-  const [map,setMap] = useState(null)
+  const [map,setMap] = useState(/** @type google.maps.Map */ (null))
   const [buildings,setBuildings] = useState((/** @type [Building] */ (null)))
   const [loaded,setLoaded] = useState(false)
   const InfoWindowContent = ( {place} ) => (
@@ -37,6 +42,14 @@ import { BuildingAPI,Building } from '@/apis/archytectApi';
   useEffect(() => {
     BuildingAPI.getBuildings(setBuildings)
   }, []);
+  useEffect(() => {
+    if(map && selectedPlace ){
+      map.panTo(getPosition(selectedPlace))
+      if(map.getZoom!=17){
+        map.setZoom(17)
+      }
+    }
+  }, [selectedPlace]);
 
 
 
@@ -98,9 +111,8 @@ const SearchBar = ({map,setSelectedPlace,buildings}) => {
   const renderSuggestion = (suggestion) => <div>{suggestion.name}</div>;
 
   const onSuggestionSelected = (event, { suggestion }) => {
-    console.log(suggestion); // Aquí se imprime el objeto de la lista que coincide con la sugerencia seleccionada
-    map.panTo(suggestion.position);
-    map.setZoom(18)
+    // Aquí se imprime el objeto de la lista que coincide con la sugerencia seleccionada
+    
     setSelectedPlace(suggestion)
   };
 
