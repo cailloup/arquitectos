@@ -5,69 +5,99 @@ import { GOOGLE_MAPS_API_KEY,LIBRARIES,MAP_OPTIONS_DEFAULT,GESELL,MADARIAGA } fr
 import styles from '../page.module.css'
 import { counties } from '@/data/counties';
 import { limitArea } from '@/apis/GoogleMaps';
-const city = 'Villa gesell'; // Nombre de la ciudad que deseas dibujar en el mapa
 
 
+const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
+
+const defaultOptions={...MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
+  {
+    featureType: "*",
+    elementType: "labels",
+    stylers: [{ visibility: "off" }]
+  }],
+    center: center, 
+    restriction: {
+    latLngBounds: limitArea(center,400),
+    strictBounds: true
+  }}
 
 function Map() {
-  const [bounds, setBounds] = useState(null);
+  const [county,setCounty] = useState(null)
+  const [map, setMap] = useState(/** @type google.maps.Map */ (null))
+  const [options,setOptions] = useState(defaultOptions)
 
-  const {isLoaded } = useLoadScript({
+  const {isLoaded} = useLoadScript({
     googleMapsApiKey:   GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES,
   });
+  useEffect(() => {
+    if(county==null){
+      setOptions(defaultOptions)
+      if (map !=null){
+        map.setZoom(10)
+      }
+      
+    }else{
+      if(map){
+        map.panTo(county.center)
+        if(map.getZoom !=14){
+          map.setZoom(14)
+        }
+
+        setOptions(
+          {...MAP_OPTIONS_DEFAULT,minZoom: 10,zoom:14,styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }]
+            }],
+              center: county.center, 
+              restriction: {
+              latLngBounds: limitArea(county.center,50),
+              strictBounds: true
+            }})
+      }
+    }
+  }, [county]);
+  
 
   useEffect(() => {
-    if(!isLoaded) return
-    // Utilizamos la API de geocodificación inversa de Google Maps para obtener los límites de la ciudad
-    const geocoder = new window.google.maps.Geocoder();
-    geocoder.geocode({ address: city }, (results, status) => {
-      if (status === 'OK') {
-        const cityBounds = results[0].geometry.bounds;
-        setBounds({
-          north: cityBounds.getNorthEast().lat(),
-          south: cityBounds.getSouthWest().lat(),
-          east: cityBounds.getNorthEast().lng(),
-          west: cityBounds.getSouthWest().lng(),
-        });
-      } else {
-        console.error('Error al obtener los límites de la ciudad');
+    function handleEscapeKeyPress(event) {
+      if (event.key === 'Escape') {
+        console.log('La tecla Escape fue presionada');
+        setCounty(null)
       }
-    });
-  }, [isLoaded]);
+    }
+    
+    document.addEventListener('keydown', handleEscapeKeyPress);
+    
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKeyPress);
+    };
+  }, []); // El arreglo vacío como segundo argumento garantiza que el efecto se ejecute solo una vez al montar el componente
 
-
+  const handlePolygonClick = (event, county) => {
+    setCounty(county)
+  };
+  
+  const handleNamedPolygonClick = (county) => (event) => {
+    handlePolygonClick(event, county);
+  };
 
   if(!isLoaded) return <main className={styles.main}><h1>y si la luna nos obseva a vos y yo?...</h1></main>
-  
-  const handlePolygonClick = (event, polygonName) => {
-    alert("parece que queres saber mas sobre "+ polygonName +" pero pablo tenia paja de seguir, con esto mostro lo pijudo que es xd")
-  };
-  
-  const handleNamedPolygonClick = (polygonName) => (event) => {
-    handlePolygonClick(event, polygonName);
-  };
-const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
   return (
     <main>
       <GoogleMap
-        options={{...MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
-            {
-              featureType: "*",
-              elementType: "labels",
-              stylers: [{ visibility: "off" }]
-            }],center: center, restriction: {
-              latLngBounds: limitArea(center,400),
-              strictBounds: true
-            },}}
+
+        onLoad={map => setMap(map)}
+        options={options}
 
         mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
-
-            {counties.map((countie) => (
+            { county==null? counties.map((countie) => (
               
               <Marker
-
+                onClick={handleNamedPolygonClick(countie)}
                 key={countie.name}
                 position={countie.center}
                 label={{
@@ -82,7 +112,7 @@ const center = counties.find( (county) =>  county.name == "Mar Chiquita").center
               > 
                 <Polygon
                   path ={countie.paths}
-                  onClick={handleNamedPolygonClick(countie.name)}
+                  onClick={handleNamedPolygonClick(countie)}
                   options={{
                     strokeColor: 'black',
                     strokeOpacity: 1,
@@ -90,9 +120,23 @@ const center = counties.find( (county) =>  county.name == "Mar Chiquita").center
                     fillColor: countie.color,
                     fillOpacity: 0.88,
                   }}
-                />
+                >
+                  
+                </Polygon>
               </Marker>
-            ))}
+            )):
+            <Polygon
+                  path ={county.paths}
+                  options={{
+                    strokeColor: 'black',
+                    strokeOpacity: 1,
+                    strokeWeight: 2,
+                    fillColor: "transparent",
+                    fillOpacity: 0,
+                  }}
+                ></Polygon>
+            
+            }
       </GoogleMap>
       </main>
   );
