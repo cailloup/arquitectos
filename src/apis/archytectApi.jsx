@@ -16,39 +16,46 @@
  * @property {string} uuid
  */
 
-
 const apiUrl='https://architectgallery.herokuapp.com/api/v1/'
 
 export const BuildingAPI = {
 
-    createBuilding: function(building,resolution) {
-        const requestBody = JSON.stringify(building);
+    postBuilding: function(building,resolution) {
+
+        uploadImage(building.image)
+        .then(url =>{
+            const requestBody = JSON.stringify({...building,image:url});
     
-        fetch(`${apiUrl}building`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: requestBody,
-          })
-          .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Ocurrió un error al enviar la solicitud.');
-            }
-          })
-          .then(data => {
-            if(data.response == "Building added successfully."){
-                return { success: true };
-            }else{
-                return { success: false };
-            }
-          })
-          .then((data)=> resolution(data.success))
-          .catch(error => {
-            return { success: false, error: error.message };
-          });
+            fetch(`${apiUrl}building`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: requestBody,
+              })
+              .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Ocurrió un error al enviar la solicitud.');
+                }
+              })
+              .then(data => {
+                if(data.response == "Building added successfully."){
+                    return { success: true };
+                }else{
+                    return { success: false };
+                }
+              })
+              .then((data)=> resolution(data.success))
+              .catch(error => {
+                return { success: false, error: error.message };
+              });
+        } )
+
+       
+
+        
       },
 
       getBuildings: function(setBuildings) {
@@ -57,9 +64,21 @@ export const BuildingAPI = {
             .then(data => setBuildings(data.buildings))
             .catch(error => console.error(error));
       },
-
-      deleteBuilding: function(id) {//TODO
-        return fetch(`${apiUrl}building/${id}`, {
+      getBuildingsByCity: function(city,setBuildings) {
+        const requestBody = JSON.stringify( {city:city} );
+        fetch(`${apiUrl}buildings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: requestBody
+        })
+        .then(response => response.json())
+        .then(data => setBuildings(data.buildings)) 
+        .catch(error => console.error(error));
+      },
+      deleteBuilding: function(id) {
+        return fetch(`${apiUrl}buildings/${id}`, {
             method: 'DELETE'
           })
           .then(response => {
@@ -74,10 +93,10 @@ export const BuildingAPI = {
           });
       },
 
-      putBuilding: function(id, building) { //TODO
+      putBuilding: function(id, building) { 
         const requestBody = JSON.stringify(building);
     
-        return fetch(`${apiUrl}building/${id}`, {
+        fetch(`${apiUrl}buildings/${id}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
@@ -94,6 +113,23 @@ export const BuildingAPI = {
           .catch(error => {
             return { success: false, error: error.message };
           });
-      }
+      },
+      
 
 }
+
+function uploadImage(image){
+    const formData = new FormData();
+    formData.append('image', image);
+
+    return fetch(`${apiUrl}/images/upload`, {
+        method: 'POST',
+        body: formData,
+      })
+      .then(response => response.json())
+      .then(response => response.imageUrl)
+      .catch(error => {
+        return { success: false, error: error.message };
+      });
+
+  }

@@ -37,7 +37,7 @@ export default function Register() {
   const [marKerPosition,setMarkerPosition] = useState()
   const [geocoder, setGeocoder] = useState(null);
   const inputRef = useRef(null)
-
+  const [file, setFile] = useState(null);
   //Cuando cambio el marcador de lugar centro el mapa
   useEffect(() => {
     if(map){
@@ -98,8 +98,11 @@ export default function Register() {
     }
   };
 
+  
+
   function handleSubmit(event) {
     event.preventDefault();
+
 
     formData.architect= `${event.target.elements.archytectName.value}  ${event.target.elements.archytectSurname.value}`
     formData.city = event.target.elements.county.value
@@ -109,12 +112,11 @@ export default function Register() {
     formData.isProtected = "false"
     formData.name = event.target.elements.buildName.value
     formData.builtDate = "15/10/1997"
-    formData.image = event.target.elements.image.value
+    formData.image = file
     formData.period = "15/10/1997"
     formData.state = "0km"
     formData.style = event.target.elements.buildStyle.value
     formData.type = event.target.elements.buildType.value
-    console.log(formData);
 
     const resolution = (success)=> {
       if(success){
@@ -124,10 +126,14 @@ export default function Register() {
       }
     }
 
-    BuildingAPI.createBuilding(formData,resolution) 
+
+    
+    BuildingAPI.postBuilding(formData,resolution) 
       
   }
-
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
   return (
     <main className={styles.main}>
       <section className={styles.mapSection}>
@@ -164,7 +170,7 @@ export default function Register() {
           <br/>
           
           <label> Imagen del edificio</label><br/>
-          <input id="image" className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
+          <input onChange={handleFileChange} id="image" className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
           
           <br/><br/>
         

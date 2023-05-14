@@ -38,7 +38,7 @@ import { BuildingAPI,Building } from '@/apis/archytectApi';
     BuildingAPI.getBuildings(setBuildings)
   }, []);
 
-  
+
 
  
   if(!isLoaded) return <main className={styles.main}><h1>y si la luna nos obseva a vos y yo?...</h1></main>
@@ -129,7 +129,7 @@ const SearchBar = ({map,setSelectedPlace,buildings}) => {
   const myTheme = {
     container: {
       position: 'absolute',
-      top: '150px',
+      top: '82px',
       zIndex:'15',
       width:'80%'
     },
