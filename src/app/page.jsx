@@ -5,7 +5,7 @@ import { GoogleMap,Marker,useLoadScript,InfoWindow } from "@react-google-maps/ap
 import { limitArea } from '@/apis/GoogleMaps';
 import { useState,useEffect } from 'react';
 import Autosuggest from 'react-autosuggest';
-
+import { BuildingAPI,Building } from '@/apis/archytectApi';
 
 
  export default function Drawing() {
@@ -17,9 +17,9 @@ import Autosuggest from 'react-autosuggest';
     libraries: LIBRARIES,
   });
 
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [selectedPlace, setSelectedPlace] = useState((/** @type Building */ (null)));
   const [map,setMap] = useState(null)
-  const [buildings,setBuildings] = useState(null)
+  const [buildings,setBuildings] = useState((/** @type [Building] */ (null)))
   const [loaded,setLoaded] = useState(false)
   const InfoWindowContent = ( {place} ) => (
     <div className={styles.buildingCard}>
@@ -35,10 +35,10 @@ import Autosuggest from 'react-autosuggest';
   );
 
   useEffect(() => {
-    fetch('https://architectgallery.herokuapp.com/api/v1/buildings')
-      .then(response => response.json())
-      .then(data => {setBuildings(data.buildings);setLoaded(true);  console.log(data);});
+    BuildingAPI.getBuildings(setBuildings)
   }, []);
+
+  
 
  
   if(!isLoaded) return <main className={styles.main}><h1>y si la luna nos obseva a vos y yo?...</h1></main>
@@ -52,13 +52,13 @@ import Autosuggest from 'react-autosuggest';
         mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
       >
 
-        {loaded?buildings.map( (buildig) => (
+        {buildings&&buildings.map( (building) => (
           <Marker
-            key={buildig.uuid}
-            position={{lat:parseFloat(buildig.lat),lng: parseFloat(buildig.longitude)}}
-            onClick={() => setSelectedPlace(buildig)}
+            key={building.uuid}
+            position={{lat:parseFloat(building.lat),lng: parseFloat(building.longitude)}}
+            onClick={() => setSelectedPlace(building)}
           />
-        ) ):''}
+        ) )}
         
         {selectedPlace && (
           <InfoWindow

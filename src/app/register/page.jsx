@@ -4,6 +4,7 @@ import {useRef,useState,useEffect } from "react";
 import {useLoadScript} from "@react-google-maps/api";
 import styles from './register.module.css';
 import { Map,InputMap,limitArea } from "@/apis/GoogleMaps";
+import { BuildingAPI } from "@/apis/archytectApi";
 
 
 
@@ -115,31 +116,16 @@ export default function Register() {
     formData.type = event.target.elements.buildType.value
     console.log(formData);
 
-    const requestBody = JSON.stringify(formData);
-    fetch('https://architectgallery.herokuapp.com/api/v1/building', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: requestBody,
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.text();
-      } else {
-        throw new Error('Ocurrió un error al enviar la solicitud.');
+    const resolution = (success)=> {
+      if(success){
+        alert("edificio agregado correctamete")
+      }else{
+        alert("hubo un error al agregar el edificio")
       }
-    })
-    .then(data => {
-      if (data === 'Building added successfully') {
-        console.log('La solicitud se procesó correctamente.');
-      } else {
-        throw new Error('El servidor respondió con un mensaje inesperado:' + data);
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    }
+
+    BuildingAPI.createBuilding(formData,resolution) 
+      
   }
 
   return (
