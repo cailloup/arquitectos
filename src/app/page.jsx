@@ -86,12 +86,6 @@ const SearchBar = ({map,setSelectedPlace,buildings}) => {
     setSelectedPlace(suggestion)
   };
 
-
-  const onChange = (event, { newValue }) => {
-    setValue(newValue);
-    buildings.find( build )
-  };
-
   const onSuggestionsFetchRequested = ({ value }) => {
     setSuggestions(getSuggestions(value));
   };
