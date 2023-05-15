@@ -167,7 +167,7 @@ input:focus , select:focus {
 table{
   font-size: 18px;
   border-collapse: separate;
-  border-spacing: 0px 2px;
+  border-spacing: 1px 2px;
   width: 100%;
 }
 th{
@@ -184,8 +184,8 @@ td{
 }
 
 tr{
-  background-color: rgb(175, 191, 204);
-  text-align: left;
+    text-align: left;
+    background-color: #f9fcfc;
 }
 tr{
   cursor: pointer;
@@ -193,7 +193,7 @@ tr{
 }
 
 tr:nth-child(even) {
-  background-color: #f9fcfc;
+  background-color: rgb(175, 191, 204);
 }
 
 tr:not(:first-child):hover{
