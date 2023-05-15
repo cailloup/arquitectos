@@ -175,12 +175,15 @@ th{
   color: white;
   font-weight: 800;
   padding:15px;
+  transition: all 150ms ease-in-out;
 }
 
 th:hover{
   filter: brightness(120%);
 }
-
+.thSelected{
+  filter: brightness(120%);
+}
 
 td{
   color: rgb(48, 48, 48);

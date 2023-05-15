@@ -118,10 +118,10 @@ export default function DashBoard(){
                 <table>
                     <tbody>
                         <tr>
-                            <th onClick={() => toggleSort("name")}>Nombre</th>
-                            <th onClick={() => toggleSort("location")}>Direccion</th>                                       
-                            <th onClick={() => toggleSort("architect") } >Arquitecto</th>
-                            <th onClick={() => toggleSort("city")}>Localidad</th>
+                            <th onClick={() => toggleSort("name")} className={sortedType.includes("name")?'thSelected':''} >Nombre</th>
+                            <th onClick={() => toggleSort("location")} className={sortedType.includes("location")?'thSelected':''} >Direccion</th>                                       
+                            <th onClick={() => toggleSort("architect")} className={sortedType.includes("architect")?'thSelected':''} >Arquitecto</th>
+                            <th onClick={() => toggleSort("city")} className={sortedType.includes("city")?'thSelected':''} >Localidad</th>
                         </tr>
                         {filteredBuildings.map((building) => 
                         <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
