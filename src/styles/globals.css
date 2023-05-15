@@ -183,14 +183,15 @@ td{
   padding:15px;
 }
 
-
+tr{
+  background-color: rgb(175, 191, 204);
+  text-align: left;
+}
 tr:not(:first-child){
   cursor: pointer;
   transition: all 150ms ease-in-out;
 }
-tr{
-  background-color: rgb(175, 191, 204);
-}
+
 tr:nth-child(even) {
   background-color: #f9fcfc;
 }
