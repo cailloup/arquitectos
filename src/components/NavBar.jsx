@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState,useEffect } from "react";
 import Image from "next/image";
 export default function NavBar() {
-  const [navbar, setNavbar] = useState(true);
+  const [navbar, setNavbar] = useState(false);
   const [selected, setSelected] = useState(0);
   
   const options = [

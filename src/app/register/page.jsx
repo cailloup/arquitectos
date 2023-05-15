@@ -13,7 +13,8 @@ export default function Register() {
   const [geocoder, setGeocoder] = useState(null);
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
-  
+  const [formFull,setFormFull] = useState(false)
+
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
     libraries: GoogleMapsConfig.LIBRARIES,
@@ -119,9 +120,7 @@ export default function Register() {
     setFile(event.target.files[0]);
   };
 
-  function notify(){
-    
-  }
+  
 
   if (!isLoaded) return <LoadScreen/>
  
@@ -129,16 +128,16 @@ export default function Register() {
     <>    
     <main className="main-register">
       <section className="mapSection">
+      <div className='circle' onClick={() => setFormFull(!formFull)}>    </div>
         <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
       </section>
-      <section className="formSection">
+      <section className={`formSection ${formFull?'fullForm':'zeroForm'}`} >
         <h1>Registrar edificio</h1><br/><br/>
-        
         <form onSubmit={handleSubmit}>
           
           <label> Partido</label><br/>
           <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>
-          <button type='button' className="secondary-button" onClick={notify}> Cambiar</button><br/>
+          <button type='button' className="secondary-button" onClick={""}> Cambiar</button><br/>
           
           <br/><br/>
           
