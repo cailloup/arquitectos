@@ -10,10 +10,10 @@ export default function DashBoard(){
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
     const [sortedType,setSortedType] = useState('')
     const [searchValue, setSearchValue] = useState("");
+    
     useEffect(() => { //onPageLoad
-
         BuildingAPI.endPonts.getBuildings(setBuildings)
-      }, []);
+    }, []);
 
     function deleteBuilding(id) {
 
@@ -25,7 +25,6 @@ export default function DashBoard(){
               error: 'Hubo un error al eliminar el edificio 🤯'
             }
           ).then(() => {
-            console.log("actualizando edificios");
             BuildingAPI.endPonts.getBuildings(setBuildings); // TODO: pido la lista devuelta o solo la actualizo localmente
 
           });
@@ -55,10 +54,8 @@ export default function DashBoard(){
         }
     }
 
-
-
     function deleteAllBuildingsSelecteds(){
-        if (selectedBuildings.length==0){
+        if (filteredSelectedBuildings.length==0){
             toast.error('Error: debe seleccionar edificios para eleminar', {
                 position: "top-center",
                 autoClose: 2000,
@@ -69,17 +66,20 @@ export default function DashBoard(){
                 progress: undefined,
                 theme: "light",
                 });
+                return
         }
     
-        selectedBuildings.forEach( (id) => {
+        filteredSelectedBuildings.forEach( (id) => {
             deleteBuilding(id)
         } )
     }
 
     const filteredBuildings = buildings.filter((building) =>
-    building.name.toLowerCase().startsWith(searchValue.toLowerCase())
+        building.name.toLowerCase().startsWith(searchValue.toLowerCase())
     );
 
+    const filteredSelectedBuildings = selectedBuildings.filter((buildingId) => filteredBuildings.map((building) => building.uuid).includes(buildingId) )
+    
     const handleInputChange = (event) => {
         setSearchValue(event.target.value);
     };
@@ -111,7 +111,7 @@ export default function DashBoard(){
                     <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
                 </div>
 
-                <p className="buildingIndicator">Edificios seleccionados: {selectedBuildings.length}/{buildings.length} </p>
+                <p className="buildingIndicator">Edificios seleccionados: {filteredSelectedBuildings.length}/{filteredBuildings.length} </p>
                 <hr/>
             </div>
             <div className={"tableContainer"}>
