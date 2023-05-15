@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 export default function DashBoard(){ 
     const [buildings,setBuildings] = useState((/** @type [Building] */ (null))) 
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
+    const [sortedType,setSortedType] = useState('')
     useEffect(() => { //onPageLoad
 
         BuildingAPI.endPonts.getBuildings(setBuildings)
@@ -38,6 +39,22 @@ export default function DashBoard(){
             setSelectedBuildings(newBuilds)
         }
     }
+
+
+    function toggleSort(sortBy) {
+
+        const sortDir = sortedType == `SortBy${sortBy}Asc` ? "desc" : "asc"
+
+        if (sortDir == "asc") {
+          setBuildings(buildings.sort((a, b) => b[sortBy].localeCompare(a[sortBy])));
+          setSortedType(`SortBy${sortBy}Asc`);
+        } else {
+          setBuildings(buildings.sort((a, b) => a[sortBy].localeCompare(b[sortBy])));
+          setSortedType(`SortBy${sortBy}Dsc`);
+        }
+      }
+
+
 
     function deleteAllBuildingsSelecteds(){
         if (selectedBuildings.length==0){
@@ -90,10 +107,10 @@ export default function DashBoard(){
                 <table>
                     <tbody>
                         <tr>
-                            <th>Nombre</th>
-                            <th>Direccion</th>
-                            <th>Arquitecto</th>
-                            <th>Localidad</th>
+                            <th onClick={() => toggleSort("name")}>Nombre</th>
+                            <th onClick={() => toggleSort("location")}>Direccion</th>                                       
+                            <th onClick={() => toggleSort("architect") } >Arquitecto</th>
+                            <th onClick={() => toggleSort("city")}>Localidad</th>
                         </tr>
                         {buildings&& buildings.map((building) => 
                         <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
