@@ -73,18 +73,19 @@ export default function DashBoard(){
             pauseOnHover
             theme="light"
           />
-            <div className={styles.titleContainer}>
-                <h1>Panel de control</h1>
-            </div>
-            <br />
-            
-            <div className="optionsContainer">
-                <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
-                <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
-            </div>
+          <div className="centeredElements">
+                <div className={styles.titleContainer}>
+                    <h1>Panel de control</h1>
+                </div>
+                <br />
+                
+                <div className="optionsContainer">
+                    <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
+                    <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
+                </div>
 
-            <p className="buildingIndicator">Edificios seleccionados {selectedBuildings.length}/{buildings.length} </p>
-
+                <p className="buildingIndicator">Edificios seleccionados {selectedBuildings.length}/{buildings.length} </p>
+            </div>
             <div className={"tableContainer"}>
                 <table>
                     <tbody>
