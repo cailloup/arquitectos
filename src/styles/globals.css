@@ -198,10 +198,12 @@ tr:nth-child(even) {
 
 tr:not(:first-child):hover{
   filter: brightness(70%);
+  scale: 1.01;
 }
 
 .tr-selected:nth-child(even),.tr-selected {
   background-color: rgb(37, 138, 221);
+  scale: 1.01;
 }
 
 .buildingIndicator{
@@ -252,7 +254,6 @@ tr:not(:first-child):hover{
   grid-template-columns: 1fr 1fr 6fr;
   gap: 15px;
   width: 100%;
-
 }
 
 .optionsContainer .adminButton{
