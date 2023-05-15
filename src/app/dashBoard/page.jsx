@@ -6,9 +6,10 @@ import LoadScreen from "@/components/LoadScreen"
 import styles from '@/styles/pages/dashBoard.module.css' 
 import "react-toastify/dist/ReactToastify.css";
 export default function DashBoard(){ 
-    const [buildings,setBuildings] = useState((/** @type [Building] */ (null))) 
+    const [buildings,setBuildings] = useState((/** @type [Building] */ [])) 
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
     const [sortedType,setSortedType] = useState('')
+    const [searchValue, setSearchValue] = useState("");
     useEffect(() => { //onPageLoad
 
         BuildingAPI.endPonts.getBuildings(setBuildings)
@@ -52,7 +53,7 @@ export default function DashBoard(){
           setBuildings(buildings.sort((a, b) => a[sortBy].localeCompare(b[sortBy])));
           setSortedType(`SortBy${sortBy}Dsc`);
         }
-      }
+    }
 
 
 
@@ -69,11 +70,19 @@ export default function DashBoard(){
                 theme: "light",
                 });
         }
-
+    
         selectedBuildings.forEach( (id) => {
             deleteBuilding(id)
         } )
     }
+
+    const filteredBuildings = buildings.filter((building) =>
+    building.name.toLowerCase().startsWith(searchValue.toLowerCase())
+    );
+
+    const handleInputChange = (event) => {
+        setSearchValue(event.target.value);
+    };
 
     if(!buildings) return <LoadScreen/>
     return(
@@ -99,9 +108,11 @@ export default function DashBoard(){
                 <div className="optionsContainer">
                     <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
                     <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
+                    <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
                 </div>
 
-                <p className="buildingIndicator">Edificios seleccionados {selectedBuildings.length}/{buildings.length} </p>
+                <p className="buildingIndicator">Edificios seleccionados: {selectedBuildings.length}/{buildings.length} </p>
+                <hr/>
             </div>
             <div className={"tableContainer"}>
                 <table>
@@ -112,7 +123,7 @@ export default function DashBoard(){
                             <th onClick={() => toggleSort("architect") } >Arquitecto</th>
                             <th onClick={() => toggleSort("city")}>Localidad</th>
                         </tr>
-                        {buildings&& buildings.map((building) => 
+                        {filteredBuildings.map((building) => 
                         <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
                             
                             <td>{building.name}</td>
