@@ -13,7 +13,7 @@ export default function Register() {
   const [geocoder, setGeocoder] = useState(null);
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
-  const [formFull,setFormFull] = useState(false)
+  const formRef = useRef(/** @type {HTMLElement | null} */(null))
 
   const {isLoaded } = useLoadScript({
     googleMapsApiKey:   GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
@@ -87,7 +87,19 @@ export default function Register() {
   const sendBuild = () =>{
     return BuildingAPI.endPonts.postBuilding(formData) 
   }
-  
+  function togleForm(){
+    if (formRef.current.classList.contains("zeroForm")) {
+      formRef.current.classList.remove("zeroForm");
+      formRef.current.classList.add("fullForm");
+      return
+    }
+
+    if (formRef.current.classList.contains('fullForm')) {
+      formRef.current.classList.remove('fullForm');
+      formRef.current.classList.add('zeroForm');
+      return
+    }
+  }
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -128,16 +140,16 @@ export default function Register() {
     <>    
     <main className="main-register">
       <section className="mapSection">
-      <div className='circle' onClick={() => setFormFull(!formFull)}>    </div>
+      <div className='circle' onClick={togleForm}>    </div>
         <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
       </section>
-      <section className={`formSection ${formFull?'fullForm':'zeroForm'}`} >
+      <section ref={formRef} className={"formSection zeroForm"} >
         <h1>Registrar edificio</h1><br/><br/>
         <form onSubmit={handleSubmit}>
           
           <label> Partido</label><br/>
           <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>
-          <button type='button' className="secondary-button" onClick={""}> Cambiar</button><br/>
+          <button type='button' className="secondary-button" onClick={() => toast.success("hola")}> Cambiar</button><br/>
           
           <br/><br/>
           
@@ -190,7 +202,7 @@ export default function Register() {
     </main>
     <ToastContainer
             position="top-center"
-            autoClose={5000}
+            autoClose={2000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
