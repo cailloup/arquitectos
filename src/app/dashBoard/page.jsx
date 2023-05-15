@@ -15,7 +15,6 @@ export default function DashBoard(){
         {field:"location",label:"Direccion"},
         {field:"architect",label:"Arquitecto"},
         {field:"city",label:"Localidad"},
-        {field:"city",label:"Localidad"},
         ]
     useEffect(() => { //onPageLoad
         BuildingAPI.endPonts.getBuildings(setBuildings)
