@@ -6,11 +6,17 @@ import LoadScreen from "@/components/LoadScreen"
 import styles from '@/styles/pages/dashBoard.module.css' 
 import "react-toastify/dist/ReactToastify.css";
 export default function DashBoard(){ 
-    const [buildings,setBuildings] = useState((/** @type [Building] */ [])) 
+    const [buildings,setBuildings] = useState(/** @type [Building] */([]) ) 
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
     const [sortedType,setSortedType] = useState('')
     const [searchValue, setSearchValue] = useState("");
-    
+    const columns = [
+        {field:"name",label:"Nombre"},
+        {field:"location",label:"Direccion"},
+        {field:"architect",label:"Arquitecto"},
+        {field:"city",label:"Localidad"},
+        {field:"city",label:"Localidad"},
+        ]
     useEffect(() => { //onPageLoad
         BuildingAPI.endPonts.getBuildings(setBuildings)
     }, []);
@@ -117,23 +123,18 @@ export default function DashBoard(){
             <div className={"tableContainer"}>
                 <table>
                     <tbody>
-                        <tr>
-                            <th onClick={() => toggleSort("name")} className={sortedType.includes("name")?'thSelected':''} >Nombre</th>
-                            <th onClick={() => toggleSort("location")} className={sortedType.includes("location")?'thSelected':''} >Direccion</th>                                       
-                            <th onClick={() => toggleSort("architect")} className={sortedType.includes("architect")?'thSelected':''} >Arquitecto</th>
-                            <th onClick={() => toggleSort("city")} className={sortedType.includes("city")?'thSelected':''} >Localidad</th>
+                        <tr> 
+                            {columns.map( (column) =>
+                                <th key={column.field} onClick={() => toggleSort(column.field)} className={sortedType.includes(column.field)?'thSelected':''} >{column.label}</th>
+                            )}
                         </tr>
                         {filteredBuildings.map((building) => 
                         <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
-                            
-                            <td>{building.name}</td>
-                            <td>{building.location}</td>
-                            <td>{building.architect}</td>
-                            <td>{building.city}</td>
-                            
+                            {columns.map( (column) =>
+                                <td key={column.field}>{building[column.field]}</td>
+                            )}
                         </tr>
                         )}
-                        
                     </tbody>
                 </table>
             </div>
