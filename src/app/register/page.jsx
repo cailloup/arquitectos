@@ -139,11 +139,12 @@ export default function Register() {
   return (
     <>    
     <main className="main-register">
+    <div className='circle' onClick={togleForm}>    </div>
       <section className="mapSection">
-      <div className='circle' onClick={togleForm}>    </div>
         <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
       </section>
       <section ref={formRef} className={"formSection zeroForm"} >
+      
         <h1>Registrar edificio</h1><br/><br/>
         <form onSubmit={handleSubmit}>
           
