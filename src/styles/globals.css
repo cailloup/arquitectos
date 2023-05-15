@@ -187,7 +187,7 @@ tr{
   background-color: rgb(175, 191, 204);
   text-align: left;
 }
-tr:not(:first-child){
+tr{
   cursor: pointer;
   transition: all 150ms ease-in-out;
 }
