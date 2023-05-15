@@ -93,7 +93,7 @@ function Map() {
         onLoad={map => setMap(map)}
         options={options}
 
-        mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
+        mapContainerStyle={{width: "100%", height: "100%"}}
       >
             { county==null? counties.map((countie) => (
               

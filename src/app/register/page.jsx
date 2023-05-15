@@ -1,5 +1,5 @@
 "use client"
-import styles from '@/styles/pages/register.module.css';
+import '@/styles/pages/register.css';
 import LoadScreen from '@/components/LoadScreen';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import {toast,ToastContainer} from "react-toastify"
@@ -126,11 +126,12 @@ export default function Register() {
   if (!isLoaded) return <LoadScreen/>
  
   return (
-    <>    <main className={styles.main}>
-      <section className={styles.mapSection}>
+    <>    
+    <main className="main-register">
+      <section className="mapSection">
         <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
       </section>
-      <section className={styles.formSection}>
+      <section className="formSection">
         <h1>Registrar edificio</h1><br/><br/>
         
         <form onSubmit={handleSubmit}>
@@ -213,7 +214,7 @@ function Map({onLoad,handleMapChanges,marKerPosition,bounds,options}){
   return (
     <GoogleMap 
       onLoad={map => {onLoad(map) }}
-      mapContainerClassName={styles.mapContainer}
+      mapContainerStyle={{width: "100%", height: "100%"}}
       options={!bounds? options:{...options,restriction: { latLngBounds: bounds,strictBounds: false}}}
       onClick={handleMapClick}
       >

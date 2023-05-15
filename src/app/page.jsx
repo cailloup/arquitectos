@@ -1,5 +1,5 @@
 "use client"
-import styles from '@/styles/pages/map.module.css';
+import '@/styles/pages/map.css';
 import Autosuggest from 'react-autosuggest';
 import LoadScreen from '@/components/LoadScreen';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
@@ -34,12 +34,12 @@ import { BuildingAPI,Building } from '@/apis/archytectApi';
   if (!isLoaded) return <LoadScreen/>
 
   return (
-    <main className={styles.main}>
+    <main>
       
       <GoogleMap 
         onLoad={(map)=>setMap(map)}
         options={{...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10),strictBounds: false}}}
-        mapContainerStyle={{width: "100%", height: "calc(100vh - 72px)", top:"72px" ,position:"absolute"}}
+        mapContainerStyle={{width: "100%", height: "100%"}}
       >
 
         {buildings&&buildings.map( (building) => (
@@ -105,9 +105,14 @@ const SearchBar = ({map,setSelectedPlace,buildings}) => {
   const myTheme = {
     container: {
       position: 'absolute',
-      top: '82px',
+      top: '10px',
       zIndex:'9',
-      width:'80%'
+      width:'100%',
+      display: 'flex',
+      justifyContent: 'center',
+      paddingLeft: '187px',
+      paddingRight:'10%',
+
     },
 
     suggestionsContainerOpen: {
@@ -147,10 +152,10 @@ const SearchBar = ({map,setSelectedPlace,buildings}) => {
 
 //Otras cosas
 const InfoWindowContent = ( {place} ) => (
-  <div className={styles.buildingCard}>
+  <div className="buildingCard">
     <h2>  {place.name} </h2>
-    <img className={styles.buildingPicture} src={place.image} alt="" />
-    <div className={styles.buildingDescription}>
+    <img className="buildingPicture" src={place.image} alt="" />
+    <div className="buildingDescription">
     <p>Partido: {place.city}</p>
     <p>Arquitecto: {place.architect}</p>
     <p>Estilo: {place.style}</p>

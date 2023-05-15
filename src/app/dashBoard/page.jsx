@@ -3,7 +3,7 @@ import { useState,useEffect } from "react"
 import { BuildingAPI,Building } from "@/apis/archytectApi"
 import {toast,ToastContainer} from "react-toastify"
 import LoadScreen from "@/components/LoadScreen"
-import styles from '@/styles/pages/dashBoard.module.css' 
+import '@/styles/pages/dashBoard.css' 
 import "react-toastify/dist/ReactToastify.css";
 export default function DashBoard(){ 
     const [buildings,setBuildings] = useState(/** @type [Building] */([]) ) 
@@ -91,7 +91,7 @@ export default function DashBoard(){
 
     if(!buildings) return <LoadScreen/>
     return(
-        <main className={styles.main}>
+        <main className="main-dashBoard">
              <ToastContainer
             position="top-center"
             autoClose={2000}
@@ -105,7 +105,7 @@ export default function DashBoard(){
             theme="light"
           />
           <div className="centeredElements">
-                <div className={styles.titleContainer}>
+                <div className="titleContainer">
                     <h1>Panel de control</h1>
                 </div>
                 <br />
