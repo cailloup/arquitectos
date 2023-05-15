@@ -7,6 +7,7 @@ import styles from '@/styles/pages/dashBoard.module.css'
 import "react-toastify/dist/ReactToastify.css";
 export default function DashBoard(){ 
     const [buildings,setBuildings] = useState((/** @type [Building] */ (null))) 
+    const [selectedBuildings,setSelectedBuildings] = useState([]) 
     useEffect(() => { //onPageLoad
 
         BuildingAPI.endPonts.getBuildings(setBuildings)
@@ -29,12 +30,27 @@ export default function DashBoard(){
 
     }
 
+    function toggleBuild(newId){
+        if(!selectedBuildings.includes(newId)){
+            setSelectedBuildings([...selectedBuildings,newId])
+        }else{
+            const newBuilds = selectedBuildings.filter( (id) => id!=newId );
+            setSelectedBuildings(newBuilds)
+        }
+    }
+
+    function deleteAllBuildingsSelecteds(){
+        selectedBuildings.forEach( (id) => {
+            deleteBuilding(id)
+        } )
+    }
+
     if(!buildings) return <LoadScreen/>
     return(
         <main className={styles.main}>
              <ToastContainer
             position="top-center"
-            autoClose={5000}
+            autoClose={2000}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick
@@ -49,7 +65,13 @@ export default function DashBoard(){
             </div>
             <br />
             
-            
+            <div className="optionsContainer">
+                <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
+                <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
+            </div>
+
+            <p className="buildingIndicator">Edificios seleccionados {selectedBuildings.length}/{buildings.length} </p>
+
             <div className={"tableContainer"}>
                 <table>
                     <tbody>
@@ -58,22 +80,14 @@ export default function DashBoard(){
                             <th>Direccion</th>
                             <th>Arquitecto</th>
                             <th>Localidad</th>
-                            <th>Accion</th>
                         </tr>
                         {buildings&& buildings.map((building) => 
-                        <tr key={building.uuid}>
+                        <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
                             
                             <td>{building.name}</td>
                             <td>{building.location}</td>
                             <td>{building.architect}</td>
                             <td>{building.city}</td>
-                            <td>
-                                <div className="buttonsContainer">
-                                    <button className="adminButton" id={building.uuid} onClick={() => deleteBuilding(building.uuid)}> eliminar </button> 
-                                    <button className="adminButton"> modificar </button> 
-                                </div>
-                                
-                            </td>
                             
                         </tr>
                         )}
