@@ -176,6 +176,12 @@ th{
   font-weight: 800;
   padding:15px;
 }
+
+th:hover{
+  filter: brightness(90%);
+}
+
+
 td{
   color: rgb(48, 48, 48);
   font-weight: 600;
