@@ -1,4 +1,6 @@
-
+.main-register{
+  overflow: hidden;
+}
 .mapSection{
   position: absolute;
   width: 50%;
