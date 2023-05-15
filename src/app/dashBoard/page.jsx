@@ -40,6 +40,19 @@ export default function DashBoard(){
     }
 
     function deleteAllBuildingsSelecteds(){
+        if (selectedBuildings.length==0){
+            toast.error('Error: debe seleccionar edificios para eleminar', {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                });
+        }
+
         selectedBuildings.forEach( (id) => {
             deleteBuilding(id)
         } )
