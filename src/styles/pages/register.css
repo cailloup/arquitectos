@@ -16,54 +16,55 @@
   background-color: white;
   z-index: 9;
   box-shadow: -3px 1px 11px 1px rgba(0,0,0,0.75);
-  overflow: auto;
   transition: all 250ms;
 }
 
-.fullForm{
-  width: 100%
+.formRegister{
+  height: 100%;
+  width: 100%;
+  overflow: auto;
 }
+
+
+.leftBar{
+  position: absolute;
+  background-color: rgb(90 94 98);
+  top: 0;
+  left: 0px;
+  width: 20px;
+  height: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  display: none;
+}
+
+.leftBarLine{
+  width: 3px;
+  height: 50px;
+  background-color: #3e3e3e;
+}
+
+/* Mobile*/
 @media (max-width: 768px) {
+  .leftBar{
+    display: flex;
+  }
+  .fullForm{
+    width: 100%
+  }
   .mapSection{
     width: 100%;
   }
   .formSection {
     width: 100%;
     padding: 75px 20px;
+    padding-left: 40px;
   }
   .zeroForm{
-    right: -100%;
+    right: calc(-100% + 20px);
   }
   
-}
-
-.circle {
-  top:10px;
-  right: 10px;
-  z-index: 11;
-  position: absolute;
-  background-color: rgb(255, 255, 255);
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
-}
-
-.circle::before {
-  content: "";
-  width: 16px;
-  height: 16px;
-  border-top: 4px solid black;
-  border-right: 4px solid black;
-  transform: translate(-50%, -50%) rotate(45deg);
-  position: absolute;
-  top: 50%;
-  left: 50%;
-}
-
-.circle:hover {
-  filter: brightness(90%);
 }

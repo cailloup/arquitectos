@@ -13,10 +13,7 @@ import { BuildingAPI,Building } from '@/apis/archytectApi';
   const [map,setMap] = useState(/** @type google.maps.Map */ (null))
   const [buildings,setBuildings] = useState((/** @type [Building] */ (null)))
   
-  const {isLoaded } = useLoadScript({
-    googleMapsApiKey: GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
-    libraries: GoogleMapsConfig.LIBRARIES,
-  });
+  const {isLoaded } = useLoadScript(GoogleMapsConfig.scriptInit);
 
   useEffect(() => { //onPageLoad
     BuildingAPI.endPonts.getBuildings(setBuildings)

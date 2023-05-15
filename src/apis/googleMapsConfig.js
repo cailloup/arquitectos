@@ -22,6 +22,10 @@ const GESELL = { lat: -37.266919903698266, lng: -56.9869653399663462 }
 const MADARIAGA ={ lat: -37.001944, lng: -57.136111}
 
 const GoogleMapsConfig = {
+  scriptInit: {
+    //googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    libraries: LIBRARIES,
+  },
   GOOGLE_MAPS_API_KEY:GOOGLE_MAPS_API_KEY,
   LIBRARIES:LIBRARIES,
   MAP_OPTIONS_DEFAULT:MAP_OPTIONS_DEFAULT,

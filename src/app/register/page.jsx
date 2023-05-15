@@ -4,21 +4,18 @@ import LoadScreen from '@/components/LoadScreen';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
-import {useLoadScript,GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
+import {GoogleMap,Marker,Autocomplete,useLoadScript} from "@react-google-maps/api";
 import { BuildingAPI } from "@/apis/archytectApi";
 import "react-toastify/dist/ReactToastify.css";
 export default function Register() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [marKerPosition,setMarkerPosition] = useState()
-  const [geocoder, setGeocoder] = useState(null);
+  const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null}*/ (null));
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
   const formRef = useRef(/** @type {HTMLElement | null} */(null))
 
-  const {isLoaded } = useLoadScript({
-    googleMapsApiKey:   GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
-    libraries: GoogleMapsConfig.LIBRARIES,
-  });
+  const {isLoaded } = useLoadScript(GoogleMapsConfig.scriptInit);
 
   const formData ={
       image:"",
@@ -50,7 +47,6 @@ export default function Register() {
   function onLoad(mapa){
     setGeocoder(new window.google.maps.Geocoder())
     setMap(mapa)
-    
   }
 
   const handleMapChanges = (location) => {
@@ -87,6 +83,7 @@ export default function Register() {
   const sendBuild = () =>{
     return BuildingAPI.endPonts.postBuilding(formData) 
   }
+
   function togleForm(){
     if (formRef.current.classList.contains("zeroForm")) {
       formRef.current.classList.remove("zeroForm");
@@ -100,6 +97,8 @@ export default function Register() {
       return
     }
   }
+
+
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -139,14 +138,15 @@ export default function Register() {
   return (
     <>    
     <main className="main-register">
-    <div className='circle' onClick={togleForm}>    </div>
       <section className="mapSection">
         <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
       </section>
-      <section ref={formRef} className={"formSection zeroForm"} >
-      
+      <section ref={formRef}  className={"formSection fullForm"} >
+      <div  className='leftBar' onClick={togleForm}>
+        <div className='leftBarLine'/> 
+      </div>
         <h1>Registrar edificio</h1><br/><br/>
-        <form onSubmit={handleSubmit}>
+        <form className='formRegister' onSubmit={handleSubmit}>
           
           <label> Partido</label><br/>
           <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>

@@ -26,10 +26,7 @@ function Map() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [options,setOptions] = useState(defaultOptions)
 
-  const {isLoaded} = useLoadScript({
-    googleMapsApiKey:   GoogleMapsConfig.GOOGLE_MAPS_API_KEY,
-    libraries: GoogleMapsConfig.LIBRARIES,
-  });
+  const {isLoaded} = useLoadScript(GoogleMapsConfig.scriptInit);
   useEffect(() => {
     if(county==null){
       setOptions(defaultOptions)
