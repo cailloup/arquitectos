@@ -1,17 +1,18 @@
 "use client"
 import LoadScreen from '@/components/LoadScreen';
-import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, Polygon,useLoadScript,Marker } from '@react-google-maps/api';
 import { counties } from '@/data/counties';
 import { BuildingAPI } from '@/apis/archytectApi';
-import { useGoogleMaps } from '@/app/layout';
+import {useGoogleMaps} from '@/apis/googleMapsConfig'; 
+import GoogleMapsConfig from '@/apis/googleMapsConfig';
+import NavBar from '@/components/NavBar';
 
 const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
 
 const defaultOptions={...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
   {
-    featureType: "*",
+    
     elementType: "labels",
     stylers: [{ visibility: "off" }]
   }],
@@ -25,8 +26,9 @@ function Map() {
   const [county,setCounty] = useState(null)
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [options,setOptions] = useState(defaultOptions)
-
+  const [redirect,setRedirect] = useState(false)
   const isLoaded = useGoogleMaps();
+
   useEffect(() => {
     if(county==null){
       setOptions(defaultOptions)
@@ -81,62 +83,64 @@ function Map() {
     handlePolygonClick(event, county);
   };
 
-  if (!isLoaded) return <LoadScreen/>
+  if (!isLoaded || redirect) return <LoadScreen/>
 
   return (
-    <main>
-      <GoogleMap
+    <NavBar setRedirect={setRedirect}>
+      <main>
+        <GoogleMap
 
-        onLoad={map => setMap(map)}
-        options={options}
+          onLoad={map => setMap(map)}
+          options={options}
 
-        mapContainerStyle={{width: "100%", height: "100%"}}
-      >
-            { county==null? counties.map((countie) => (
-              
-              <Marker
-                onClick={handleNamedPolygonClick(countie)}
-                key={countie.name}
-                position={countie.center}
-                label={{
-                  text: countie.name,
-                  fontSize: '24px', // Aumenta el tamaño de la fuente
-                  color:"black"
-                }}
-                icon= {{
-                  path: google.maps.SymbolPath.CIRCLE,
-                  scale: 0}
-                }
-              > 
-                <Polygon
-                  path ={countie.paths}
+          mapContainerStyle={{width: "100%", height: "100%"}}
+        >
+              { county==null? counties.map((countie) => (
+                
+                <Marker
                   onClick={handleNamedPolygonClick(countie)}
-                  options={{
-                    strokeColor: 'black',
-                    strokeOpacity: 1,
-                    strokeWeight: 2,
-                    fillColor: countie.color,
-                    fillOpacity: 0.88,
+                  key={countie.name}
+                  position={countie.center}
+                  label={{
+                    text: countie.name,
+                    fontSize: '24px', // Aumenta el tamaño de la fuente
+                    color:"black"
                   }}
-                >
-                  
-                </Polygon>
-              </Marker>
-            )):
-            <Polygon
-                  path ={county.paths}
-                  options={{
-                    strokeColor: 'black',
-                    strokeOpacity: 1,
-                    strokeWeight: 2,
-                    fillColor: "transparent",
-                    fillOpacity: 0,
-                  }}
-                ></Polygon>
-            
-            }
-      </GoogleMap>
+                  icon= {{
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 0}
+                  }
+                > 
+                  <Polygon
+                    path ={countie.paths}
+                    onClick={handleNamedPolygonClick(countie)}
+                    options={{
+                      strokeColor: 'black',
+                      strokeOpacity: 1,
+                      strokeWeight: 2,
+                      fillColor: countie.color,
+                      fillOpacity: 0.88,
+                    }}
+                  >
+                    
+                  </Polygon>
+                </Marker>
+              )):
+              <Polygon
+                    path ={county.paths}
+                    options={{
+                      strokeColor: 'black',
+                      strokeOpacity: 1,
+                      strokeWeight: 2,
+                      fillColor: "transparent",
+                      fillOpacity: 0,
+                    }}
+                  ></Polygon>
+              
+              }
+        </GoogleMap>
       </main>
+    </NavBar>
   );
 }
 

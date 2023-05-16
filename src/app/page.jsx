@@ -2,16 +2,18 @@
 import '@/styles/pages/map.css';
 import Autosuggest from 'react-autosuggest';
 import LoadScreen from '@/components/LoadScreen';
-import GoogleMapsConfig from '@/apis/googleMapsConfig';
-import { GoogleMap,Marker,useLoadScript,InfoWindow } from "@react-google-maps/api";
+import { GoogleMap,Marker,InfoWindow } from "@react-google-maps/api";
 import { useState,useEffect } from 'react';
 import { BuildingAPI,Building } from '@/apis/archytectApi';
-import { useGoogleMaps } from '@/app/layout';
+import {useGoogleMaps} from '@/apis/googleMapsConfig'; 
+import GoogleMapsConfig from '@/apis/googleMapsConfig';
+import NavBar from '@/components/NavBar';
 
  export default function Drawing() {
   const [selectedBuilding, setSelectedBuilding] = useState((/** @type Building */ (null)));
   const [map,setMap] = useState(/** @type google.maps.Map */ (null))
   const [buildings,setBuildings] = useState((/** @type [Building] */ (null)))
+  const [redirect,setRedirect] = useState(false)
   const isLoaded = useGoogleMaps();
   
   useEffect(() => { //onPageLoad
@@ -27,38 +29,40 @@ import { useGoogleMaps } from '@/app/layout';
     }
   }, [selectedBuilding]);
 
-  if (!isLoaded) return <LoadScreen/>
+  if (!isLoaded || redirect) return <LoadScreen/>
 
   return (
-    <main>
-      
-      <GoogleMap 
-        onLoad={(map)=>setMap(map)}
-        options={{...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10),strictBounds: false}}}
-        mapContainerStyle={{width: "100%", height: "100%"}}
-      >
-
-        {buildings&&buildings.map( (building) => (
-          <Marker
-            key={building.uuid}
-            position={{lat:parseFloat(building.lat),lng: parseFloat(building.longitude)}}
-            onClick={() => setSelectedBuilding(building)}
-          />
-        ) )}
+    <NavBar setRedirect={setRedirect}>
+      <main>
         
-        {selectedBuilding && (
-          <InfoWindow
-            position={{lat:parseFloat(selectedBuilding.lat),lng: parseFloat(selectedBuilding.longitude)}}
-            onCloseClick={() => setSelectedBuilding(null)}
-          >
-            <InfoWindowContent place={selectedBuilding} />
-          </InfoWindow>
-        )}
+        <GoogleMap 
+          onLoad={(map)=>setMap(map)}
+          options={{...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,restriction: { latLngBounds: BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10),strictBounds: false}}}
+          mapContainerStyle={{width: "100%", height: "100%"}}
+        >
+
+          {buildings&&buildings.map( (building) => (
+            <Marker
+              key={building.uuid}
+              position={{lat:parseFloat(building.lat),lng: parseFloat(building.longitude)}}
+              onClick={() => setSelectedBuilding(building)}
+            />
+          ) )}
+          
+          {selectedBuilding && (
+            <InfoWindow
+              position={{lat:parseFloat(selectedBuilding.lat),lng: parseFloat(selectedBuilding.longitude)}}
+              onCloseClick={() => setSelectedBuilding(null)}
+            >
+              <InfoWindowContent place={selectedBuilding} />
+            </InfoWindow>
+          )}
 
 
-      </GoogleMap>
-      <SearchBar map={map} setSelectedPlace={setSelectedBuilding} buildings={buildings} ></SearchBar>
-    </main>
+        </GoogleMap>
+        <SearchBar map={map} setSelectedPlace={setSelectedBuilding} buildings={buildings} ></SearchBar>
+      </main>
+    </NavBar>
   );
 }
 

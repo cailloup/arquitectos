@@ -5,13 +5,16 @@ import {toast,ToastContainer} from "react-toastify"
 import LoadScreen from "@/components/LoadScreen"
 import '@/styles/pages/dashBoard.css' 
 import "react-toastify/dist/ReactToastify.css";
+import NavBar from "@/components/NavBar"
 export default function DashBoard(){ 
     const [buildings,setBuildings] = useState(/** @type [Building] */([]) ) 
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
     const [sortedType,setSortedType] = useState('')
     const [searchValue, setSearchValue] = useState("");
+    const [redirect,setRedirect] = useState(false);
+
     const columns = [
-        {field:"name",label:"Nombre"},
+        {field:"name",label:"Nombre"}, 
         {field:"location",label:"Direccion"},
         {field:"architect",label:"Arquitecto"},
         {field:"city",label:"Localidad"},
@@ -89,55 +92,57 @@ export default function DashBoard(){
         setSearchValue(event.target.value);
     };
 
-    if(!buildings) return <LoadScreen/>
+    if(!buildings || redirect) return <LoadScreen/>
     return(
-        <main className="main-dashBoard">
-             <ToastContainer
-            position="top-center"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-          <div className="centeredElements">
-                <div className="titleContainer">
-                    <h1>Panel de control</h1>
-                </div>
-                <br />
-                
-                <div className="optionsContainer">
-                    <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
-                    <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
-                    <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
-                </div>
+        <NavBar setRedirect={setRedirect}>
+            <main className="main-dashBoard">
+                <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
+            <div className="centeredElements">
+                    <div className="titleContainer">
+                        <h1>Panel de control</h1>
+                    </div>
+                    <br />
+                    
+                    <div className="optionsContainer">
+                        <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
+                        <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
+                        <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
+                    </div>
 
-                <p className="buildingIndicator">Edificios seleccionados: {filteredSelectedBuildings.length}/{filteredBuildings.length} </p>
-                <hr/>
-            </div>
-            <div className={"tableContainer"}>
-                <table>
-                    <tbody>
-                        <tr> 
-                            {columns.map( (column) =>
-                                <th key={column.field} onClick={() => toggleSort(column.field)} className={sortedType.includes(column.field)?'thSelected':''} >{column.label}</th>
+                    <p className="buildingIndicator">Edificios seleccionados: {filteredSelectedBuildings.length}/{filteredBuildings.length} </p>
+                    <hr/>
+                </div>
+                <div className={"tableContainer"}>
+                    <table>
+                        <tbody>
+                            <tr> 
+                                {columns.map( (column) =>
+                                    <th key={column.field} onClick={() => toggleSort(column.field)} className={sortedType.includes(column.field)?'thSelected':''} >{column.label}</th>
+                                )}
+                            </tr>
+                            {filteredBuildings.map((building) => 
+                            <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
+                                {columns.map( (column) =>
+                                    <td key={column.field}>{building[column.field]}</td>
+                                )}
+                            </tr>
                             )}
-                        </tr>
-                        {filteredBuildings.map((building) => 
-                        <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
-                            {columns.map( (column) =>
-                                <td key={column.field}>{building[column.field]}</td>
-                            )}
-                        </tr>
-                        )}
-                    </tbody>
-                </table>
-            </div>
-            
-        </main>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </main>
+        </NavBar>
     )
 }

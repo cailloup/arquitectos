@@ -1,12 +1,13 @@
 "use client";
 import styles from "@/styles/components/nav.module.css";
 import Link from "next/link";
-import { useState,useEffect } from "react";
+import { useState,useEffect} from "react";
 import Image from "next/image";
-export default function NavBar() {
+
+export default function NavBar({children,setRedirect}) {
   const [navbar, setNavbar] = useState(false);
   const [selected, setSelected] = useState(0);
-  
+
   const options = [
     {name:"Mapa",
     route:""},
@@ -28,6 +29,11 @@ export default function NavBar() {
   function handleClick(id) {
     setNavbar(false)
     setSelected(id);
+
+    if(setRedirect){
+      setRedirect(true)
+    }
+    
   }
   useEffect(() => {
     const pathname = window.location.pathname;
@@ -43,6 +49,7 @@ export default function NavBar() {
 
 
   return (
+    <>
     <nav className={styles.nav}>
       <div className={styles.container}>
         <div>
@@ -87,5 +94,7 @@ export default function NavBar() {
         </div>
       </div>
     </nav>
+    {children}
+    </>
   );
 }

@@ -1,13 +1,14 @@
 "use client"
 import '@/styles/pages/register.css';
+import "react-toastify/dist/ReactToastify.css";
 import LoadScreen from '@/components/LoadScreen';
-import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
 import {GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
 import { BuildingAPI } from "@/apis/archytectApi";
-import "react-toastify/dist/ReactToastify.css";
-import { useGoogleMaps } from '@/app/layout';
+import {useGoogleMaps} from '@/apis/googleMapsConfig'; 
+import GoogleMapsConfig from '@/apis/googleMapsConfig';
+import NavBar from '@/components/NavBar';
 
 export default function Register() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
@@ -16,6 +17,7 @@ export default function Register() {
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
   const formRef = useRef(/** @type {HTMLElement | null} */(null))
+  const [redirect,setRedirect] = useState(false)
   const isLoaded = useGoogleMaps();
 
   const formData ={
@@ -134,87 +136,87 @@ export default function Register() {
 
   
 
-  if (!isLoaded) return <LoadScreen/>
+  if (!isLoaded || redirect) return <LoadScreen/>
  
   return (
-    <>    
-    <main className="main-register">
-      <section className="mapSection">
-        <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
-      </section>
-      <section ref={formRef}  className={"formSection fullForm"} >
-      <div  className='leftBar' onClick={togleForm}>
-        <div className='leftBarLine'/> 
-      </div>
-        <h1>Registrar edificio</h1><br/><br/>
-        <form className='formRegister' onSubmit={handleSubmit}>
+    <NavBar setRedirect={setRedirect}>   
+      <main className="main-register">
+        <section className="mapSection">
+          <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
+        </section>
+        <section ref={formRef}  className={"formSection fullForm"} >
+        <div  className='leftBar' onClick={togleForm}>
+          <div className='leftBarLine'/> 
+        </div>
+          <h1>Registrar edificio</h1><br/><br/>
+          <form className='formRegister' onSubmit={handleSubmit}>
+            
+            <label> Partido</label><br/>
+            <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>
+            <button type='button' className="secondary-button" onClick={() => toast.success("hola")}> Cambiar</button><br/>
+            
+            <br/><br/>
+            
+            <label> Direccion</label><br/>
+            <InputMap 
+                onTextChange={handleMapChanges}
+                bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)}
+            >
+              <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion"  />
+            </InputMap>
+            <br/>
+            <label> Nombre</label><br/>
+            <input id="buildName" className="formInput" type="text"  placeholder="ingrese nombre del edificio" />
+            <br/><br/>
+            <label> Arquitecto</label><br/>
+            <div className="form-row-2Columns">
+              <input id="archytectName" className="formInput" type="text"  placeholder="nombre" />
+              <input id="archytectSurname" className="formInput" type="text"  placeholder="apellido" />
+            </div>
+            
+            <br/>
+            
+            <label> Imagen del edificio</label><br/>
+            <input onChange={handleFileChange} id="image" className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
+            
+            <br/><br/>
           
-          <label> Partido</label><br/>
-          <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>
-          <button type='button' className="secondary-button" onClick={() => toast.success("hola")}> Cambiar</button><br/>
-          
-          <br/><br/>
-          
-          <label> Direccion</label><br/>
-          <InputMap 
-              onTextChange={handleMapChanges}
-              bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)}
-          >
-            <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion"  />
-          </InputMap>
-          <br/>
-          <label> Nombre</label><br/>
-          <input id="buildName" className="formInput" type="text"  placeholder="ingrese nombre del edificio" />
-          <br/><br/>
-          <label> Arquitecto</label><br/>
-          <div className="form-row-2Columns">
-            <input id="archytectName" className="formInput" type="text"  placeholder="nombre" />
-            <input id="archytectSurname" className="formInput" type="text"  placeholder="apellido" />
-          </div>
-          
-          <br/>
-          
-          <label> Imagen del edificio</label><br/>
-          <input onChange={handleFileChange} id="image" className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
-          
-          <br/><br/>
-        
-          <div className="form-row-2Columns">
-          <label> Tipo de edificio</label>
-          <label> Estilo arquitectonico</label>
-            <select className="formSelect" name="tipo de edificio" id="buildType">
-              <option value="sabatica">sectario</option>
-              <option value="religiosa">asuntos oficiales</option>
-              <option value="andaluz">andaluz</option>
-              <option value="empirica">empirica</option>
-            </select>
+            <div className="form-row-2Columns">
+            <label> Tipo de edificio</label>
+            <label> Estilo arquitectonico</label>
+              <select className="formSelect" name="tipo de edificio" id="buildType">
+                <option value="sabatica">sectario</option>
+                <option value="religiosa">asuntos oficiales</option>
+                <option value="andaluz">andaluz</option>
+                <option value="empirica">empirica</option>
+              </select>
 
-            <select className="formSelect" name="estilo de edificio" id="buildStyle">
-              <option value="gotico">gotico</option>
-              <option value="verano">verano</option>
-              <option value="salado">salado</option>
-              <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional de los pelados por el calentamiento de global</option>
-            </select>
-          </div>
-          <br />
+              <select className="formSelect" name="estilo de edificio" id="buildStyle">
+                <option value="gotico">gotico</option>
+                <option value="verano">verano</option>
+                <option value="salado">salado</option>
+                <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional de los pelados por el calentamiento de global</option>
+              </select>
+            </div>
+            <br />
 
-          <button type="submit" className="send-button" >Agregar edificio</button>
-        </form>
-      </section>
-    </main>
-    <ToastContainer
-            position="top-center"
-            autoClose={2000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-          />
-    </>
+            <button type="submit" className="send-button" >Agregar edificio</button>
+          </form>
+        </section>
+      </main>
+      <ToastContainer
+              position="top-center"
+              autoClose={2000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
+    </NavBar>
    )
 }
 

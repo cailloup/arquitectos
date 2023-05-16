@@ -1,4 +1,6 @@
-
+"use client"
+import React, { useEffect, useState, createContext, useContext } from 'react';
+import { useLoadScript } from '@react-google-maps/api';
 
 const LIBRARIES = ['places'];
 const GOOGLE_MAPS_API_KEY="AIzaSyATNDswrRQLqhoxDwYh9B9W0Jp90NVGcEY"
@@ -34,3 +36,25 @@ const GoogleMapsConfig = {
 }
 
 export default GoogleMapsConfig
+
+
+
+const GoogleMapsContext = createContext();
+export const GoogleMapsLoader = ({ children }) => {
+  const { isLoaded, loadError } = useLoadScript(GoogleMapsConfig.scriptInit);
+  const [apiLoaded, setApiLoaded] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded && !loadError) {
+      setApiLoaded(true);
+    }
+  }, [isLoaded, loadError]);
+
+  return (
+    <GoogleMapsContext.Provider value={isLoaded}>
+      {children}
+    </GoogleMapsContext.Provider>
+  );
+};
+
+export const useGoogleMaps = () => useContext(GoogleMapsContext);
