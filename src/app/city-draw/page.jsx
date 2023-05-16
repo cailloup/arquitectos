@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { GoogleMap, Polygon,useLoadScript,Marker } from '@react-google-maps/api';
 import { counties } from '@/data/counties';
 import { BuildingAPI } from '@/apis/archytectApi';
-
+import { useGoogleMaps } from '@/app/layout';
 
 const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
 
@@ -26,7 +26,7 @@ function Map() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [options,setOptions] = useState(defaultOptions)
 
-  const {isLoaded} = useLoadScript(GoogleMapsConfig.scriptInit);
+  const isLoaded = useGoogleMaps();
   useEffect(() => {
     if(county==null){
       setOptions(defaultOptions)

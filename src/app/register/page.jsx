@@ -4,9 +4,11 @@ import LoadScreen from '@/components/LoadScreen';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
-import {GoogleMap,Marker,Autocomplete,useLoadScript} from "@react-google-maps/api";
+import {GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
 import { BuildingAPI } from "@/apis/archytectApi";
 import "react-toastify/dist/ReactToastify.css";
+import { useGoogleMaps } from '@/app/layout';
+
 export default function Register() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [marKerPosition,setMarkerPosition] = useState()
@@ -14,8 +16,7 @@ export default function Register() {
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
   const formRef = useRef(/** @type {HTMLElement | null} */(null))
-
-  const {isLoaded } = useLoadScript(GoogleMapsConfig.scriptInit);
+  const isLoaded = useGoogleMaps();
 
   const formData ={
       image:"",

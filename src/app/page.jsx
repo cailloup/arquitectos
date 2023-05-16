@@ -6,15 +6,14 @@ import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import { GoogleMap,Marker,useLoadScript,InfoWindow } from "@react-google-maps/api";
 import { useState,useEffect } from 'react';
 import { BuildingAPI,Building } from '@/apis/archytectApi';
-
+import { useGoogleMaps } from '@/app/layout';
 
  export default function Drawing() {
   const [selectedBuilding, setSelectedBuilding] = useState((/** @type Building */ (null)));
   const [map,setMap] = useState(/** @type google.maps.Map */ (null))
   const [buildings,setBuildings] = useState((/** @type [Building] */ (null)))
+  const isLoaded = useGoogleMaps();
   
-  const {isLoaded } = useLoadScript(GoogleMapsConfig.scriptInit);
-
   useEffect(() => { //onPageLoad
     BuildingAPI.endPonts.getBuildings(setBuildings)
   }, []);
