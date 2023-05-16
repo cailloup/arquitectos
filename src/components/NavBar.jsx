@@ -15,17 +15,9 @@ export default function NavBar({children,setRedirect}) {
     route:"register"},
     {name:"Contacto",
     route:"contact"},
-    {name:"Poligonos",
-    route:"city-draw"},
     {name:"Panel",
     route:"dashboard"}]
     
-  function buttonClass(id) {
-    return `pb-6 text-xl ${
-      selected == id ? "text-sky-700" : "text-black"
-    } py-2 px-6 text-center  border-b-2 md:border-b-0 hover:border-b-4   hover:bg-sky-700  border-sky-900  md:hover:text-sky-700 md:hover:bg-transparent duration-200`;
-  }
-
   function handleClick(id) {
     setNavbar(false)
     setSelected(id);

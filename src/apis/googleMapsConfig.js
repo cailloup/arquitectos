@@ -25,7 +25,7 @@ const MADARIAGA ={ lat: -37.001944, lng: -57.136111}
 
 const GoogleMapsConfig = {
   scriptInit: {
-    //googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES,
   },
   GOOGLE_MAPS_API_KEY:GOOGLE_MAPS_API_KEY,
@@ -36,8 +36,6 @@ const GoogleMapsConfig = {
 }
 
 export default GoogleMapsConfig
-
-
 
 const GoogleMapsContext = createContext();
 export const GoogleMapsLoader = ({ children }) => {
@@ -58,3 +56,4 @@ export const GoogleMapsLoader = ({ children }) => {
 };
 
 export const useGoogleMaps = () => useContext(GoogleMapsContext);
+

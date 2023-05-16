@@ -1,7 +1,7 @@
 "use client"
 import LoadScreen from '@/components/LoadScreen';
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, Polygon,useLoadScript,Marker } from '@react-google-maps/api';
+import { GoogleMap, Polygon,Marker } from '@react-google-maps/api';
 import { counties } from '@/data/counties';
 import { BuildingAPI } from '@/apis/archytectApi';
 import {useGoogleMaps} from '@/apis/googleMapsConfig'; 

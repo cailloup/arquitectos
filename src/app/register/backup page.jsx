@@ -1,11 +1,10 @@
 "use client"
 import '@/styles/pages/register.css';
 import "react-toastify/dist/ReactToastify.css";
-import Map from "@/components/map";
 import LoadScreen from '@/components/LoadScreen';
 import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
-import {Marker,Autocomplete} from "@react-google-maps/api";
+import {GoogleMap,Marker,Autocomplete} from "@react-google-maps/api";
 import { BuildingAPI } from "@/apis/archytectApi";
 import {useGoogleMaps} from '@/apis/googleMapsConfig'; 
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
@@ -20,8 +19,6 @@ export default function Register() {
   const formRef = useRef(/** @type {HTMLElement | null} */(null))
   const [redirect,setRedirect] = useState(false)
   const isLoaded = useGoogleMaps();
-  const [countyName,setCountyName] = useState('')
-  const [bounds,setBounds] = useState(null)
 
   const formData ={
       image:"",
@@ -42,7 +39,7 @@ export default function Register() {
 
 
   useEffect(() => {
-    if(map && marKerPosition){
+    if(map){
       map.panTo(marKerPosition)
       if(map.getZoom !=18){
         map.setZoom(18)
@@ -138,33 +135,16 @@ export default function Register() {
   };
 
   
-  function handleCountySelect(county){
-    if(county){
-      setCountyName(`Partido de ${county.name}`)
-      setBounds(BuildingAPI.utils.limitArea(county.center,10))
-    }else{
-      setCountyName('')
-      setMarkerPosition(null)
-    }
-    
-  }
-  const handleMapClick = (event) => {
-    if(countyName){
-      const location = {position: event.latLng.toJSON()};
-      handleMapChanges(location)
-    }
-  }
 
   if (!isLoaded || redirect) return <LoadScreen/>
+ 
   return (
     <NavBar setRedirect={setRedirect}>   
       <main className="main-register">
-        <section className= {countyName==""?"mapSection full-width":"mapSection"} >
-          <Map onLoad={onLoad}  setCountyName={setCountyName} onCountySelect={handleCountySelect}  onMapClick={handleMapClick}>
-            <Marker position={marKerPosition}/>
-          </Map>
+        <section className="mapSection">
+          <Map onLoad={onLoad} handleMapChanges={handleMapChanges} marKerPosition={marKerPosition} bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)} options={{... GoogleMapsConfig.MAP_OPTIONS_DEFAULT, center:GoogleMapsConfig.GESELL}} />
         </section>
-        <section ref={formRef}  className={"formSection fullForm"} style={countyName==""?{right:"-100%"}:'' }>
+        <section ref={formRef}  className={"formSection fullForm"} >
         <div  className='leftBar' onClick={togleForm}>
           <div className='leftBarLine'/> 
         </div>
@@ -172,7 +152,7 @@ export default function Register() {
           <form className='formRegister' onSubmit={handleSubmit}>
             
             <label> Partido</label><br/>
-            <input id="county" className="formInput redOnly" type="text"  value={countyName} readOnly="readOnly"/> <br/><br/>
+            <input id="county" className="formInput redOnly" type="text"  value={"Partido de Villa Gesell"} readOnly="readOnly"/> <br/><br/>
             <button type='button' className="secondary-button" onClick={() => toast.success("hola")}> Cambiar</button><br/>
             
             <br/><br/>
@@ -180,9 +160,9 @@ export default function Register() {
             <label> Direccion</label><br/>
             <InputMap 
                 onTextChange={handleMapChanges}
-                bounds={bounds}
+                bounds={BuildingAPI.utils.limitArea(GoogleMapsConfig.GESELL,10)}
             >
-              <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef}   type="text"  placeholder="Ingrese una direccion"  />
+              <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef} type="text"  placeholder="Ingrese una direccion"  />
             </InputMap>
             <br/>
             <label> Nombre</label><br/>
@@ -240,13 +220,16 @@ export default function Register() {
    )
 }
 
-function Msap({onLoad,handleMapChanges,marKerPosition,bounds,options}){
-  
- 
+function Map({onLoad,handleMapChanges,marKerPosition,bounds,options}){
+  const handleMapClick = (event) => {
+    const location = {position: event.latLng.toJSON()};
+    handleMapChanges(location)
+  }
 
   return (
     <GoogleMap 
       onLoad={map => {onLoad(map) }}
+      mapContainerStyle={{width: "100%", height: "100%"}}
       options={!bounds? options:{...options,restriction: { latLngBounds: bounds,strictBounds: false}}}
       onClick={handleMapClick}
       >

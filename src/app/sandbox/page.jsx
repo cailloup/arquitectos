@@ -3,12 +3,11 @@ import '@/styles/pages/map.css';
 import Map from "@/components/map";
 import { useState, useEffect } from "react";
 import { Marker,InfoWindow } from "@react-google-maps/api";
-import {useGoogleMaps} from '@/apis/googleMapsConfig'; 
-import { BuildingAPI } from "@/apis/archytectApi";
 import Autosuggest from 'react-autosuggest';
 import NavBar from '@/components/NavBar';
+import {useGoogleMaps} from '@/apis/googleMapsConfig'; 
+import { BuildingAPI } from "@/apis/archytectApi";
 import LoadScreen from "@/components/LoadScreen";
-
 export default function sandBox(){
     const [countyName,setCountyName] = useState(null)
     const [redirect,setRedirect] = useState(false)
@@ -18,7 +17,9 @@ export default function sandBox(){
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
 
     useEffect(() => { //se selecciono un partido
+        console.log("me ejecuto");
         if(countyName){
+            console.log("api");
             BuildingAPI.endPonts.getBuildingsByCity(countyName,setBuildings)
         }
       }, [countyName]);
@@ -32,19 +33,12 @@ export default function sandBox(){
         }
       }, [selectedBuilding]);
 
-      function handleCountyChange(county){
-        if(county){
-          setCountyName(`Partido de ${county.name}`)
-        }
-        
-      }
-
     if (!isLoaded || redirect) return <LoadScreen/>
     return (
         <NavBar setRedirect={setRedirect}>
             <main>
                 
-                <Map onCountySelect={handleCountyChange} onLoad={(map) => setMap(map)} >
+                <Map setCountyName={setCountyName} setM={setMap} >
                     {buildings&&buildings.map( (building) => (
                         <Marker
                         key={building.uuid}
@@ -126,10 +120,8 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
         marginTop: '10',
         left: '0',
         right: '0',
-        listStyle: "none",
-        top: '31px',
-        paddingLeft: '187px',
-        paddingRight:'10%',
+        listStyle: "none"
+  
       },
   
       suggestion: {
