@@ -25,7 +25,7 @@
     align-items: center;
     padding-top: 0.75rem/* 12px */;
     padding-bottom: 0.75rem/* 12px */;
-    max-height: 72px;
+    height: 72px;
 }
 
 .logo{
@@ -40,9 +40,8 @@
     padding: 0.4rem;
     --tw-text-opacity: 1;
     color: rgb(55 65 81 / var(--tw-text-opacity));
-    border-radius: 0.375rem/* 6px */;
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+    border: none;
+    background-color: transparent;
 }
 .button:focus{
     border-color: rgb(156 163 175 / var(--tw-border-opacity));
