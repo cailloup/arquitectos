@@ -20,12 +20,11 @@ export default function NavBar({children,setRedirect}) {
     
   function handleClick(id) {
     setNavbar(false)
-    setSelected(id);
-
-    if(setRedirect){
+    
+    if(setRedirect && id!=selected){
       setRedirect(true)
     }
-    
+    setSelected(id);
   }
   useEffect(() => {
     const pathname = window.location.pathname;

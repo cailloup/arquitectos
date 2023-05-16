@@ -22,6 +22,7 @@ export default function Register() {
   const isLoaded = useGoogleMaps();
   const [countyName,setCountyName] = useState('')
   const [bounds,setBounds] = useState(null)
+  const [changeCounty,setChangeCounty] = useState(false)
 
   const formData ={
       image:"",
@@ -139,9 +140,10 @@ export default function Register() {
 
   
   function handleCountySelect(county){
+    setChangeCounty(false)
     if(county){
       setCountyName(`Partido de ${county.name}`)
-      setBounds(BuildingAPI.utils.limitArea(county.center,10))
+      setBounds(BuildingAPI.utils.limitArea(county.center,county.radio)) //TODO ver que hacer con el tema del radio
     }else{
       setCountyName('')
       setMarkerPosition(null)
@@ -155,12 +157,16 @@ export default function Register() {
     }
   }
 
+  function changeCountyHandler(){
+    setChangeCounty(true)
+  }
+
   if (!isLoaded || redirect) return <LoadScreen/>
   return (
     <NavBar setRedirect={setRedirect}>   
       <main className="main-register">
         <section className= {countyName==""?"mapSection full-width":"mapSection"} >
-          <Map onLoad={onLoad}  setCountyName={setCountyName} onCountySelect={handleCountySelect}  onMapClick={handleMapClick}>
+          <Map onLoad={onLoad}  setCountyName={setCountyName} onCountySelect={handleCountySelect}  onMapClick={handleMapClick} changeCounty= {changeCounty}>
             <Marker position={marKerPosition}/>
           </Map>
         </section>
@@ -173,7 +179,7 @@ export default function Register() {
             
             <label> Partido</label><br/>
             <input id="county" className="formInput redOnly" type="text"  value={countyName} readOnly="readOnly"/> <br/><br/>
-            <button type='button' className="secondary-button" onClick={() => toast.success("hola")}> Cambiar</button><br/>
+            <button type='button' className="secondary-button" onClick={changeCountyHandler}> Cambiar</button><br/>
             
             <br/><br/>
             
@@ -239,25 +245,6 @@ export default function Register() {
     </NavBar>
    )
 }
-
-function Msap({onLoad,handleMapChanges,marKerPosition,bounds,options}){
-  
- 
-
-  return (
-    <GoogleMap 
-      onLoad={map => {onLoad(map) }}
-      options={!bounds? options:{...options,restriction: { latLngBounds: bounds,strictBounds: false}}}
-      onClick={handleMapClick}
-      >
-      <Marker
-        position={marKerPosition}
-      />
-    </GoogleMap>
-  )
-}
-
-
 
 function InputMap({onTextChange,children,bounds}){
   const [autocomplete, setAutocomplete] = useState(null);

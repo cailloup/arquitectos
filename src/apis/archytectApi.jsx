@@ -21,10 +21,10 @@ const apiUrl='https://architectgallery.herokuapp.com/api/v1/'
 const utils ={
   limitArea: function(position,radioKm){
     const bounds = {
-      north: position.lat + radioKm * 0.0089,
-      south: position.lat - radioKm * 0.0089,
-      east: position.lng + radioKm * 0.0089,
-      west: position.lng - radioKm * 0.0089 
+      north: position.lat + radioKm/2 * 0.0089,
+      south: position.lat - radioKm/2 * 0.0089,
+      east: position.lng + radioKm/2 * 0.0089,
+      west: position.lng - radioKm/2 * 0.0089 
     }
     return bounds
   },

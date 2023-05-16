@@ -7,7 +7,7 @@ import { BuildingAPI } from "@/apis/archytectApi";
 import { counties } from '@/data/counties';
 
 
-export default function Map ({children,onLoad,onCountySelect,onMapClick}){
+export default function Map ({children,onLoad,onCountySelect,onMapClick,changeCounty}){
     const [selectedCounty,setSelectedCounty] = useState(null)
     const [options,setOptions] = useState(defaultOptions)
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
@@ -58,7 +58,12 @@ export default function Map ({children,onLoad,onCountySelect,onMapClick}){
           document.removeEventListener('keydown', handleEscapeKeyPress);
         };
       }, []); 
-    
+      useEffect(() => {   //en caso de aprear escape
+        if(changeCounty){
+          setSelectedCounty(null)
+        }
+      }, [changeCounty]); 
+
     const handlePolygonClick = (event, county) => {
         setSelectedCounty(county)
     };
