@@ -110,12 +110,6 @@ input:focus , select:focus {
  
 
 }
-.form-row-2Columns{
-  display: grid;
-  grid-template-columns: 1fr 1fr ;
-  column-gap: 25px;
-}
-
 
 .send-button:hover, .secondary-button:hover{
   background-color: #5b9be4;

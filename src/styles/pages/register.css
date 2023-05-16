@@ -13,6 +13,7 @@
   height: 100%;
   right: 0;
   padding: 75px 100px;
+  padding-bottom: 0;
   background-color: white;
   z-index: 9;
   box-shadow: -3px 1px 11px 1px rgba(0,0,0,0.75);
@@ -47,6 +48,13 @@
   background-color: #3e3e3e;
 }
 
+.form-row-2Columns{
+  display: grid;
+  grid-template-columns: 1fr 1fr ;
+  column-gap: 25px;
+}
+
+
 /* Mobile*/
 @media (max-width: 768px) {
   .leftBar{
@@ -66,5 +74,9 @@
   .zeroForm{
     right: calc(-100% + 20px);
   }
-  
+  .form-row-2Columns{
+    display: grid;
+    grid-template-columns: 1fr ;
+    column-gap: 25px;
+  }
 }
