@@ -208,21 +208,27 @@ export default function Register() {
             <br/><br/>
           
             <div className="form-row-2Columns">
-            <label> Tipo de edificio</label>
+              <div>
+                <label> Tipo de edificio</label>
+                <select className="formSelect" name="tipo de edificio" id="buildType" placeholder=' Tipo de edificio'>
+                  <option value="sabatica">sectario</option>
+                  <option value="religiosa">asuntos oficiales</option>
+                  <option value="andaluz">andaluz</option>
+                  <option value="empirica">empirica</option>
+                </select>
+              </div>
+           
+            <div>
             <label> Estilo arquitectonico</label>
-              <select className="formSelect" name="tipo de edificio" id="buildType">
-                <option value="sabatica">sectario</option>
-                <option value="religiosa">asuntos oficiales</option>
-                <option value="andaluz">andaluz</option>
-                <option value="empirica">empirica</option>
-              </select>
-
               <select className="formSelect" name="estilo de edificio" id="buildStyle">
                 <option value="gotico">gotico</option>
                 <option value="verano">verano</option>
                 <option value="salado">salado</option>
                 <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional de los pelados por el calentamiento de global</option>
               </select>
+            </div>
+
+            
             </div>
             <br />
 
