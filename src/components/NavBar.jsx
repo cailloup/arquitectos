@@ -26,7 +26,7 @@ export default function NavBar() {
   }
 
   function handleClick(id) {
-    
+    setNavbar(false)
     setSelected(id);
   }
   useEffect(() => {
