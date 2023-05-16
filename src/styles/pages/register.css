@@ -74,6 +74,7 @@
     padding-left: 40px;
   }
   .zeroForm{
+    box-shadow: none;
     right: calc(-100% + 20px);
   }
   .form-row-2Columns{
