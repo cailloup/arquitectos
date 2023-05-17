@@ -1,8 +1,14 @@
 "use client"
-import styles from "@/styles/components/dragMenu.module.css"
-import React, { useState } from 'react';
+/**
+ * @typedef {Object} DragMenu
+ * @property {function} setLeft - seter.
+ */
 
-export default function DragMenu({children}){
+
+import styles from "@/styles/components/dragMenu.module.css"
+import React, { useState,forwardRef, useImperativeHandle } from 'react';
+export const DragMenu = forwardRef((props,ref) => {
+    const componentRef = React.useRef();
     const [left, setLeft] = useState(window.innerWidth - 20);
     const [isdraggin, setdraggin] = useState(false);
     const [transition,setTransition] = useState('all 350ms')
@@ -40,13 +46,16 @@ export default function DragMenu({children}){
         window.addEventListener('touchmove', handleMouseMove);
         window.addEventListener('touchend', handleMouseUp);
     };
-  
+
+    useImperativeHandle(ref, () => ({
+        setLeft,
+    }));
     return (
         <div className={styles.menuContainer} style={ {transition:transition, left: `max(0px,min(${left}px,calc(100vw - 20px)))` } }>
             <div  className={styles.leftBar}  onMouseDown={handleMouseDown}  onTouchStart={handleMouseDown} onMouseUp={togleForm}>
                 <div className={styles.leftBarLine}/> 
             </div>
-            {children}
+            {props.children}
         </div>
     )
-}
+})
