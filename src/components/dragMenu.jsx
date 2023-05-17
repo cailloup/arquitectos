@@ -11,7 +11,7 @@ export const DragMenu = forwardRef((props,ref) => {
     const componentRef = React.useRef();
     const [left, setLeft] = useState(window.innerWidth - 20);
     const [isdraggin, setdraggin] = useState(false);
-    const [transition,setTransition] = useState('all 350ms')
+    const [transition,setTransition] = useState('all 800ms cubic-bezier(.2,.85,.49,.91)')
     function togleForm(){
         if(isdraggin)
             return
@@ -31,7 +31,7 @@ export const DragMenu = forwardRef((props,ref) => {
   
     const handleMouseUp = () => {
         setdraggin(false)
-        setTransition("all 350ms")
+        setTransition("all 800ms cubic-bezier(.2,.85,.49,.91)")
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
 
