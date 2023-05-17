@@ -90,7 +90,30 @@ export default function Register() {
   };
 
   const sendBuild = () =>{
+    
+    if(!marKerPosition?.lng || !marKerPosition?.lng){
+      return  new Promise (  (resolve,reject) =>{
+        const error = new Error('Error al seleccionar la ubicacion');
+        console.log(error);
+        reject(error); 
+      })
+    }
+     
+    formData.architect= `${event.target.elements.archytectName.value}  ${event.target.elements.archytectSurname.value}`
+    formData.city = event.target.elements.county.value
+    formData.location = event.target.elements.address.value
+    formData.isProtected = event.target.elements.buildProtected.value == "on"?"true":"false"
+    formData.name = event.target.elements.buildName.value
+    formData.builtDate = event.target.elements.buildDate.value
+    formData.image = file
+    formData.period = event.target.elements.buildPeriod.value
+    formData.state = event.target.elements.buildState.value
+    formData.style = event.target.elements.buildStyle.value
+    formData.type = event.target.elements.buildType.value
+    formData.longitude = String(marKerPosition.lng)
+    formData.lat = String(marKerPosition.lat)
     return BuildingAPI.endPonts.postBuilding(formData) 
+      
   }
 
   function togleForm(){
@@ -111,20 +134,6 @@ export default function Register() {
   function handleSubmit(event) {
     event.preventDefault();
 
-    formData.architect= `${event.target.elements.archytectName.value}  ${event.target.elements.archytectSurname.value}`
-    formData.city = event.target.elements.county.value
-    formData.location = event.target.elements.address.value
-    formData.longitude = String(marKerPosition.lng)
-    formData.lat = String(marKerPosition.lat)
-    formData.isProtected = event.target.elements.buildProtected.value == "on"?"true":"false"
-    formData.name = event.target.elements.buildName.value
-    formData.builtDate = event.target.elements.buildDate.value
-    formData.image = file
-    formData.period = event.target.elements.buildPeriod.value
-    formData.state = event.target.elements.buildState.value
-    formData.style = event.target.elements.buildStyle.value
-    formData.type = event.target.elements.buildType.value
-    console.log(formData);
     toast.promise(
       sendBuild,
       {
@@ -208,13 +217,13 @@ export default function Register() {
               <div>
                 <label>Tipologia</label>
                 <select className="formSelect" name="tipo de edificio" id="buildType" placeholder=' Tipo de edificio'>
-                  {buildingTypes.map( (buildingType) => <option value={buildingType}>{buildingType}</option>)}
+                  {buildingTypes.map( (buildingType) => <option key={buildingType}  value={buildingType}>{buildingType}</option>)}
                 </select>
               </div>
               <div>
                 <label> Estilo</label>
                 <select className="formSelect" name="estilo de edificio" id="buildStyle">
-                  {buildingStyles.map( (buildingStyle) => <option value={buildingStyle}>{buildingStyle}</option>)}
+                  {buildingStyles.map( (buildingStyle) => <option key={buildingStyle} value={buildingStyle}>{buildingStyle}</option>)}
                 </select>
               </div>
             </div>
