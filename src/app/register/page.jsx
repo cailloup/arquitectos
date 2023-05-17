@@ -42,10 +42,10 @@ export default function Register() {
 
   useEffect(() => {
     if(map && marKerPosition){
-      map.panTo(marKerPosition)
       if(map.getZoom !=18){
         map.setZoom(18)
       }
+      map.panTo(marKerPosition)
     }
   }, [marKerPosition]);
 
