@@ -3,7 +3,6 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import { useLoadScript } from '@react-google-maps/api';
 
 const LIBRARIES = ['places'];
-const GOOGLE_MAPS_API_KEY="AIzaSyATNDswrRQLqhoxDwYh9B9W0Jp90NVGcEY"
 
 const MAP_OPTIONS_DEFAULT = {
     mapTypeControl: true,
@@ -25,10 +24,9 @@ const MADARIAGA ={ lat: -37.001944, lng: -57.136111}
 
 const GoogleMapsConfig = {
   scriptInit: {
-    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES,
   },
-  GOOGLE_MAPS_API_KEY:GOOGLE_MAPS_API_KEY,
   LIBRARIES:LIBRARIES,
   MAP_OPTIONS_DEFAULT:MAP_OPTIONS_DEFAULT,
   GESELL:GESELL,

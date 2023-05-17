@@ -4,7 +4,6 @@
  * @property {function} setLeft - seter.
  */
 
-
 import styles from "@/styles/components/dragMenu.module.css"
 import React, { useState,forwardRef, useImperativeHandle } from 'react';
 export const DragMenu = forwardRef((props,ref) => {

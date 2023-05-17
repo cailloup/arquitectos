@@ -55,7 +55,7 @@ export default function sandBox(){
       function play(src){
         new Audio(src).play();
         dragMenu.current.setLeft(250)
-        
+        console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
       }
 
     if (!isLoaded || redirect) return <LoadScreen/>
