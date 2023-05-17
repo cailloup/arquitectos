@@ -1,6 +1,6 @@
 "use client"
 import styles from "@/styles/components/dragMenu.module.css"
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export default function DragMenu({children}){
     const [left, setLeft] = useState(window.innerWidth - 20);
@@ -14,11 +14,11 @@ export default function DragMenu({children}){
         }else{
             setLeft(0)
         }
-        
     }
 
     const handleMouseMove = (event) => {
-        setLeft(event.clientX);
+        const clientX = event.type == 'mousemove'?event.clientX:event.touches[0].clientX
+        setLeft( clientX);
         setdraggin(true)
         setTransition("all 0ms")
     };
@@ -28,22 +28,22 @@ export default function DragMenu({children}){
         setTransition("all 350ms")
         window.removeEventListener('mousemove', handleMouseMove);
         window.removeEventListener('mouseup', handleMouseUp);
+
+        window.removeEventListener('touchmove', handleMouseMove);
+        window.removeEventListener('touchend', handleMouseUp);
     };
   
     const handleMouseDown = () => {
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
+
+        window.addEventListener('touchmove', handleMouseMove);
+        window.addEventListener('touchend', handleMouseUp);
     };
   
-    useEffect(() => {
-      return () => {
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
-      };
-    }, []);
     return (
         <div className={styles.menuContainer} style={ {transition:transition, left: `max(0px,min(${left}px,calc(100vw - 20px)))` } }>
-            <div  className={styles.leftBar}  onMouseDown={handleMouseDown}  onMouseUp={togleForm}>
+            <div  className={styles.leftBar}  onMouseDown={handleMouseDown}  onTouchStart={handleMouseDown} onMouseUp={togleForm}>
                 <div className={styles.leftBarLine}/> 
             </div>
             {children}

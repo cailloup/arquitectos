@@ -26,7 +26,6 @@ export default function sandBox(){
       }, [county]);
       
     useEffect(() => { //onBuildChange
-      console.log(selectedBuilding)
         if(map && selectedBuilding ){
           const location = BuildingAPI.utils.getPosition(selectedBuilding);
           if(map.getZoom!=17){
@@ -45,7 +44,7 @@ export default function sandBox(){
    
     return (
         <NavBar setRedirect={setRedirect}>
-            <main>
+            <main className='main-map'>
               <DragMenu>
                 <div className='filters-container'>
                   <h1>Filtros | Detalles mas exactos?</h1>

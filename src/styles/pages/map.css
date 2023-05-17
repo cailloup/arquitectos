@@ -1,3 +1,6 @@
+.main-map{
+  overflow-x: hidden;
+}
 /*Contenedor de google */
 .gm-style .gm-style-iw-c{
   background-color: red;
