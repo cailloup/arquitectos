@@ -30,6 +30,30 @@ const utils ={
   },
   getPosition: function getPosition(building){
     return ({lat:parseFloat(building.lat),lng: parseFloat(building.longitude)})
+  },
+  getCounty: function (geocoder, selectedcounty,setCounty){
+    const name = `Partido de ${selectedcounty.name}`
+    geocoder.geocode({ address: name }, (results, status) => {
+      if (status === 'OK') {
+        const location = results[0].geometry.location
+        const bounds = results[0].geometry.bounds
+        const county = {
+          name: name,
+          location: location,
+          paths: selectedcounty.paths,
+          bounds: {
+            north: bounds.getNorthEast().lat(),
+            south: bounds.getSouthWest().lat(),
+            east: bounds.getNorthEast().lng(),
+            west: bounds.getSouthWest().lng(),
+          },
+          center:bounds.getCenter()
+        }
+        setCounty(county)
+      } else {
+        console.error('Geocode was not successful for the following reason: ' + status);
+      }
+    })
   }
 }
 

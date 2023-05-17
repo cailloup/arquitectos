@@ -10,46 +10,43 @@ import NavBar from '@/components/NavBar';
 import LoadScreen from "@/components/LoadScreen";
 
 export default function sandBox(){
-    const [countyName,setCountyName] = useState(null)
+    const [county,setCounty] = useState(null)
     const [redirect,setRedirect] = useState(false)
+    const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null} */ (null));
     const isLoaded = useGoogleMaps();
     const [selectedBuilding, setSelectedBuilding] = useState((/** @type Building */ (null)));
     const [buildings,setBuildings] = useState((/** @type [Building] */ (null)))
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
 
     useEffect(() => { //se selecciono un partido
-        if(countyName){
-            BuildingAPI.endPonts.getBuildingsByCity(countyName,setBuildings)
+        if(county?.name){
+            BuildingAPI.endPonts.getBuildingsByCity(county.name,setBuildings)
         }
-      }, [countyName]);
+      }, [county]);
       
     useEffect(() => { //onBuildChange
+      console.log(selectedBuilding)
         if(map && selectedBuilding ){
-          map.panTo(BuildingAPI.utils.getPosition(selectedBuilding))
+          const location = BuildingAPI.utils.getPosition(selectedBuilding);
           if(map.getZoom!=17){
             map.setZoom(17)
           }
+          map.panTo(location)
         }
       }, [selectedBuilding]);
 
-      function handleCountyChange(county){
-        if(county){
-          setCountyName(`Partido de ${county.name}`)
-        }
-        
+      function onLoad(mapa){
+        setGeocoder(new window.google.maps.Geocoder())
+        setMap(mapa)
       }
 
     if (!isLoaded || redirect) return <LoadScreen/>
-
-    const svgMarker = {
-    
-    };
-    
+   
     return (
         <NavBar setRedirect={setRedirect}>
             <main>
-                
-                <Map onCountySelect={handleCountyChange} onLoad={(map) => setMap(map)} >
+                {county &&< button onClick={() => setCounty(null)} className='send-button button-back'> Volver </button>}
+                <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
                     {buildings&&buildings.map( (building,index) => (
                         <Marker
                         icon={{
@@ -62,6 +59,11 @@ export default function sandBox(){
                           anchor: new google.maps.Point(0, 20),
                         }}
                         key={building.uuid}
+                        label={{
+                          text: building.name,
+                          fontSize: '24px', // Aumenta el tamaño de la fuente
+                          color:"black",
+                        }}
                         position={{lat:parseFloat(building.lat),lng: parseFloat(building.longitude)}}
                         onClick={() => setSelectedBuilding(building)}
                         />
@@ -119,6 +121,17 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
       onChange: (_, { newValue }) => {
         setValue(newValue);
       },
+      onKeyDown: (event) => { 
+        if (event.key === 'Enter') {
+          const value = event.target.value.toLowerCase()
+          const suggestion = suggestions.find((suggestion) => suggestion.name.toLowerCase() == value)
+           if(suggestion ){
+              onSuggestionSelected(event, { suggestion:suggestion });
+           }
+        }
+
+          
+         }
     };
   
     const myTheme = {
@@ -167,6 +180,7 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
         inputProps={inputProps}
         theme={myTheme}
         onSuggestionSelected={onSuggestionSelected}
+        
       />
     );
   };

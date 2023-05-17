@@ -14,15 +14,13 @@ import NavBar from '@/components/NavBar';
 export default function Register() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [marKerPosition,setMarkerPosition] = useState()
-  const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null}*/ (null));
+  const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null} */ (null));
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
   const formRef = useRef(/** @type {HTMLElement | null} */(null))
   const [redirect,setRedirect] = useState(false)
   const isLoaded = useGoogleMaps();
-  const [countyName,setCountyName] = useState('')
-  const [bounds,setBounds] = useState(null)
-  const [changeCounty,setChangeCounty] = useState(false)
+  const [county,setCounty] = useState(null)
 
   const formData ={
       image:"",
@@ -138,39 +136,34 @@ export default function Register() {
     setFile(event.target.files[0]);
   };
 
-  
-  function handleCountySelect(county){
-    setChangeCounty(false)
-    if(county){
-      setCountyName(`Partido de ${county.name}`)
-      setBounds(BuildingAPI.utils.limitArea(county.center,county.radio)) //TODO ver que hacer con el tema del radio
-    }else{
-      setCountyName('')
+
+  useEffect(() => {
+    if(!county){
       setMarkerPosition(null)
     }
-    
-  }
+  }, [county]);
+
   const handleMapClick = (event) => {
-    if(countyName){
+    if(county){
       const location = {position: event.latLng.toJSON()};
       handleMapChanges(location)
     }
   }
 
   function changeCountyHandler(){
-    setChangeCounty(true)
+    setCounty(null)
   }
 
   if (!isLoaded || redirect) return <LoadScreen/>
   return (
     <NavBar setRedirect={setRedirect}>   
       <main className="main-register">
-        <section className= {countyName==""?"mapSection full-width":"mapSection"} >
-          <Map onLoad={onLoad}  setCountyName={setCountyName} onCountySelect={handleCountySelect}  onMapClick={handleMapClick} changeCounty= {changeCounty}>
+        <section className= {county==null?"mapSection full-width":"mapSection"} >
+          <Map onLoad={onLoad} onMapClick={handleMapClick} geocoder={geocoder} selectedCounty={county} setSelectedCounty={setCounty} >
             <Marker position={marKerPosition}/>
           </Map>
         </section>
-        <section ref={formRef}  className={"formSection fullForm"} style={countyName==""?{right:"-100%"}:'' }>
+        <section ref={formRef}  className={"formSection fullForm"} style={county==null?{right:"-100%"}:'' }>
         <div  className='leftBar' onClick={togleForm}>
           <div className='leftBarLine'/> 
         </div>
@@ -178,7 +171,7 @@ export default function Register() {
           <form className='formRegister' onSubmit={handleSubmit}>
             
             <label> Partido</label><br/>
-            <input id="county" className="formInput redOnly" type="text"  value={countyName} readOnly="readOnly"/> <br/><br/>
+            <input id="county" className="formInput redOnly" type="text"  value={county?county.name:'' } readOnly="readOnly"/> <br/><br/>
             <button type='button' className="secondary-button" onClick={changeCountyHandler}> Cambiar</button><br/>
             
             <br/><br/>
@@ -186,7 +179,7 @@ export default function Register() {
             <label> Direccion</label><br/>
             <InputMap 
                 onTextChange={handleMapChanges}
-                bounds={bounds}
+                bounds={county?.bounds}
             >
               <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef}   type="text"  placeholder="Ingrese una direccion"  />
             </InputMap>
@@ -224,7 +217,7 @@ export default function Register() {
                 <option value="gotico">gotico</option>
                 <option value="verano">verano</option>
                 <option value="salado">salado</option>
-                <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional de los pelados por el calentamiento de global</option>
+                <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional</option>
               </select>
             </div>
 
@@ -258,6 +251,7 @@ function InputMap({onTextChange,children,bounds}){
   return(
     <Autocomplete
                 bounds={!bounds ? undefined : bounds}
+                
                 onLoad={(auto) =>  setAutocomplete(auto)}
                 onPlaceChanged={() => {
                   const place = autocomplete.getPlace();

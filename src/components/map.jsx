@@ -6,46 +6,33 @@ import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import { BuildingAPI } from "@/apis/archytectApi";
 import { counties } from '@/data/counties';
 
-
-export default function Map ({children,onLoad,onCountySelect,onMapClick,changeCounty}){
-    const [selectedCounty,setSelectedCounty] = useState(null)
+export default function Map ({children,onLoad,onMapClick,geocoder,setSelectedCounty,selectedCounty}){
     const [options,setOptions] = useState(defaultOptions)
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
 
     useEffect(() => {
-        if(onCountySelect){
-            onCountySelect(selectedCounty)
-        }
-        if(selectedCounty==null){
-          setOptions(defaultOptions)
-          if (map !=null){
-            map.setZoom(10)
-          }
+        if(selectedCounty==null && map){
+          map.setOptions(defaultOptions)
+          map.setZoom(8)
         }else{
-            
-            
           if(map){
+            map.setZoom(map.getZoom()+2)
             map.panTo(selectedCounty.center)
-            if(map.getZoom !=14){
-              map.setZoom(14)
-            }
-            setOptions(
-              {...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,minZoom: 10,zoom:14,styles: [
+            map.setOptions({
+              restriction: {latLngBounds: selectedCounty.bounds, strictBounds:false },
+              styles: [
                 {
                   featureType: "poi",
                   elementType: "labels",
                   stylers: [{ visibility: "off" }]
-                }],
-                  center: selectedCounty.center, 
-                  restriction: {
-                  latLngBounds: BuildingAPI.utils.limitArea(selectedCounty.center,50),
-                  strictBounds: true
-                }})
+                }]
+            })
           }
+          
         }
       }, [selectedCounty]);
 
-      useEffect(() => {   //en caso de aprear escape
+      useEffect(() => {   //en caso de aprear escape regiistro
         function handleEscapeKeyPress(event) {
           if (event.key === 'Escape') {
             setSelectedCounty(null)
@@ -58,14 +45,9 @@ export default function Map ({children,onLoad,onCountySelect,onMapClick,changeCo
           document.removeEventListener('keydown', handleEscapeKeyPress);
         };
       }, []); 
-      useEffect(() => {   //en caso de aprear escape
-        if(changeCounty){
-          setSelectedCounty(null)
-        }
-      }, [changeCounty]); 
 
     const handlePolygonClick = (event, county) => {
-        setSelectedCounty(county)
+        BuildingAPI.utils.getCounty(geocoder,county,setSelectedCounty)
     };
 
     const handleNamedPolygonClick = (county) => (event) => {
@@ -130,13 +112,15 @@ export default function Map ({children,onLoad,onCountySelect,onMapClick,changeCo
 
   const center = counties.find( (county) =>  county.name == "Mar Chiquita").center;
 
-  const defaultOptions={...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,minZoom: 7,zoom:10,styles: [
-    {
+  const defaultOptions={...GoogleMapsConfig.MAP_OPTIONS_DEFAULT,
+    minZoom:8,
+    zoom:8,
+    styles: [{
         elementType: "labels",
         stylers: [{ visibility: "off" }]
     }],
         center: center, 
         restriction: {
-        latLngBounds: BuildingAPI.utils.limitArea(center,400),
+        latLngBounds: BuildingAPI.utils.limitArea(center,1200),
         strictBounds: true
     }}

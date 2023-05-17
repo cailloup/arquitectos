@@ -63,6 +63,14 @@
   font-weight: 500;
 }
 
+
+.button-back{
+  position: absolute;
+  z-index: 1;
+  bottom: 20px;
+  left: 20px;
+  cursor: pointer;
+}
 /* Mobile */
 @media (max-width: 700px) {
 
