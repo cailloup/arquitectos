@@ -24,7 +24,7 @@ main {
   position: absolute;;
   display: grid;
   top: 72px;
-  min-height: calc(100vh - 72px);
+  min-height: 100%;
   width: 100%;
 }
 
