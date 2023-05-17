@@ -24,7 +24,7 @@ const MADARIAGA ={ lat: -37.001944, lng: -57.136111}
 
 const GoogleMapsConfig = {
   scriptInit: {
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    googleMapsApiKey: "AIzaSyATNDswrRQLqhoxDwYh9B9W0Jp90NVGcEY",//process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     libraries: LIBRARIES,
   },
   LIBRARIES:LIBRARIES,
