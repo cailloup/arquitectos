@@ -8,6 +8,7 @@ import { BuildingAPI } from "@/apis/archytectApi";
 import Autosuggest from 'react-autosuggest';
 import NavBar from '@/components/NavBar';
 import LoadScreen from "@/components/LoadScreen";
+import DragMenu from '@/components/dragMenu';
 
 export default function sandBox(){
     const [county,setCounty] = useState(null)
@@ -45,6 +46,12 @@ export default function sandBox(){
     return (
         <NavBar setRedirect={setRedirect}>
             <main>
+              <DragMenu>
+                <div className='filters-container'>
+                  <h1>Filtros | Detalles mas exactos?</h1>
+                </div>
+                
+              </DragMenu>
                 {county &&< button onClick={() => setCounty(null)} className='send-button button-back'> Volver </button>}
                 <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
                     {buildings&&buildings.map( (building,index) => (
