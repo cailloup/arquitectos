@@ -11,6 +11,10 @@ import {useGoogleMaps} from '@/apis/googleMapsConfig';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
 import NavBar from '@/components/NavBar';
 
+
+const buildingTypes = ["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"]
+const buildingStyles = ["Centro Europeo","Modernismo","Prefabricado","Tradicional","Otro"]
+
 export default function Register() {
   const [map, setMap] = useState(/** @type google.maps.Map */ (null))
   const [marKerPosition,setMarkerPosition] = useState()
@@ -112,15 +116,15 @@ export default function Register() {
     formData.location = event.target.elements.address.value
     formData.longitude = String(marKerPosition.lng)
     formData.lat = String(marKerPosition.lat)
-    formData.isProtected = "false"
+    formData.isProtected = event.target.elements.buildProtected.value == "on"?"true":"false"
     formData.name = event.target.elements.buildName.value
-    formData.builtDate = "15/10/1997"
+    formData.builtDate = event.target.elements.buildDate.value
     formData.image = file
-    formData.period = "15/10/1997"
-    formData.state = "0km"
+    formData.period = event.target.elements.buildPeriod.value
+    formData.state = event.target.elements.buildState.value
     formData.style = event.target.elements.buildStyle.value
     formData.type = event.target.elements.buildType.value
-
+    console.log(formData);
     toast.promise(
       sendBuild,
       {
@@ -181,11 +185,11 @@ export default function Register() {
                 onTextChange={handleMapChanges}
                 bounds={county?.bounds}
             >
-              <input id="address" className="formInput" onKeyPress={handleEnterPress} ref={inputRef}   type="text"  placeholder="Ingrese una direccion"  />
+              <input id="address"  className="formInput" onKeyPress={handleEnterPress} ref={inputRef}   type="text" required placeholder="Ingrese una direccion"  />
             </InputMap>
             <br/>
             <label> Nombre</label><br/>
-            <input id="buildName" className="formInput" type="text"  placeholder="ingrese nombre del edificio" />
+            <input id="buildName" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
             <br/><br/>
             <label> Arquitecto</label><br/>
             <div className="form-row-2Columns">
@@ -202,29 +206,38 @@ export default function Register() {
           
             <div className="form-row-2Columns">
               <div>
-                <label> Tipo de edificio</label>
+                <label>Tipologia</label>
                 <select className="formSelect" name="tipo de edificio" id="buildType" placeholder=' Tipo de edificio'>
-                  <option value="sabatica">sectario</option>
-                  <option value="religiosa">asuntos oficiales</option>
-                  <option value="andaluz">andaluz</option>
-                  <option value="empirica">empirica</option>
+                  {buildingTypes.map( (buildingType) => <option value={buildingType}>{buildingType}</option>)}
                 </select>
               </div>
-           
-            <div>
-            <label> Estilo arquitectonico</label>
-              <select className="formSelect" name="estilo de edificio" id="buildStyle">
-                <option value="gotico">gotico</option>
-                <option value="verano">verano</option>
-                <option value="salado">salado</option>
-                <option value="congreso nacional de los pelados por el calentamiento de global">congreso nacional</option>
-              </select>
+              <div>
+                <label> Estilo</label>
+                <select className="formSelect" name="estilo de edificio" id="buildStyle">
+                  {buildingStyles.map( (buildingStyle) => <option value={buildingStyle}>{buildingStyle}</option>)}
+                </select>
+              </div>
             </div>
-
+            <br/>
+            <label>Estado</label><br/>
+            <input id="buildState" className="formInput" type="text"  placeholder="ingrese estado del edificio" />
+            <br/><br/>
+            <div style={{   display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center"}}>
+              <label>Protegido</label>
+              <input type="checkbox" id="buildProtected" style={{marginLeft:"10px",width:"15px",height:"15px"}}/>
+            </div>
+            <br/>
+            <label>Fecha</label>
+            <input id="buildDate" type="date"  name="buildDate"
+            min="1800-01-01" max={new Date().toISOString().split("T")[0]}/>
             
-            </div>
-            <br />
-
+            <br/><br/>
+            <label>Epoca</label>
+            <input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
+            
+            <br/><br/>
             <button type="submit" className="send-button" >Agregar edificio</button>
           </form>
         </section>
