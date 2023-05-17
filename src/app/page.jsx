@@ -19,12 +19,15 @@ export default function sandBox(){
     const [selectedBuilding, setSelectedBuilding] = useState((/** @type Building */ (null)));
     const [buildings,setBuildings] = useState((/** @type [Building] */ (null)))
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
+    const [allBuilds, setAllBuilds] = useState(/** @type google.maps.Map */ (null))
     const selectorColor = useRef()
+    const selectorType = useRef()
     const dragMenu = useRef(/** @type {DragMenu | null} */ (null) );
-  
+
     useEffect(() => { //se selecciono un partido
         if(county?.name){
-            BuildingAPI.endPonts.getBuildingsByCity(county.name,(builds) => setBuildings(builds.map((build)  => {return {...build,color: assests.colors.blue} } )) )
+            
+          BuildingAPI.endPonts.getBuildingsByCity(county.name,(builds) => initBuilds(builds.map((build)  => {return {...build,color: generateColor(build.type)} } )) )
         }
       }, [county]);
       
@@ -37,6 +40,24 @@ export default function sandBox(){
           map.panTo(location)
         }
       }, [selectedBuilding]);
+
+      function initBuilds(builds){
+        setAllBuilds(builds)
+        setBuildings(builds)
+      }
+
+      function generateColor(type){
+        if (type == "Vivienda"){
+          return assests.colors.orange
+        }
+        if (type == "Religioso"){
+          return assests.colors.blue
+        }
+        if (type == "Publico"){
+          return assests.colors.red
+        }
+        return assests.colors.puple 
+      }
 
       const handleSelectedBuildingChange = (newSelectedBuilding) => {
         const updatedBuildings = buildings.map((building) =>
@@ -57,7 +78,7 @@ export default function sandBox(){
         dragMenu.current.setLeft(250)
         console.log(process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
       }
-
+      const buildingTypes = ["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"]
     if (!isLoaded || redirect) return <LoadScreen/>
    
     return (
@@ -65,8 +86,17 @@ export default function sandBox(){
             <main className='main-map'>
               <DragMenu ref={dragMenu}>
                 <div className='filters-container'>
-                  <h1>Filtros | Detalles mas exactos?</h1>
-                  <button onClick={() => play(assests.audios.vela)} className='send-button' style={{float:"unset"}}> vela </button>
+                  <h1>Filtros | Detalles mas exactos?</h1><br />
+                  <button onClick={() => play(assests.audios.vela)} className='send-button' style={{float:"unset"}}> vela </button><br /><br />
+                  <select ref={selectorType} name="" id="selecttor">
+                    <option value="Publico">Publico</option>
+                    <option value="Religioso">Religioso</option>
+                    <option value="Hotelera">Hotelera</option>
+                    <option value="Vivienda">Vivienda</option>
+                    <option value="Todos">Todos</option>
+                  </select><br /><br />
+                  <button onClick={() => setBuildings( allBuilds.filter( (building ) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" ) )} className='send-button' style={{float:"unset"}}> Filtrar </button>
+                  <br /><br />
                   {selectedBuilding && 
                     <div>
                       <h1> {selectedBuilding.name}</h1>
@@ -86,7 +116,7 @@ export default function sandBox(){
                 <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
                     {buildings&&buildings.map( (building,index) => (
                         <Marker
-                        icon={assests.icons.mapPoint( building.color? building.color : assests.colors.green )}
+                        icon={assests.icons.mapPoint( building.color )}
                         key={building.uuid}
                         label={{
                           text: building.name,
@@ -216,11 +246,14 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
 
 const InfoWindowContent = ( {place} ) => (
   <div className="buildingCard">
-    <h2 style={{backgroundColor: place.color}}>  {place.name} </h2>
+    
     <img className="buildingPicture" src={place.image} alt="" />
+    
     <div className="buildingDescription">
-      <p>Partido: {place.city}</p>
-      <p>Arquitecto: {place.architect}</p>
+      <p>{place.name}</p>
+      <p>Año: {place.builtDate}</p>
+      <p>Constructor: {place.architect}</p>
+      <p>Ubicacion: {place.location}</p>
       <p>Estilo: {place.style}</p>
       <p>Tipo: {place.type}</p>
     </div>

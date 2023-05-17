@@ -10,7 +10,8 @@ export const assests = {
                                 green:"#1fbd93",
                                 blue:"#128aed",
                                 puple:"#943ddb",
-                                yellow:"#e6d925" 
+                                yellow:"#e6d925" ,
+                                orange:"#d45500"
                             },
                             icons:{
                                 mapPoint: (color) => {
