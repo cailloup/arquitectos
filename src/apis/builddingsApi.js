@@ -109,7 +109,7 @@ export default class ArchytecstApi {
      * @returns {Promise<string>} A promise that resolves with a success message.
      */
     putBulding(building){
-        const requestBody = JSON.stringify(getBuildingData(building));
+        const requestBody = JSON.stringify(formatBuildingData(building));
     
         fetch(`${apiUrl}buildings/${building.uuid}`, {
             method: 'PUT',
@@ -231,26 +231,21 @@ function assignColor(type){
     return assests.colors.puple 
 }
 
-/**
- * @param {Building} building 
- * @returns {object}
- */
-function getBuildingData(building){
-    const buidingData = {
-        image: building.image,
-        period: building.period,
-        city: building.city,
-        name: building.name,
-        architect: building.architect,
-        type: building.type,
-        uuid: building.uuid,
-        longitude: building.location.lng.toString(),
-        builtDate: building.builtDate,
-        isProtected: building.isProtected.state.toString(),
-        location: building.address,
-        style: building.style,
-        state: building.state,
-        lat: building.location.lat.toString()
-    }
-    return  buidingData
+function formatBuildingData({ image, period, city, name, architect, type, uuid, location, style, state, builtDate, isProtected }) {
+    return {
+        image,
+        period,
+        city,
+        name,
+        architect,
+        type,
+        uuid,
+        longitude: location.lng.toString(),
+        builtDate,
+        isProtected: isProtected.state.toString(),
+        location: address,
+        style,
+        state,
+        lat: location.lat.toString()
+    };
 }
