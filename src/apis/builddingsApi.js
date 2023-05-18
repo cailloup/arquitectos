@@ -174,13 +174,14 @@ export class Building {
     * @property {boolean} isprotected.state - The protection state of the building.
     * @property {string} isprotected.info - Additional information about the protection status.
     * @property {string} refColor - The reference color of the building based on its type.
+    * @property {string} builtDate - The date of built.
     * @constructor
     */
     constructor(buildingData){
         this.uuid = buildingData.uuid
         this.name = buildingData.name
-        this.location = { lat: parseFloat(buildingData.lat),lng: parseFloat(buildingData.lng)}
-        this.address = buildingData.address
+        this.location = { lat: parseFloat(buildingData.lat),lng: parseFloat(buildingData.longitude)}
+        this.address = buildingData.location
         this.image = buildingData.image
         this.period = buildingData.period
         this.city = buildingData.city
@@ -190,6 +191,7 @@ export class Building {
         this.style = buildingData.style
         this.isprotected = { state: buildingData.isProtected== "true", info:"-"}
         this.refColor = assignColor(this.type)
+        this.builtDate = buildingData.builtDate
     }
 }
 
