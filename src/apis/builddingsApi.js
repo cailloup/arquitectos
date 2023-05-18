@@ -253,7 +253,7 @@ function getBuidingData(building){
         location: building.address,
         style: building.style,
         state: building.state,
-        lat: building.location.lat.toString
+        lat: building.location.lat.toString()
     }
     return  buidingData
 }
