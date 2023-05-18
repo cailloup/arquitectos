@@ -2,14 +2,10 @@
 import '@/styles/pages/register.css';
 import "react-toastify/dist/ReactToastify.css";
 import Map from "@/components/map";
-import LoadScreen from '@/components/LoadScreen';
 import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
 import {Marker,Autocomplete} from "@react-google-maps/api";
-import { BuildingAPI } from "@/apis/archytectApi";
-import {useGoogleMaps} from '@/apis/googleMapsConfig'; 
-import GoogleMapsConfig from '@/apis/googleMapsConfig';
-import NavBar from '@/components/NavBar';
+import ArchytecstApi from '@/apis/builddingsApi';
 
 
 const buildingTypes = ["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"]
@@ -22,10 +18,8 @@ export default function Register() {
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
   const formRef = useRef(/** @type {HTMLElement | null} */(null))
-  const [redirect,setRedirect] = useState(false)
-  const isLoaded = useGoogleMaps();
   const [county,setCounty] = useState(null)
-
+  const archytecstApi = new ArchytecstApi()
   const formData ={
       image:"",
       period:"",
@@ -112,7 +106,8 @@ export default function Register() {
     formData.type = event.target.elements.buildType.value
     formData.longitude = String(marKerPosition.lng)
     formData.lat = String(marKerPosition.lat)
-    return BuildingAPI.endPonts.postBuilding(formData) 
+
+    return archytecstApi.postBuilding(formData) 
       
   }
 
@@ -167,9 +162,8 @@ export default function Register() {
     setCounty(null)
   }
 
-  if (!isLoaded || redirect) return <LoadScreen/>
   return (
-    <NavBar setRedirect={setRedirect}>   
+  
       <main className="main-register">
         <section className= {county==null?"mapSection full-width":"mapSection"} >
           <Map onLoad={onLoad} onMapClick={handleMapClick} geocoder={geocoder} selectedCounty={county} setSelectedCounty={setCounty} >
@@ -251,19 +245,6 @@ export default function Register() {
           </form>
         </section>
       </main>
-      <ToastContainer
-              position="top-center"
-              autoClose={2000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-            />
-    </NavBar>
    )
 }
 

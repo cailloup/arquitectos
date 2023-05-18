@@ -1,7 +1,8 @@
 import '@/styles/globals.css'
 import { Inter } from 'next/font/google'
 import NavBar from '@/components/NavBar'
-import { GoogleMapsLoader } from '@/apis/googleMapsConfig';
+import "react-toastify/dist/ReactToastify.css";
+
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
@@ -10,14 +11,14 @@ export const metadata = {
 }
 
 export default function RootLayout({ children }) {
-  
+
    return (
     <html lang="es">
       <body className={inter.className}>
-          <GoogleMapsLoader>
-            {children}
-          </GoogleMapsLoader>
-        </body>
+        <NavBar>
+          {children}
+        </NavBar>
+      </body>
     </html>
   ) 
 }

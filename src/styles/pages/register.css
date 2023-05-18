@@ -12,7 +12,7 @@
   width: 50%;
   height: 100%;
   right: 0;
-  padding: 75px 100px;
+  padding: 75px 75px;
   background-color: white;
   z-index: 9;
   box-shadow: -3px 1px 11px 1px rgba(0,0,0,0.75);
@@ -20,10 +20,13 @@
 }
 
 .formRegister{
+  display: inline-block;
   height: 100%;
   width: 100%;
   overflow: auto;
   padding-bottom: 75px;
+  padding-right: 3px;
+  padding-left: 3px;
 }
 
 

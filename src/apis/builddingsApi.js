@@ -21,14 +21,14 @@ export default class ArchytecstApi {
 
     /**
      * Posts a building.
-     * @param {Building} building - The Building object to be posted.
+     * @param {buildingData} Object - The Building object to be posted.
      * @returns {Promise<String>} A promise that resolves with a success message upon successful posting.
      */
-    postBuilding(building){
+    postBuilding(buildingData){
 
-        return postImage(building.image)
+        return postImage(buildingData.image)
                 .then(url => {
-                    const requestBody = JSON.stringify({...building,image:url});
+                    const requestBody = JSON.stringify({...buildingData,image:url});
                     fetch(`${apiUrl}building`, {
                         method: 'POST',
                         headers: {
@@ -85,9 +85,7 @@ export default class ArchytecstApi {
      * @param {Building} building - The building object to be deleted.
      * @returns {Promise<string>} A promise that resolves with a success message.
      */
-    deleteBuilding(building) {
-        const uuid = building.uuid;
-
+    deleteBuilding(uuid) {
         return fetch(`${apiUrl}buildings/${uuid}`, {
             method: 'DELETE'
           })

@@ -2,31 +2,28 @@
 import { useState,useEffect } from "react"
 import { BuildingAPI,Building } from "@/apis/archytectApi"
 import {toast,ToastContainer} from "react-toastify"
-import LoadScreen from "@/components/LoadScreen"
 import '@/styles/pages/dashBoard.css' 
-import "react-toastify/dist/ReactToastify.css";
-import NavBar from "@/components/NavBar"
+import ArchytecstApi from "@/apis/builddingsApi"
 export default function DashBoard(){ 
     const [buildings,setBuildings] = useState(/** @type [Building] */([]) ) 
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
     const [sortedType,setSortedType] = useState('')
     const [searchValue, setSearchValue] = useState("");
-    const [redirect,setRedirect] = useState(false);
-
+    const archytecstApi = new ArchytecstApi();
     const columns = [
         {field:"name",label:"Nombre"}, 
-        {field:"location",label:"Direccion"},
+        {field:"address",label:"Direccion"},
         {field:"architect",label:"Arquitecto"},
         {field:"city",label:"Localidad"},
         ]
     useEffect(() => { //onPageLoad
-        BuildingAPI.endPonts.getBuildings(setBuildings)
+        archytecstApi.getBuildings().then(buildings => setBuildings(buildings))
     }, []);
 
     function deleteBuilding(id) {
 
         toast.promise(
-            () => BuildingAPI.endPonts.deleteBuilding(id),
+            () => archytecstApi.deleteBuilding(id),
             {
               pending: 'Eliminando edificio',
               success: 'Edificio eliminado correctamente 👌',
@@ -92,57 +89,41 @@ export default function DashBoard(){
         setSearchValue(event.target.value);
     };
 
-    if(!buildings || redirect) return <LoadScreen/>
     return(
-        <NavBar setRedirect={setRedirect}>
-            <main className="main-dashBoard">
-                <ToastContainer
-                position="top-center"
-                autoClose={2000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="light"
-            />
+        <main className="main-dashBoard">
             <div className="centeredElements">
-                    <div className="titleContainer">
-                        <h1>Panel de control</h1>
-                    </div>
-                    <br />
-                    
-                    <div className="optionsContainer">
-                        <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
-                        <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
-                        <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
-                    </div>
-
-                    <p className="buildingIndicator">Edificios seleccionados: {filteredSelectedBuildings.length}/{filteredBuildings.length} </p>
-                    <hr/>
+                <div className="titleContainer">
+                    <h1>Panel de control</h1>
                 </div>
-                <div className={"tableContainer"}>
-                    <table>
-                        <tbody>
-                            <tr> 
-                                {columns.map( (column) =>
-                                    <th key={column.field} onClick={() => toggleSort(column.field)} className={sortedType.includes(column.field)?'thSelected':''} >{column.label}</th>
-                                )}
-                            </tr>
-                            {filteredBuildings.map((building) => 
-                            <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
-                                {columns.map( (column) =>
-                                    <td key={column.field}>{building[column.field]}</td>
-                                )}
-                            </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                <br />
                 
-            </main>
-        </NavBar>
+                <div className="optionsContainer">
+                    <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
+                    <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
+                    <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
+                </div>
+
+                <p className="buildingIndicator">Edificios seleccionados: {filteredSelectedBuildings.length}/{filteredBuildings.length} </p>
+                <hr/>
+            </div>
+            <div className={"tableContainer"}>
+                <table>
+                    <tbody>
+                        <tr> 
+                            {columns.map( (column) =>
+                                <th key={column.field} onClick={() => toggleSort(column.field)} className={sortedType.includes(column.field)?'thSelected':''} >{column.label}</th>
+                            )}
+                        </tr>
+                        {filteredBuildings.map((building) => 
+                        <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
+                            {columns.map( (column) =>
+                                <td key={column.field}>{building[column.field]}</td>
+                            )}
+                        </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </main>
     )
 }
