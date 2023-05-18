@@ -13,7 +13,6 @@ import LoadScreen from "@/components/LoadScreen";
 import { DragMenu } from '@/components/dragMenu';
 
 import { useGoogleMaps } from '@/apis/googleMapsConfig';
-import { BuildingAPI } from "@/apis/archytectApi";
 import ArchytecstApi, { Building } from '@/apis/builddingsApi';
 import { assests } from "@/data/assest";
 
@@ -38,9 +37,20 @@ export default function sandBox(){
     const isLoaded = useGoogleMaps();
     
     useEffect(() => { //se selecciono un partido
-        if(county?.name){
-          archytecstApi.getBuildingsByCity(county.name).then( buildings => {setAllBuildings(buildings); setBuildings(buildings)} )
-        }
+        if(!county?.name)
+          return
+
+        archytecstApi.getBuildingsByCity(county.name).then( buildings => {setAllBuildings(buildings); setBuildings(buildings)} )
+        toast.promise(
+          archytecstApi.getBuildingsByCity(county.name)
+          .then( buildings => {setAllBuildings(buildings); setBuildings(buildings)} ),
+          {
+            pending: 'Buscando edificios',
+            success: 'edificios encontrados correctamente 👌',
+            error: 'Hubo un error al obtener los edificios 🤯'
+          }
+        )
+        
     }, [county]);
       
     useEffect(() => { //onBuildChange
@@ -68,22 +78,6 @@ export default function sandBox(){
         setMap(mapa)
       }
 
-
-      function play(src){
-       console.log(buildings);
-        /*
-         const call = new ArchytecstApi()
-        toast.promise(
-          call.getBuildingsByCity("Partido de Villa Gesell")
-            .then(building => {console.log(building[0].refColor )}),
-          {
-            pending: 'Agregando edificio',
-            success: 'Edificio agregado correctamente 👌',
-            error: 'Hubo un error al agregar el edificio 🤯'
-          }
-        )*/
-      }
-      
     if (!isLoaded || redirect) return <LoadScreen/>
    
     return (
@@ -106,12 +100,8 @@ export default function sandBox(){
             <DragMenu ref={dragMenu}>
               <div className='filters-container'>
                 <h1>Filtros | Detalles mas exactos?</h1><br />
-                <button onClick={() => play(assests.audios.vela)} className='send-button' style={{float:"unset"}}> vela </button><br /><br />
                 <select ref={selectorType} name="" id="selecttor">
-                  <option value="Publico">Publico</option>
-                  <option value="Religioso">Religioso</option>
-                  <option value="Hotelera">Hotelera</option>
-                  <option value="Vivienda">Vivienda</option>
+                  {buildingTypes.map(type =><option key={type} value={type}>{type}</option> )  }
                   <option value="Todos">Todos</option>
                 </select><br /><br />
                 <button onClick={() => setBuildings( allBuildings.filter( (building ) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" ) )} className='send-button' style={{float:"unset"}}> Filtrar </button>
