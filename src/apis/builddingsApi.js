@@ -109,7 +109,25 @@ export default class ArchytecstApi {
      * @returns {Promise<string>} A promise that resolves with a success message.
      */
     putBulding(building){
-
+        const requestBody = JSON.stringify(getBuidingData(building));
+    
+        fetch(`${apiUrl}buildings/${building.uuid}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: requestBody,
+          })
+          .then(response => {
+            if (response.ok) {
+                return  'success';
+            }else{
+                throw error
+            }
+          })
+          .catch(error => {
+            throw { success: false, error: error.message };
+          });
     }
 
 }
@@ -211,4 +229,31 @@ function assignColor(type){
         return assests.colors.red
     }
     return assests.colors.puple 
+}
+
+/**
+ * Assigns a color hexadecimal value based on the type of building.
+ * @param {Building} building - The type of the building.
+ * @returns {object} - The hexadecimal color value.
+ */
+function getBuidingData(building){
+    buidingData = 
+
+    {
+        image: building.image,
+        period: building.period,
+        city: building.city,
+        name: building.name,
+        architect: building.architect,
+        type: building.type,
+        uuid: building.uuid,
+        longitude: building.location.lng.toString(),
+        builtDate: building.builtDate,
+        isProtected: building.isprotected.state.toString(),
+        location: building.address,
+        style: building.style,
+        state: building.state,
+        lat: building.location.lat.toString
+    }
+    return  buidingData
 }
