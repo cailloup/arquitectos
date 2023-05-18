@@ -13,6 +13,7 @@ export const assests = {
                                 yellow:"#e6d925" ,
                                 orange:"#d45500"
                             },
+                            buildingTypes:["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"],
                             icons:{
                                 mapPoint: (color) => {
                                     return {
