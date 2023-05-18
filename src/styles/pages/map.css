@@ -2,6 +2,9 @@
   overflow-x: hidden;
 }
 /*Contenedor de google */
+.gm-style .gm-style-iw-tc::after{
+  background-color: transparent !important;
+}
 .gm-style .gm-style-iw-c{
   padding: 0;
   max-width: 800px !important;
