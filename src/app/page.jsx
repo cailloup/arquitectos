@@ -38,9 +38,8 @@ export default function sandBox(){
     
     useEffect(() => { //se selecciono un partido
         if(!county?.name)
-          return
-
-        archytecstApi.getBuildingsByCity(county.name).then( buildings => {setAllBuildings(buildings); setBuildings(buildings)} )
+          return  
+          
         toast.promise(
           archytecstApi.getBuildingsByCity(county.name)
           .then( buildings => {setAllBuildings(buildings); setBuildings(buildings)} ),
