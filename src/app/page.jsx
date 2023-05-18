@@ -26,7 +26,7 @@ export default function sandBox(){
     const [selectedBuilding, setSelectedBuilding] = useState((/** @type {Building} */ (null)));
     const [buildings,setBuildings] = useState((/** @type {[Building] || null} */ (null)))
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
-    const [allBuildings, setAllBuildings] = useState(/** @type google.maps.Map */ (null))
+    const [filterCondition, setFilterCondition] = useState( () => (building) => true);
     const selectorColor = useRef(/** @type {HTMLInputElement} */ (null) )
     const selectorType = useRef( /** @type {HTMLInputElement} */ (null))
     const dragMenu = useRef(/** @type {DragMenu | null} */ (null) ); 
@@ -39,10 +39,10 @@ export default function sandBox(){
     useEffect(() => { //se selecciono un partido
         if(!county?.name)
           return  
-          
+
         toast.promise(
           archytecstApi.getBuildingsByCity(county.name)
-          .then( buildings => {setAllBuildings(buildings); setBuildings(buildings)} ),
+          .then( buildings => setBuildings(buildings) ),
           {
             pending: 'Buscando edificios',
             success: 'edificios encontrados correctamente 👌',
@@ -69,7 +69,6 @@ export default function sandBox(){
     
         setSelectedBuilding(newSelectedBuilding);
         setBuildings(updatedBuildings);
-        setAllBuildings(updatedBuildings);
       };
 
       function onLoad(mapa){
@@ -103,7 +102,7 @@ export default function sandBox(){
                   {buildingTypes.map(type =><option key={type} value={type}>{type}</option> )  }
                   <option value="Todos">Todos</option>
                 </select><br /><br />
-                <button onClick={() => setBuildings( allBuildings.filter( (building ) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" ) )} className='send-button' style={{float:"unset"}}> Filtrar </button>
+                <button onClick={() => setFilterCondition( () => (building) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" )} className='send-button' style={{float:"unset"}}> Filtrar </button>
                 <br /><br />
                 {selectedBuilding && 
                   <div>
@@ -122,7 +121,7 @@ export default function sandBox(){
             </DragMenu>
               {county &&< button onClick={() => setCounty(null)} className='send-button button-back'> Volver </button>}
               <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
-                  {buildings&&buildings.map( (building) => (
+                  {buildings&&buildings.filter(filterCondition).map( (building) => (
                       <Marker
                       icon={assests.icons.mapPoint( building.refColor )}
                       key={building.uuid}
@@ -144,7 +143,7 @@ export default function sandBox(){
                       <InfoWindowContent place={selectedBuilding} />
                       </InfoWindow>
                   )}
-                  <SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings} ></SearchBar>
+                  <SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings?.filter(filterCondition)} ></SearchBar>
               </Map>
           </main>  
       </NavBar>
@@ -256,8 +255,8 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
 
 
 /**
- * @param {{ place: Building }} props - Propiedades del componente.
- * @returns {JSX.Element} El contenido del InfoWindow.
+ * @param {{ place: Building }} props 
+ * @returns {JSX.Element} 
  */
 const InfoWindowContent = (  {place} ) => (
   <div className="buildingCard">
