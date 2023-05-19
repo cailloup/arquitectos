@@ -171,15 +171,15 @@ export default function Register() {
           </Map>
         </section>
         <section ref={formRef}  className={"formSection fullForm"} style={county==null?{right:"-100%"}:'' }>
-        <div  className='leftBar' onClick={togleForm}>
-          <div className='leftBarLine'/> 
+        <div  className='leftBar secondary-background' onClick={togleForm}>
+          <div className='constrast-secondary-background leftBarLine'/> 
         </div>
           <h1>Registrar edificio</h1><br/><br/>
           <form className='formRegister' onSubmit={handleSubmit}>
             
             <label> Partido</label><br/>
             <input id="county" className="formInput redOnly" type="text"  value={county?county.name:'' } readOnly="readOnly"/> <br/><br/>
-            <button type='button' className="secondary-button" onClick={changeCountyHandler}> Cambiar</button><br/>
+            <button type='button' className="button" onClick={changeCountyHandler}> Cambiar</button><br/>
             
             <br/><br/>
             
@@ -241,7 +241,7 @@ export default function Register() {
             <input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
             
             <br/><br/>
-            <button type="submit" className="send-button" >Agregar edificio</button>
+            <button type="submit" className="button right" >Agregar edificio</button>
           </form>
         </section>
       </main>

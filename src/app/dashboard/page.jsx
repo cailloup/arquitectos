@@ -97,8 +97,8 @@ export default function DashBoard(){
                 <br />
                 
                 <div className="optionsContainer">
-                    <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
-                    <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
+                    <button className="button"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
+                    <button className="button" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
                     <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
                 </div>
 

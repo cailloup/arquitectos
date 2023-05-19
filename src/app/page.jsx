@@ -69,7 +69,7 @@ export default function MainScreen(){
               {assests.buildingTypes.map(type =><option key={type} value={type}>{type}</option> )  }
               <option value="Todos">Todos</option>
             </select><br /><br />
-            <button onClick={() => setFilterCondition( () => (building) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" )} className='send-button' style={{float:"unset"}}> Filtrar </button>
+            <button onClick={() => setFilterCondition( () => (building) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" )} className='button' style={{float:"unset"}}> Filtrar </button>
             <br /><br />
             {selectedBuilding && 
               <div>
@@ -81,7 +81,7 @@ export default function MainScreen(){
                       <option  key={name} value={value} >{name}</option>
                     )}
                   </select>
-                  <button onClick={() =>{ selectedBuilding.refColor=selectorColor.current.value ; handleSelectedBuildingChange(selectedBuilding)}} className='send-button' style={{float:"unset"}}> color </button>
+                  <button onClick={() =>{ selectedBuilding.refColor=selectorColor.current.value ; handleSelectedBuildingChange(selectedBuilding)}} className='button' style={{float:"unset"}}> color </button>
               </div>
             }
           </div>

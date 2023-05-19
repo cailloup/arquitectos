@@ -1,6 +1,5 @@
 .nav{
     width: 100%;
-    background-color: white;
     position: fixed;
     top: 0;
     left: 0;
@@ -32,7 +31,6 @@
     font-size: 1.5rem/* 24px */;
     line-height: 2rem/* 32px */;
     --tw-text-opacity: 1;
-    color: rgb(0 0 0 / var(--tw-text-opacity));
     font-weight: 700;
 }
 
@@ -72,7 +70,7 @@
 }
 
 .selected{
-    color: rgb(10, 80, 117);
+    filter:brightness(150%);
 }
 
 .hideMenu{
@@ -92,6 +90,14 @@
     height: 100vh;
     align-items: center;
     justify-content: center;
+}
+
+.optionText{
+    filter:brightness(90%);
+}
+
+.optionText:hover{
+    filter:brightness(150%);
 }
 
 @media (min-width: 850) {

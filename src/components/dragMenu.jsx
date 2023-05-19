@@ -51,8 +51,8 @@ export const DragMenu = forwardRef((props,ref) => {
     }));
     return (
         <div className={styles.menuContainer} style={ {transition:transition, left: `max(0px,min(${left}px,calc(100vw - 20px)))` } }>
-            <div  className={styles.leftBar}  onMouseDown={handleMouseDown}  onTouchStart={handleMouseDown} onMouseUp={togleForm}>
-                <div className={styles.leftBarLine}/> 
+            <div  className={`${styles.leftBar} secondary-background`}  onMouseDown={handleMouseDown}  onTouchStart={handleMouseDown} onMouseUp={togleForm}>
+                <div className={`constrast-secondary-background ${styles.leftBarLine}`}/> 
             </div>
             {props.children}
         </div>

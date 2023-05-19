@@ -163,7 +163,7 @@ table{
   min-width: 800px;
 }
 th{
-  background-color: rgb(25, 115, 189);
+  background-color:var(--secondary-color);
   color: white;
   font-weight: 800;
   padding:15px;
@@ -272,4 +272,101 @@ tr:not(:first-child):hover{
 }
 .optionsContainer .adminButton:hover{
   background-color: #5b9be4;
+}
+
+
+:root {
+  --primary-color: white;
+  
+  --acent-color: #0000ff;
+  --contrast-primary-color: #050505;
+  --contrast-secondary-color: #ffffff;
+
+  --lighten: 10%;
+  --darken: -10%;
+  /* secondary color*/
+
+
+  
+  /* secondary color*/
+  --secondary-color-h:212;
+  --secondary-color-s:23%;
+  --secondary-color-l:23%;
+  
+--secondary-color: hsl( var(--secondary-color-h), 
+                          var(--secondary-color-s), 
+                          var(--secondary-color-l));
+
+--secondary-color-light: hsl( var(--secondary-color-h), 
+                              calc( var(--secondary-color-s) ), 
+                              calc( var(--secondary-color-l) + var(--lighten) ));
+
+--secondary-color-dark: hsl(  var(--secondary-color-h), 
+                              calc( var(--secondary-color-s) ), 
+                              calc( var(--secondary-color-l) + var(--darken) ));
+  
+}
+
+.primary-background{
+  background-color: var(--primary-color);
+}
+
+.primary-color{
+  color: var(--primary-color)
+}
+
+.contrast-primary-color{
+  color: var(--contrast-primary-color);
+  fill: var(--contrast-primary-color);
+}
+.constrast-primary-background{
+  background-color: var(--contrast-primary-color);
+}
+.secondary-background{
+  background-color: var(--secondary-color);
+}
+
+.secondary-color{
+  background-color: var(--secondary-color);
+}
+
+.constrast-secondary-color{
+  color: var(--contrast-secondary-color);
+  fill:var(--contrast-secondary-color);
+}
+.constrast-secondary-background{
+  background-color: var(--contrast-secondary-color);
+}
+
+.button{
+  margin: 1px;
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color:var(--contrast-secondary-color);
+  background-color: var(--secondary-color) ;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 250ms;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75), 0px 0px 10px 2px var(--secondary-color-light) inset;
+  display: block;
+  right: 0;
+}
+
+.button:hover{
+  filter: brightness(110%);
+}
+.secondary-button{
+  font-size: Max(16px, 1em);
+  color:white;
+  font-weight: 600;
+  padding: 10px 15px;
+  background-color: #2f81df;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75),
+  -1px -1px 11px 3px rgb(54 148 228) inset;
+  transition: 250ms;
+  display: block;
 }
