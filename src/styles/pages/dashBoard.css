@@ -7,14 +7,15 @@
     padding-left:5%;
     overflow: hidden;
 }
-/*
+
   @media (max-width: 700px) {
-    .main {
+    .main-dashBoard {
+
       padding-right:0;
       padding-left:0;
     }
   }
-*/
+
   .titleContainer{
     width: 100%;
     text-align: start;
