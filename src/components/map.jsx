@@ -3,7 +3,6 @@
 import { Polygon,GoogleMap,Marker } from "@react-google-maps/api"
 import React, { useState, useEffect } from 'react';
 import GoogleMapsConfig from '@/apis/googleMapsConfig';
-import { BuildingAPI } from "@/apis/archytectApi";
 import { counties } from '@/data/counties';
 
 export default function Map ({children,onLoad,onMapClick,geocoder,setSelectedCounty,selectedCounty}){
@@ -47,7 +46,7 @@ export default function Map ({children,onLoad,onMapClick,geocoder,setSelectedCou
       }, []); 
 
     const handlePolygonClick = (event, county) => {
-        BuildingAPI.utils.getCounty(geocoder,county,setSelectedCounty)
+      getCounty(geocoder,county,setSelectedCounty)
     };
 
     const handleNamedPolygonClick = (county) => (event) => {
@@ -121,6 +120,42 @@ export default function Map ({children,onLoad,onMapClick,geocoder,setSelectedCou
     }],
         center: center, 
         restriction: {
-        latLngBounds: BuildingAPI.utils.limitArea(center,1200),
+        latLngBounds: limitArea(center,1200),
         strictBounds: true
     }}
+
+
+function getCounty (geocoder, selectedcounty,setCounty){
+      const name = `Partido de ${selectedcounty.name}`
+      geocoder.geocode({ address: name }, (results, status) => {
+        if (status === 'OK') {
+          const location = results[0].geometry.location
+          const bounds = results[0].geometry.bounds
+          const county = {
+            name: name,
+            location: location,
+            paths: selectedcounty.paths,
+            bounds: {
+              north: bounds.getNorthEast().lat(),
+              south: bounds.getSouthWest().lat(),
+              east: bounds.getNorthEast().lng(),
+              west: bounds.getSouthWest().lng(),
+            },
+            center:bounds.getCenter()
+          }
+          setCounty(county)
+        } else {
+          console.error('Geocode was not successful for the following reason: ' + status);
+        }
+      })
+}
+
+function limitArea (position,radioKm){
+  const bounds = {
+    north: position.lat + radioKm/2 * 0.0089,
+    south: position.lat - radioKm/2 * 0.0089,
+    east: position.lng + radioKm/2 * 0.0089,
+    west: position.lng - radioKm/2 * 0.0089 
+  }
+  return bounds
+}

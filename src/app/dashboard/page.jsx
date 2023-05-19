@@ -1,11 +1,11 @@
 "use client"
 import { useState,useEffect } from "react"
-import { BuildingAPI,Building } from "@/apis/archytectApi"
-import {toast,ToastContainer} from "react-toastify"
+import {toast} from "react-toastify"
 import '@/styles/pages/dashBoard.css' 
-import ArchytecstApi from "@/apis/builddingsApi"
+import ArchytecstApi,{ Building } from "@/apis/builddingsApi"
+
 export default function DashBoard(){ 
-    const [buildings,setBuildings] = useState(/** @type [Building] */([]) ) 
+    const [buildings,setBuildings] = useState(/** @type {[Building]} */([]) ) 
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
     const [sortedType,setSortedType] = useState('')
     const [searchValue, setSearchValue] = useState("");
@@ -30,8 +30,7 @@ export default function DashBoard(){
               error: 'Hubo un error al eliminar el edificio 🤯'
             }
           ).then(() => {
-            BuildingAPI.endPonts.getBuildings(setBuildings); // TODO: pido la lista devuelta o solo la actualizo localmente
-
+            archytecstApi.getBuildings().then(buildings => setBuildings(buildings)) // TODO: pido la lista devuelta o solo la actualizo localmente
           });
 
     }
