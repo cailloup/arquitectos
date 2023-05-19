@@ -1,5 +1,5 @@
 import { assests } from "@/data/assest";
-const apiUrl='https://architectgallery.herokuapp.com/api/v1/'
+const apiUrl='https://bold-crow-384002.rj.r.appspot.com/api/v1/'
 
 export default class ArchytecstApi {
 
