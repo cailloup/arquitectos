@@ -21,7 +21,9 @@ export default function NavBar({children}) {
     {name:"Mapa", route:""},
     {name:"Registrar edificio", route:"register"},
     {name:"Contacto", route:"contact"},
-    {name:"Panel", route:"dashboard"}]
+    {name:"Panel", route:"dashboard"},
+    {name:"Assests", route:"assests"},
+  ]
     
   function handleClick(id) {
     setNavbar(false)
@@ -33,6 +35,7 @@ export default function NavBar({children}) {
   }
   useEffect(() => {
     const pathname = window.location.pathname;
+
     const segment = pathname.split('/')[1];
     const index = options.findIndex( (option) => segment==option.route )
     if (index ==-1){
@@ -41,9 +44,18 @@ export default function NavBar({children}) {
     setSelected(index)
   }, []);
 
+  function getTheme() {
+    const themeValue = sessionStorage.getItem("theme")
 
+    if (themeValue){
+      return theme[themeValue]
+    }else{
+      return theme.default
+    }
+
+  }
   return (
-    <ThemeProvider theme={theme.default}>
+    <ThemeProvider theme={getTheme}>
       <ToastContainer
           position="top-center"
           autoClose={2000}
