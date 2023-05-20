@@ -15,13 +15,13 @@ export default function test(){
 
             </select>
             <br/>
-            <br/> <Button secondary onClick={() => alert("hola")} >secondary Button</Button>
+            <br/> <Button secondary onClick={() => alert("Brindo contigo, Hölderlin")} >secondary Button</Button>
             <br/>
-            <br/><Button onClick={() => alert("hola")} >primary Button</Button>
+            <br/><Button onClick={() => alert("Brindo contigo, Hölderlin")} >primary Button</Button>
             <br/>
-            <br/><Button disabled onClick={() => alert("hola")} >primary Button</Button>
+            <br/><Button disabled onClick={() => alert("Brindo contigo, Hölderlin")} >primary Button</Button>
             <br/>
-            <br/><Button disabled secondary onClick={() => alert("hola")} >secondary Button</Button>
+            <br/><Button disabled secondary onClick={() => alert("Brindo contigo, Hölderlin")} >secondary Button</Button>
             <br/><br/>
             
         </div>
