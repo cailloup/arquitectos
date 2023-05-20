@@ -45,7 +45,7 @@ export default function NavBar({children}) {
   }, []);
 
   function getTheme() {
-    const themeValue = sessionStorage.getItem("theme")
+    const themeValue = window?.sessionStorage.getItem("theme")
 
     if (themeValue){
       return theme[themeValue]
