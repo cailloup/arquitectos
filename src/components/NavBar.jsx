@@ -15,7 +15,7 @@ export default function NavBar({children}) {
   const [selected, setSelected] = useState(0);
   const [redirect,setRedirect] =useState(false);
   const {isLoaded} = useLoadScript(GoogleMapsConfig.scriptInit);
- 
+  const [themeValue,setTheme]= useState("default");
 
   const options = [
     {name:"Mapa", route:""},
@@ -42,20 +42,18 @@ export default function NavBar({children}) {
       setSelected(0)
     }
     setSelected(index)
+
+    const Value = window?.sessionStorage.getItem("theme")
+    if (Value){
+      setTheme(Value)
+    }else{
+     setTheme("default")
+    }
   }, []);
 
-  function getTheme() {
-    const themeValue = window?.sessionStorage.getItem("theme")
 
-    if (themeValue){
-      return theme[themeValue]
-    }else{
-      return theme.default
-    }
-
-  }
   return (
-    <ThemeProvider theme={getTheme}>
+    <ThemeProvider theme={theme[themeValue]}>
       <ToastContainer
           position="top-center"
           autoClose={2000}
