@@ -7,6 +7,8 @@ import LoadScreen from "./LoadScreen";
 import { useLoadScript } from "@react-google-maps/api";
 import GoogleMapsConfig from "@/apis/googleMapsConfig";
 import { ToastContainer } from "react-toastify";
+import { ThemeProvider } from 'styled-components';
+import theme from '@/styles/theme';
 
 export default function NavBar({children}) {
   const [navbar, setNavbar] = useState(false);
@@ -41,7 +43,7 @@ export default function NavBar({children}) {
 
 
   return (
-    <>
+    <ThemeProvider theme={theme.default}>
       <ToastContainer
           position="top-center"
           autoClose={2000}
@@ -101,6 +103,6 @@ export default function NavBar({children}) {
         </div>
       </nav>
       {redirect||!isLoaded? <LoadScreen/>:<>{children}</>}
-      </>
+    </ThemeProvider>
   );
 }
