@@ -6,7 +6,7 @@ import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
 import {Marker,Autocomplete} from "@react-google-maps/api";
 import ArchytecstApi from '@/apis/builddingsApi';
-
+import { Button } from '@/components/Assests';
 
 const buildingTypes = ["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"]
 const buildingStyles = ["Centro Europeo","Modernismo","Prefabricado","Tradicional","Otro"]
@@ -179,7 +179,7 @@ export default function Register() {
             
             <label> Partido</label><br/>
             <input id="county" className="formInput redOnly" type="text"  value={county?county.name:'' } readOnly="readOnly"/> <br/><br/>
-            <button type='button' className="secondary-button" onClick={changeCountyHandler}> Cambiar</button><br/>
+            <Button secondary onClick={changeCountyHandler}> Cambiar</Button><br/>
             
             <br/><br/>
             
@@ -241,7 +241,7 @@ export default function Register() {
             <input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
             
             <br/><br/>
-            <button type="submit" className="send-button" >Agregar edificio</button>
+            <Button type="submit" className="right" >Agregar edificio</Button>
           </form>
         </section>
       </main>
