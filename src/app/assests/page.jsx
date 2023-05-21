@@ -33,8 +33,8 @@ export default function test(){
                     <div>
                     <Select onChange={(e) => {sessionStorage.setItem("nav", (e.currentTarget.value))}} style={{ width: "300px"}}>
                         <option value={false}> Seleccionar color para barra </option>
-                        <option value={false}> secondaryNaav </option>
-                        <option value={true}> primaryNav </option>
+                        <option value={false}> color secundario </option>
+                        <option value={true}>  color primario </option>
                     </Select>
                         <h1>Input</h1>
                         <br/> <Input placeHolder="Input example" />
