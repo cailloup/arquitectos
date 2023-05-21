@@ -8,19 +8,18 @@ export default function test(){
         <>
             <div style={{padding:"50px"}}>
                 <h1>Assests Test</h1>
-                <Select onChange={(e) => {sessionStorage.setItem("theme", (e.currentTarget.value));location. reload()}} style={{ width: "300px"}}>
-                    <option value={"default"}> selecciona tema cabeza </option>
-                    <option value={"default"}> default </option>
-                    <option value={"blueDark"}> blueDark </option>
-                    <option value={"dark"}> Dark </option>
-                </Select>
-                <Select onChange={(e) => {sessionStorage.setItem("nav", (e.currentTarget.value))}} style={{ width: "300px"}}>
-                <option value={false}> default </option>
-                    <option value={false}> secondaryNaav </option>
-                    <option value={true}> primaryNav </option>
-                </Select>
+
+               
+                
+
                 <div style={{display:"grid", gridTemplateColumns:"1fr 1fr",gap:"30px"}}>
                     <div>
+                    <Select onChange={(e) => {sessionStorage.setItem("theme", (e.currentTarget.value));location. reload()}} style={{ width: "300px"}}>
+                        <option value={"default"}> selecciona tema cabeza </option>
+                        <option value={"default"}> default </option>
+                        <option value={"blueDark"}> blueDark </option>
+                        <option value={"dark"}> Dark </option>
+                    </Select>
                         <h1>Button</h1>
                         <br/> <Button secondary onClick={() => alert("Brindo contigo, Hölderlin")} >secondary Button</Button>
                         <br/>
@@ -32,6 +31,11 @@ export default function test(){
                         <br/><br/>
                     </div>
                     <div>
+                    <Select onChange={(e) => {sessionStorage.setItem("nav", (e.currentTarget.value))}} style={{ width: "300px"}}>
+                        <option value={false}> Seleccionar color para barra </option>
+                        <option value={false}> secondaryNaav </option>
+                        <option value={true}> primaryNav </option>
+                    </Select>
                         <h1>Input</h1>
                         <br/> <Input placeHolder="Input example" />
                         <br/>
