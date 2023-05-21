@@ -6,6 +6,7 @@
 
 import styles from "@/styles/components/dragMenu.module.css"
 import React, { useState,forwardRef, useImperativeHandle } from 'react';
+import { Container,LeftBar,LeftBarLine } from "./Assests";
 export const DragMenu = forwardRef((props,ref) => {
     const componentRef = React.useRef();
     const [left, setLeft] = useState(window.innerWidth - 20);
@@ -50,11 +51,11 @@ export const DragMenu = forwardRef((props,ref) => {
         setLeft,
     }));
     return (
-        <div className={styles.menuContainer} style={ {transition:transition, left: `max(0px,min(${left}px,calc(100vw - 20px)))` } }>
-            <div  className={styles.leftBar}  onMouseDown={handleMouseDown}  onTouchStart={handleMouseDown} onMouseUp={togleForm}>
-                <div className={styles.leftBarLine}/> 
-            </div>
+        <Container className={styles.menuContainer} style={ {transition:transition, left: `max(0px,min(${left}px,calc(100vw - 20px)))` } }>
+            <LeftBar  className={styles.leftBar}  onMouseDown={handleMouseDown}  onTouchStart={handleMouseDown} onMouseUp={togleForm}>
+                <LeftBarLine className={styles.leftBarLine}/> 
+            </LeftBar>
             {props.children}
-        </div>
+        </Container>
     )
 })

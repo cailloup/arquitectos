@@ -6,7 +6,7 @@ import {toast,ToastContainer} from "react-toastify"
 import {useRef,useState,useEffect } from "react";
 import {Marker,Autocomplete} from "@react-google-maps/api";
 import ArchytecstApi from '@/apis/builddingsApi';
-import { Button } from '@/components/Assests';
+import { Button,Container,Input,LeftBar,LeftBarLine,Select } from '@/components/Assests';
 
 const buildingTypes = ["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"]
 const buildingStyles = ["Centro Europeo","Modernismo","Prefabricado","Tradicional","Otro"]
@@ -17,6 +17,7 @@ export default function Register() {
   const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null} */ (null));
   const [file, setFile] = useState(null);
   const inputRef = useRef(null)
+  const fileInputRef = useRef(null)
   const formRef = useRef(/** @type {HTMLElement | null} */(null))
   const [county,setCounty] = useState(null)
   const archytecstApi = new ArchytecstApi()
@@ -164,87 +165,88 @@ export default function Register() {
 
   return (
   
-      <main className="main-register">
+      <div className="main-register">
         <section className= {county==null?"mapSection full-width":"mapSection"} >
           <Map onLoad={onLoad} onMapClick={handleMapClick} geocoder={geocoder} selectedCounty={county} setSelectedCounty={setCounty} >
             <Marker position={marKerPosition}/>
           </Map>
         </section>
-        <section ref={formRef}  className={"formSection fullForm"} style={county==null?{right:"-100%"}:'' }>
-        <div  className='leftBar' onClick={togleForm}>
-          <div className='leftBarLine'/> 
-        </div>
-          <h1>Registrar edificio</h1><br/><br/>
+        <Container ref={formRef}  className={"formSection fullForm"} style={county==null?{right:"-100%"}:'' }>
+        <LeftBar  className='leftBar' onClick={togleForm}>
+          <LeftBarLine className='leftBarLine'/> 
+        </LeftBar>
+          
           <form className='formRegister' onSubmit={handleSubmit}>
             
             <label> Partido</label><br/>
-            <input id="county" className="formInput redOnly" type="text"  value={county?county.name:'' } readOnly="readOnly"/> <br/><br/>
+            <Input id="county" className="formInput redOnly" type="text"  value={county?county.name:'' } disabled readOnly="readOnly"/> <br/><br/>
             <Button secondary onClick={changeCountyHandler}> Cambiar</Button><br/>
             
-            <br/><br/>
+            <br/>
             
             <label> Direccion</label><br/>
             <InputMap 
                 onTextChange={handleMapChanges}
                 bounds={county?.bounds}
             >
-              <input id="address"  className="formInput" onKeyPress={handleEnterPress} ref={inputRef}   type="text" required placeholder="Ingrese una direccion"  />
+              <Input id="address"   onKeyPress={handleEnterPress} ref={inputRef}   type="text" required placeholder="Ingrese una direccion"  />
             </InputMap>
             <br/>
             <label> Nombre</label><br/>
-            <input id="buildName" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
+            <Input id="buildName" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
             <br/><br/>
             <label> Arquitecto</label><br/>
             <div className="form-row-2Columns">
-              <input id="archytectName" className="formInput" type="text"  placeholder="nombre" />
-              <input id="archytectSurname" className="formInput" type="text"  placeholder="apellido" />
+              <Input id="archytectName" className="formInput" type="text"  placeholder="nombre" />
+              <Input id="archytectSurname" className="formInput" type="text"  placeholder="apellido" />
             </div>
             
             <br/>
             
-            <label> Imagen del edificio</label><br/>
-            <input onChange={handleFileChange} id="image" className="formInput" type="file" accept="image/*" title="Seleccionar imagen" />
+            <label> Imagen del edificio</label><br/><br/>
+              <Button secondary onClick={(event) => {event.preventDefault();fileInputRef.current.click()}} > Selecciona una imagen  </Button>
+              <Input ref={fileInputRef} onChange={handleFileChange}  id="image" notDisplay  accept="image/*" type="file"  title="Seleccionar imagen"/>
             
             <br/><br/>
           
             <div className="form-row-2Columns">
               <div>
                 <label>Tipologia</label>
-                <select className="formSelect" name="tipo de edificio" id="buildType" placeholder=' Tipo de edificio'>
+                <Select className="formSelect" name="tipo de edificio" id="buildType" placeholder=' Tipo de edificio'>
                   {buildingTypes.map( (buildingType) => <option key={buildingType}  value={buildingType}>{buildingType}</option>)}
-                </select>
+                </Select>
               </div>
               <div>
                 <label> Estilo</label>
-                <select className="formSelect" name="estilo de edificio" id="buildStyle">
+                <Select className="formSelect" name="estilo de edificio" id="buildStyle">
                   {buildingStyles.map( (buildingStyle) => <option key={buildingStyle} value={buildingStyle}>{buildingStyle}</option>)}
-                </select>
+                </Select>
               </div>
             </div>
             <br/>
             <label>Estado</label><br/>
-            <input id="buildState" className="formInput" type="text"  placeholder="ingrese estado del edificio" />
+            <Input id="buildState" className="formInput" type="text"  placeholder="ingrese estado del edificio" />
             <br/><br/>
             <div style={{   display: "flex",
                             flexDirection: "row",
                             alignItems: "center"}}>
               <label>Protegido</label>
-              <input type="checkbox" id="buildProtected" style={{marginLeft:"10px",width:"15px",height:"15px"}}/>
+              <Input type="checkbox" id="buildProtected" style={{marginLeft:"10px",width:"15px",height:"15px"}}/>
             </div>
             <br/>
             <label>Fecha</label>
-            <input id="buildDate" type="date"  name="buildDate"
+            <Input id="buildDate" type="date"  name="buildDate"
             min="1800-01-01" max={new Date().toISOString().split("T")[0]}/>
             
             <br/><br/>
             <label>Epoca</label>
-            <input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
+            <Input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
             
             <br/><br/>
             <Button type="submit" className="right" >Agregar edificio</Button>
           </form>
-        </section>
-      </main>
+        </Container>
+      </div>
    )
 }
 

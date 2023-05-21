@@ -9,7 +9,7 @@ import Map from "@/components/map";
 import { DragMenu } from '@/components/dragMenu';
 import ArchytecstApi, { Building } from '@/apis/builddingsApi';
 import { assests } from "@/data/assest";
-
+import { Button,Select,Input } from "@/components/Assests";
 export default function MainScreen(){
     const [county,setCounty] = useState(null)
     const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null} */ (null));
@@ -61,32 +61,32 @@ export default function MainScreen(){
       }
    
     return (
-      <main className='main-map'>
+      <div className='main-map'>
         <DragMenu ref={dragMenu}>
           <div className='filters-container'>
             <h1>Filtros | Detalles mas exactos?</h1><br />
-            <select ref={selectorType} name="" id="selecttor">
+            <Select ref={selectorType} name="" id="selecttor">
               {assests.buildingTypes.map(type =><option key={type} value={type}>{type}</option> )  }
               <option value="Todos">Todos</option>
-            </select><br /><br />
-            <button onClick={() => setFilterCondition( () => (building) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" )} className='send-button' style={{float:"unset"}}> Filtrar </button>
+            </Select><br /><br />
+            <Button onClick={() => setFilterCondition( () => (building) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" )}  style={{float:"unset"}}> Filtrar </Button>
             <br /><br />
             {selectedBuilding && 
               <div>
                 <h1> {selectedBuilding.name}</h1>
                 <img style={{width:"250px",aspectRatio:"16/9"}} src={selectedBuilding.image} alt="" />
                   <h3>color:</h3>
-                  <select  ref={selectorColor} name="" id="color" style={{width:"250px", marginBottom:"10px", marginRight:"10px"}}>
+                  <Select  ref={selectorColor} name="" id="color" style={{width:"250px", marginBottom:"10px", marginRight:"10px"}}>
                     {Object.entries(assests.colors).map( ([name, value]) =>
                       <option  key={name} value={value} >{name}</option>
                     )}
-                  </select>
-                  <button onClick={() =>{ selectedBuilding.refColor=selectorColor.current.value ; handleSelectedBuildingChange(selectedBuilding)}} className='send-button' style={{float:"unset"}}> color </button>
+                  </Select>
+                  <Button onClick={() =>{ selectedBuilding.refColor=selectorColor.current.value ; handleSelectedBuildingChange(selectedBuilding)}} style={{float:"unset"}}> color </Button>
               </div>
             }
           </div>
         </DragMenu>
-          {county &&< button onClick={() => setCounty(null)} className='send-button button-back'> Volver </button>}
+          {county &&< Button onClick={() => setCounty(null)} className='button-back'> Volver </Button>}
           <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
               {buildings&&buildings.filter(filterCondition).map( (building) => (
                   <Marker
@@ -112,7 +112,7 @@ export default function MainScreen(){
               )}
               <SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings?.filter(filterCondition)} ></SearchBar>
           </Map>
-      </main>  
+      </div>  
     )
 }
 
