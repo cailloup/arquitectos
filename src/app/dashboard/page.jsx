@@ -3,6 +3,7 @@ import { useState,useEffect } from "react"
 import {toast} from "react-toastify"
 import '@/styles/pages/dashBoard.css' 
 import ArchytecstApi,{ Building } from "@/apis/builddingsApi"
+import { Button, Table } from "@/components/Assests"
 
 export default function DashBoard(){ 
     const [buildings,setBuildings] = useState(/** @type {[Building]} */([]) ) 
@@ -89,7 +90,7 @@ export default function DashBoard(){
     };
 
     return(
-        <main className="main-dashBoard">
+        <div className="main-dashBoard">
             <div className="centeredElements">
                 <div className="titleContainer">
                     <h1>Panel de control</h1>
@@ -97,8 +98,8 @@ export default function DashBoard(){
                 <br />
                 
                 <div className="optionsContainer">
-                    <button className="adminButton"  onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </button> 
-                    <button className="adminButton" onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </button> 
+                    <Button onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </Button> 
+                    <Button onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </Button> 
                     <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
                 </div>
 
@@ -106,7 +107,7 @@ export default function DashBoard(){
                 <hr/>
             </div>
             <div className={"tableContainer"}>
-                <table>
+                <Table>
                     <tbody>
                         <tr> 
                             {columns.map( (column) =>
@@ -121,8 +122,8 @@ export default function DashBoard(){
                         </tr>
                         )}
                     </tbody>
-                </table>
+                </Table>
             </div>
-        </main>
+        </div>
     )
 }

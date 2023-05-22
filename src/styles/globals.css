@@ -200,8 +200,8 @@ tr:not(:first-child):hover{
   scale: 1.01;
 }
 
-.tr-selected:nth-child(even),.tr-selected {
-  background-color: rgb(37, 138, 221);
+.tr-selected {
+  background-color: rgb(37, 138, 221)!important;
   scale: 1.01;
 }
 

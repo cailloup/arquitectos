@@ -124,3 +124,30 @@ export const Nav = styled.nav`
   export const LeftBarLine = styled.div`
   background-color: ${props => props.theme.secondaryContrast};
   `;
+
+  export const Table = styled.table`
+
+  & th{
+    background-color:${props => props.theme.secondary};
+    color:${props => props.theme.secondaryContrast};
+  }
+
+  tr:nth-child(even) {
+    background-color: rgba(${props => parseInt( props.theme.secondary.slice(1, 3), 16)},${props => parseInt( props.theme.secondary.slice(3, 5), 16)},${props => parseInt( props.theme.secondary.slice(5, 7), 16)}, .5); 
+    filter: brightness(100%);
+  }
+  tr:nth-child(2n+3) {
+    background-color: rgba(${props => parseInt( props.theme.secondary.slice(1, 3), 16)},${props => parseInt( props.theme.secondary.slice(3, 5), 16)},${props => parseInt( props.theme.secondary.slice(5, 7), 16)}, .2); 
+  }
+  tr:not(:first-child):hover{
+    background-color: rgba(${props => parseInt( props.theme.secondary.slice(1, 3), 16)},${props => parseInt( props.theme.secondary.slice(3, 5), 16)},${props => parseInt( props.theme.secondary.slice(5, 7), 16)}, 1); 
+    filter: brightness(120%);
+    scale: 1.01;
+  }
+  .tr-selected {
+    background-color: rgb(37, 138, 221);
+    scale: 1.01;
+  }
+  
+
+  `;
