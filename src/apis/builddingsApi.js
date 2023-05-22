@@ -109,20 +109,16 @@ export default class ArchytecstApi {
     putBulding(building){
         const requestBody = JSON.stringify(formatBuildingData(building));
     
-        fetch(`${apiUrl}buildings/${building.uuid}`, {
+        return fetch(`${apiUrl}buildings/${building.uuid}`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json'
             },
             body: requestBody,
           })
-          .then(response => {
-            if (response.ok) {
-                return  'success';
-            }else{
-                throw error
-            }
-          })
+          .then(response => response.json() 
+          )
+          .then(data => data)
           .catch(error => {
             throw { success: false, error: error.message };
           });
@@ -209,6 +205,16 @@ export class Building {
         this.refColor = assignColor(this.type)
         this.builtDate = buildingData.builtDate
     }
+
+    setName(name){
+        this.name=name
+    }
+    setArchitect(architect){
+        this.architect=architect
+    }
+    setState(state){
+        this.state=state
+    }
 }
 
 /**
@@ -229,7 +235,7 @@ export function assignColor(type){
     return assests.colors.puple 
 }
 
-function formatBuildingData({ image, period, city, name, architect, type, uuid, location, style, state, builtDate, isProtected }) {
+function formatBuildingData({ image, period, city, name, architect, type, uuid, location, style, state, builtDate, isProtected,address }) {
     return {
         image,
         period,

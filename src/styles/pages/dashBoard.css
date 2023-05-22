@@ -8,12 +8,26 @@
     overflow: hidden;
 }
 
+.tableContainer{
+  transition:700ms;
+  position: absolute;
+  left: 0;
+  padding-right: 50px;
+  padding-left: 50px;
+}
+
+
   @media (max-width: 700px) {
     .main-dashBoard {
 
       padding-right:0;
       padding-left:0;
     }
+    .tableContainer{
+      padding-right: 0px;
+      padding-left: 0px;
+    }
+    
   }
 
   .titleContainer{
@@ -22,5 +36,4 @@
     font-size: 25px;
     font-weight: 100;
   }
-
 

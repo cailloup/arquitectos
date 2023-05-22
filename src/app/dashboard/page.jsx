@@ -3,12 +3,13 @@ import { useState,useEffect } from "react"
 import {toast} from "react-toastify"
 import '@/styles/pages/dashBoard.css' 
 import ArchytecstApi,{ Building } from "@/apis/builddingsApi"
-import { Button, Table } from "@/components/Assests"
+import { Button, Table,Input } from "@/components/Assests"
 
 export default function DashBoard(){ 
     const [buildings,setBuildings] = useState(/** @type {[Building]} */([]) ) 
     const [selectedBuildings,setSelectedBuildings] = useState([]) 
     const [sortedType,setSortedType] = useState('')
+    const [modify,setModify] = useState(false)
     const [searchValue, setSearchValue] = useState("");
     const archytecstApi = new ArchytecstApi();
     const columns = [
@@ -85,10 +86,44 @@ export default function DashBoard(){
 
     const filteredSelectedBuildings = selectedBuildings.filter((buildingId) => filteredBuildings.map((building) => building.uuid).includes(buildingId) )
     
+    function handleSubmit(event) {
+        event.preventDefault();
+    
+        toast.promise(
+        () => modifyBuild(),
+          {
+            pending: 'Modificando edificio',
+            success: 'Edificio modificado correctamente 👌',
+            error: 'Hubo un error al modificar el edificio 🤯'
+          }
+        )
+    
+      }
+
+
     const handleInputChange = (event) => {
         setSearchValue(event.target.value);
     };
 
+    /**
+     * 
+     * @param {String} uuid 
+     * @returns {Building}
+     */
+    function getBuilding(uuidS)  {
+        return buildings.find(({uuid} ) => uuid== uuidS)
+    } 
+
+    const modifyBuild = () =>{
+        const building = getBuilding( selectedBuildings[0])
+
+        building.setName(event.target.elements.buildName.value)
+        building.setArchitect(event.target.elements.buildArchitect.value)
+        building.setState(event.target.elements.buildState.value)
+        
+        return archytecstApi.putBulding(building)
+          
+      }
     return(
         <div className="main-dashBoard">
             <div className="centeredElements">
@@ -99,30 +134,45 @@ export default function DashBoard(){
                 
                 <div className="optionsContainer">
                     <Button onClick={() => deleteAllBuildingsSelecteds()}> Eliminar </Button> 
-                    <Button onClick={() => alert("Hay que esperar a que marcelo traiga la freature de miami")}> Modificar </Button> 
+                    <Button  disabled={selectedBuildings.length!=1 } onClick={() => setModify(!modify)}> Modificar </Button> 
                     <input placeholder="Nombre del edificio" onChange={handleInputChange}/>
-                </div>
-
-                <p className="buildingIndicator">Edificios seleccionados: {filteredSelectedBuildings.length}/{filteredBuildings.length} </p>
-                <hr/>
+                </div> 
+           
             </div>
-            <div className={"tableContainer"}>
-                <Table>
-                    <tbody>
-                        <tr> 
-                            {columns.map( (column) =>
-                                <th key={column.field} onClick={() => toggleSort(column.field)} className={sortedType.includes(column.field)?'thSelected':''} >{column.label}</th>
+            <div>
+                {selectedBuildings.length==1 && 
+                < div className={"tableContainer"} style={{ transform: modify?``:`translateX(${-window.screen.width}px)`  }} >
+                    <form onSubmit={handleSubmit}>
+                        <label>Nombre</label>
+                        <Input id="buildName" placeholder="ingrese nombre" defaultValue={getBuilding(selectedBuildings[0]).name}/> <br/><br/>
+                        <label>Arquitecto</label>
+                        <Input id="buildArchitect" placeholder="ingrese arquitecto" defaultValue={getBuilding(selectedBuildings[0]).architect}/><br/><br/>
+                        <label>Estado</label>
+                        <Input id="buildState" placeholder="ingrese estado"  defaultValue={getBuilding(selectedBuildings[0]).state}/><br/><br/>
+                        <Button type="send" className="right">Aplicar cambios</Button>
+                    </form>
+                </div>}
+                
+                
+                <div className={"tableContainer"} style={{ transform: modify?`translateX(${window.screen.width}px)`:''  }} >
+                    <p className="buildingIndicator">Edificios seleccionados: {filteredSelectedBuildings.length}/{filteredBuildings.length} </p>
+                    <Table>
+                        <tbody>
+                            <tr> 
+                                {columns.map( (column) =>
+                                    <th key={column.field} onClick={() => toggleSort(column.field)} className={sortedType.includes(column.field)?'thSelected':''} >{column.label}</th>
+                                )}
+                            </tr>
+                            {filteredBuildings.map((building) => 
+                            <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
+                                {columns.map( (column) =>
+                                    <td key={column.field}>{building[column.field]}</td>
+                                )}
+                            </tr>
                             )}
-                        </tr>
-                        {filteredBuildings.map((building) => 
-                        <tr key={building.uuid} onClick={()=> toggleBuild(building.uuid)}  className={selectedBuildings.includes(building.uuid) ? "tr-selected" : ""}   >
-                            {columns.map( (column) =>
-                                <td key={column.field}>{building[column.field]}</td>
-                            )}
-                        </tr>
-                        )}
-                    </tbody>
-                </Table>
+                        </tbody>
+                    </Table>
+                </div>
             </div>
         </div>
     )
