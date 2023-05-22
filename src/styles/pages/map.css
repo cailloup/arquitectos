@@ -92,3 +92,26 @@
 @media (max-width: 700px) {
 
 }
+
+.referencesContainer{
+  border-radius: 20px;
+  padding: 15px 20px;
+  position: absolute;
+  bottom: 70px;
+  left: 20px;
+  display: flex;
+  gap:10px;
+  flex-direction: column;
+  
+}
+  
+
+
+.referencesSquare{
+  width: 20px;
+  height: 20px;
+}
+.reference{
+  display: flex;
+  gap:10px;
+}

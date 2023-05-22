@@ -216,7 +216,7 @@ export class Building {
  * @param {string} type - The type of the building.
  * @returns {string} - The hexadecimal color value.
  */
-function assignColor(type){
+export function assignColor(type){
     if (type === "Vivienda"){
         return assests.colors.orange
     }

@@ -7,10 +7,11 @@ import '@/styles/pages/map.css';
 import "react-toastify/dist/ReactToastify.css";
 import Map from "@/components/map";
 import { DragMenu } from '@/components/dragMenu';
-import ArchytecstApi, { Building } from '@/apis/builddingsApi';
+import ArchytecstApi, { Building, assignColor } from '@/apis/builddingsApi';
 import { assests } from "@/data/assest";
 import { Button,Select,Input } from "@/components/Assests";
 import { useTheme } from 'styled-components';
+import theme from "@/styles/theme";
 export default function MainScreen(){
     const [county,setCounty] = useState(null)
     const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null} */ (null));
@@ -22,7 +23,7 @@ export default function MainScreen(){
     const selectorType = useRef( /** @type {HTMLInputElement} */ (null))
     const dragMenu = useRef(/** @type {DragMenu | null} */ (null) ); 
     const archytecstApi = new ArchytecstApi()
-  
+    const theme = useTheme();
 
     useEffect(() => { //se CountyChange
       if(!county?.name)
@@ -73,19 +74,6 @@ export default function MainScreen(){
             </Select><br /><br />
             <Button onClick={() => setFilterCondition( () => (building) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" )}  style={{float:"unset"}}> Filtrar </Button>
             <br /><br />
-            {selectedBuilding && 
-              <div>
-                <h1> {selectedBuilding.name}</h1>
-                <img style={{width:"250px",aspectRatio:"16/9"}} src={selectedBuilding.image} alt="" />
-                  <h3>color:</h3>
-                  <Select  ref={selectorColor} name="" id="color" style={{width:"250px", marginBottom:"10px", marginRight:"10px"}}>
-                    {Object.entries(assests.colors).map( ([name, value]) =>
-                      <option  key={name} value={value} >{name}</option>
-                    )}
-                  </Select>
-                  <Button onClick={() =>{ selectedBuilding.refColor=selectorColor.current.value ; handleSelectedBuildingChange(selectedBuilding)}} style={{float:"unset"}}> color </Button>
-              </div>
-            }
           </div>
         </DragMenu>
           {county &&< Button onClick={() => setCounty(null)} className='button-back'> Volver </Button>}
@@ -114,6 +102,14 @@ export default function MainScreen(){
               )}
               
           </Map>
+         {county && <div className="referencesContainer" style={{backgroundColor:theme.primary}}>
+                { assests.buildingTypes.map( reference => 
+                  <div key={reference} className="reference">
+                    <div className="referencesSquare" style={ {backgroundColor: assignColor(reference)}}>  </div>
+                    <p style={{color: assignColor(reference)}}>{reference}</p>
+                  </div> )
+                  }
+          </div>}
       </div>  
     )
 }
