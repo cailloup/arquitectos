@@ -10,6 +10,7 @@ import { DragMenu } from '@/components/dragMenu';
 import ArchytecstApi, { Building } from '@/apis/builddingsApi';
 import { assests } from "@/data/assest";
 import { Button,Select,Input } from "@/components/Assests";
+import { useTheme } from 'styled-components';
 export default function MainScreen(){
     const [county,setCounty] = useState(null)
     const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null} */ (null));
@@ -21,11 +22,11 @@ export default function MainScreen(){
     const selectorType = useRef( /** @type {HTMLInputElement} */ (null))
     const dragMenu = useRef(/** @type {DragMenu | null} */ (null) ); 
     const archytecstApi = new ArchytecstApi()
-    
+  
+
     useEffect(() => { //se CountyChange
       if(!county?.name)
         return  
-
       toast.promise(
         archytecstApi.getBuildingsByCity(county.name)
         .then( buildings => setBuildings(buildings) ),
@@ -64,8 +65,9 @@ export default function MainScreen(){
       <div className='main-map'>
         <DragMenu ref={dragMenu}>
           <div className='filters-container'>
-            <h1>Filtros | Detalles mas exactos?</h1><br />
-            <Select ref={selectorType} name="" id="selecttor">
+          {county &&<>< SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings?.filter(filterCondition)} ></SearchBar><br/></>}
+            <h1>Filtros </h1><br />
+            <Select ref={selectorType} name="" id="selecttor" style={{width:"400px"}}>
               {assests.buildingTypes.map(type =><option key={type} value={type}>{type}</option> )  }
               <option value="Todos">Todos</option>
             </Select><br /><br />
@@ -110,7 +112,7 @@ export default function MainScreen(){
                     <InfoWindowContent place={selectedBuilding} />
                   </InfoWindow>
               )}
-              <SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings?.filter(filterCondition)} ></SearchBar>
+              
           </Map>
       </div>  
     )
@@ -120,6 +122,7 @@ export default function MainScreen(){
 //Otras cosas
 
 const SearchBar = ({setSelectedPlace,buildings}) => {
+  const theme = useTheme();
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
 
@@ -161,29 +164,25 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
            }
         }}
     };
-  
+  /*
     const myTheme = {
       container: {
-        position: 'absolute',
-        top: '10px',
+
         zIndex:'9',
         width:'100%',
         display: 'flex',
         justifyContent: 'center',
-        paddingLeft: '187px',
-        paddingRight:'10%',
+
       },
   
       suggestionsContainerOpen: {
         position: 'absolute',
         zIndex: '1',
         marginTop: '10',
+        bottom:'0',
         left: '0',
         right: '0',
         listStyle: "none",
-        top: '31px',
-        paddingLeft: '187px',
-        paddingRight:'10%',
       },
   
       suggestion: {
@@ -195,8 +194,31 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
       suggestionHighlighted: {
         backgroundColor: '#ddd'
       }
-    };
-  
+    };*/
+    const myTheme = {
+      input: {
+        width:'400px',
+        backgroundColor:'transparent',
+        border:'none',
+        borderRadius:'0',
+        borderBottom: `solid 2px ${theme.secondary}`,
+      },
+
+      suggestionsContainerOpen: {
+        position:'absolute',
+        width:'400px',
+        backgroundColor:theme.primary,
+      },
+
+      suggestion: {
+        padding:'10px',
+        cursor:'pointer',
+      },
+      suggestionHighlighted: {
+        backgroundColor: theme.secondary,
+      },
+    }
+
     return (
       <Autosuggest  
         suggestions={suggestions}
@@ -206,6 +228,7 @@ const SearchBar = ({setSelectedPlace,buildings}) => {
         renderSuggestion={renderSuggestion}
         inputProps={inputProps}
         theme={myTheme}
+
         onSuggestionSelected={onSuggestionSelected}
       />
     );
