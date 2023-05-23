@@ -205,8 +205,8 @@ export default function Register() {
             
             <label> Imagen del edificio</label><br/><br/>
               <Button secondary onClick={(event) => {event.preventDefault();fileInputRef.current.click()}} > Selecciona una imagen  </Button>
+              <label> {fileInputRef?.current?.value?fileInputRef.current.value.split('\\').pop():'Imagen sin seleccionar'}</label>
               <Input ref={fileInputRef} onChange={handleFileChange}  id="image" notDisplay  accept="image/*" type="file"  title="Seleccionar imagen"/>
-            
             <br/><br/>
           
             <div className="form-row-2Columns">
