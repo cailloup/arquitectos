@@ -240,7 +240,7 @@ export default function Register() {
             
             <br/><br/>
             <label>Epoca</label>
-            <Input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
+            <Input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese epoca del edificio" />
             
             <br/><br/>
             <Button type="submit" className="right" >Agregar edificio</Button>
