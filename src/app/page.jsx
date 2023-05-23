@@ -90,7 +90,7 @@ export default function MainScreen(){
                   key={building.uuid}
                   label={{
                     text: building.name,
-                    fontSize: '24px',
+                    fontSize: '18px',
                     color:"white",
                     className:"markerLabel"
                   }}
