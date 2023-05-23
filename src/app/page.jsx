@@ -9,9 +9,9 @@ import Map from "@/components/map";
 import { DragMenu } from '@/components/dragMenu';
 import ArchytecstApi, { Building, assignColor } from '@/apis/builddingsApi';
 import { assests } from "@/data/assest";
-import { Button,Select,Input } from "@/components/Assests";
+import { Button,Select } from "@/components/Assests";
 import { useTheme } from 'styled-components';
-import theme from "@/styles/theme";
+
 export default function MainScreen(){
     const [county,setCounty] = useState(null)
     const [geocoder, setGeocoder] = useState( /** @type {window.google.maps.Geocoder | null} */ (null));
@@ -19,7 +19,6 @@ export default function MainScreen(){
     const [buildings,setBuildings] = useState((/** @type {[Building] || null} */ (null)))
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
     const [filterCondition, setFilterCondition] = useState( () => (building) => true);
-    const selectorColor = useRef(/** @type {HTMLInputElement} */ (null) )
     const selectorType = useRef( /** @type {HTMLInputElement} */ (null))
     const dragMenu = useRef(/** @type {DragMenu | null} */ (null) ); 
     const archytecstApi = new ArchytecstApi()
@@ -62,6 +61,12 @@ export default function MainScreen(){
         setMap(mapa)
       }
    
+     function  getQuantityTypes(buildingType){
+        let count = 0;
+        buildings.forEach(({type}) => {if( type==buildingType){count++}})
+        return count
+      }
+
     return (
       <div className='main-map'>
         <DragMenu ref={dragMenu}>
@@ -102,11 +107,11 @@ export default function MainScreen(){
               )}
               
           </Map>
-         {county && <div className="referencesContainer" style={{backgroundColor:theme.primary}}>
-                { assests.buildingTypes.map( reference => 
+         {(county && buildings?.length>0) && <div className="referencesContainer" style={{backgroundColor:theme.primary}}>
+                { assests.buildingTypes.filter(type => getQuantityTypes(type)>0).map( reference => 
                   <div key={reference} className="reference">
                     <div className="referencesSquare" style={ {backgroundColor: assignColor(reference)}}>  </div>
-                    <p style={{color: assignColor(reference)}}>{reference}</p>
+                    <p style={{color: assignColor(reference)}}>{reference}: {getQuantityTypes(reference)}</p>
                   </div> )
                   }
           </div>}
