@@ -8,7 +8,8 @@
     z-index: 10;
     padding-left: 20px;
     transition: 250ms;
-
+    box-shadow: -3px 1px 11px 1px rgba(0,0,0,0.75);
+    transform: translateX( 0 );
 }
 
 
@@ -30,6 +31,7 @@
     -ms-user-select: none; /* IE10+/Edge */
     user-select: none; /* Standard */
     transition: all 200ms;
+    display: none;
   }
 
 .leftBar:hover{
@@ -43,9 +45,7 @@
     transition: all 200ms;
 }
 
-.open{
-    transform: translateX( 0 );
-}
+
 @media (max-width: 768px) {
     .leftBar{
       display: flex ;
@@ -54,7 +54,9 @@
         width: 100% !important;
     }
     
-
+    .close{
+        transform: translateX( calc(100% - 20px) );
+    }
 }
 .hide{
     transform: translateX(100%) 

@@ -89,8 +89,10 @@
 }
 
 /* Mobile */
-@media (max-width: 700px) {
-
+@media (max-width: 768px) {
+ .containermap{
+    width: 100% !important;
+  }
 }
 
 .referencesContainer{

@@ -9,13 +9,13 @@ import styles from "@/styles/components/dragMenu.module.css"
 import React, { useState,forwardRef, useImperativeHandle } from 'react';
 import { Container,LeftBar,LeftBarLine } from "./Assests";
 
-export const DragMenu = forwardRef(({defaultWidth,...props},ref) => {
+export const DragMenu = forwardRef(({defaultWidth,free,...props},ref) => {
     const componentRef = React.useRef();
-    const [open, setOpen] = useState(false);
+    const [close, setOpen] = useState(false);
     const [hide, setHide] = useState(true);
     
     function togleForm(){
-        setOpen(!open);
+            setOpen(!close);
     }
 
     useImperativeHandle(ref, () => ({
@@ -24,7 +24,7 @@ export const DragMenu = forwardRef(({defaultWidth,...props},ref) => {
     }));
 
     return (
-        <Container  style={{width: defaultWidth}} className={`${styles.menuContainer}  ${open?styles.open:''} ${hide?styles.hide:''} `} >
+        <Container  style={{width: `${defaultWidth}%`}} className={`${styles.menuContainer}  ${close?styles.close:''} ${hide?styles.hide:''} `} >
             <LeftBar  className={styles.leftBar}  onClick={togleForm}>
                 <LeftBarLine className={styles.leftBarLine}/> 
             </LeftBar>

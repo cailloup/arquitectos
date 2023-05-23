@@ -39,7 +39,8 @@ export default function MainScreen(){
           success: 'edificios encontrados correctamente 👌',
           error: 'Hubo un error al obtener los edificios 🤯'
         }
-      ).then(()=>{dragMenu.current.setHide(false);dragMenu.current.setOpen(true)})
+      )
+      dragMenu.current.setHide(false);dragMenu.current.setOpen(true)
     }, [county]);
       
     useEffect(() => { //onBuildChange
@@ -116,7 +117,7 @@ export default function MainScreen(){
 
     return (
       <div className='main-map'>
-        <DragMenu ref={dragMenu} defaultWidth={600}>
+        <DragMenu ref={dragMenu} defaultWidth={40}>
           <div className='filters-container'>
             
             {county &&<><h1>Buscar edificio</h1><br/><br/> <Input onChange={handleInputChange} placeholder="Ingrese nombre del edificio"></Input><br/></>}
@@ -140,6 +141,7 @@ export default function MainScreen(){
           </div>
         </DragMenu>
           {county &&< Button onClick={() => setCounty(null)} className='button-back'> Volver </Button>}
+          <div className="containermap" style={{width: county?"60%":"100%", height:"100%"}}>
           <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
               {buildings&&filteredBuildings.map( (building) => (
                   <Marker
@@ -166,6 +168,7 @@ export default function MainScreen(){
               )}
               
           </Map>
+          </div>
          {(county && buildings?.length>0) && <div className="referencesContainer" style={{backgroundColor:theme.primary}}>
                 { assests.buildingTypes.filter(type => getQuantityTypes(type)>0).map( reference => 
                   <div key={reference} className="reference">
