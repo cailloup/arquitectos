@@ -72,8 +72,9 @@ export default function MainScreen(){
       }
 
     const [filteredTypes,setFilteredTypes] = useState(assests.buildingTypes);
+
     const filteredBuildings = buildings?.filter( ({type}) => filteredTypes.includes(type)).filter(filterCondition).filter((building) =>
-        building.name.toLowerCase().startsWith(searchValue.toLowerCase())
+        building.name.toLowerCase().includes(searchValue.toLowerCase())
     );
     function toggleType(type){
       const index = filteredTypes.indexOf(type);
