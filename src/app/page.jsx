@@ -9,7 +9,7 @@ import Map from "@/components/map";
 import { DragMenu } from '@/components/dragMenu';
 import ArchytecstApi, { Building, assignColor } from '@/apis/builddingsApi';
 import { assests } from "@/data/assest";
-import { Button,Select,Input } from "@/components/Assests";
+import { Button,Select,Input,Table } from "@/components/Assests";
 import { useTheme } from 'styled-components';
 
 export default function MainScreen(){
@@ -18,7 +18,9 @@ export default function MainScreen(){
     const [selectedBuilding, setSelectedBuilding] = useState((/** @type {Building} */ (null)));
     const [buildings,setBuildings] = useState((/** @type {[Building] || null} */ (null)))
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
+    const [searchValue, setSearchValue] = useState("");
     const [filterCondition, setFilterCondition] = useState( () => (building) => true);
+    const [sortedType,setSortedType] = useState('')
     const dragMenu = useRef(/** @type {DragMenu | null} */ (null) ); 
     const archytecstApi = new ArchytecstApi()
     const theme = useTheme();
@@ -70,7 +72,9 @@ export default function MainScreen(){
       }
 
     const [filteredTypes,setFilteredTypes] = useState(assests.buildingTypes);
-
+    const filteredBuildings = buildings?.filter( ({type}) => filteredTypes.includes(type)).filter(filterCondition).filter((building) =>
+        building.name.toLowerCase().startsWith(searchValue.toLowerCase())
+    );
     function toggleType(type){
       const index = filteredTypes.indexOf(type);
       if (index !== -1) {
@@ -85,20 +89,58 @@ export default function MainScreen(){
 
      
     };
+    const handleInputChange = (event) => {
+      setSearchValue(event.target.value);
+    };
+    
+    function toggleBuild(building){
+      if(selectedBuilding?.uuid == building.uuid){
+        setSelectedBuilding(null)
+      }else{
+        setSelectedBuilding(building)
+      }
+  }
+    function toggleSort(sortBy) {
+
+      const sortDir = sortedType == `SortBy${sortBy}Asc` ? "desc" : "asc"
+
+      if (sortDir == "asc") {
+        setBuildings(buildings.sort((a, b) => b[sortBy].localeCompare(a[sortBy])));
+        setSortedType(`SortBy${sortBy}Asc`);
+      } else {
+        setBuildings(buildings.sort((a, b) => a[sortBy].localeCompare(b[sortBy])));
+        setSortedType(`SortBy${sortBy}Dsc`);
+      }
+  }
 
     return (
       <div className='main-map'>
         <DragMenu ref={dragMenu} defaultWidth={600}>
           <div className='filters-container'>
             
-          {county &&<><h1>Buscar edificio</h1><br/><br/> <Input placeholder="Ingrese nombre del edificio"></Input><br/></>}
+            {county &&<><h1>Buscar edificio</h1><br/><br/> <Input onChange={handleInputChange} placeholder="Ingrese nombre del edificio"></Input><br/></>}
             
             <br/><br/>
+
+            {buildings &&<Table style={{width:"100%"}}>
+              <tbody>
+                  <tr> 
+                    <th onClick={() => toggleSort("name")}>nombre</th>
+                  </tr>
+                  {filteredBuildings.filter( ({type}) => filteredTypes.includes(type)).filter(filterCondition).map((building) => 
+                  <tr key={building.uuid} onClick={()=> toggleBuild(building)}  className={selectedBuilding?.uuid== building.uuid? "tr-selected" : ""}>
+                      <td >{building.name}</td>
+                  </tr>
+                  )}
+              </tbody>
+          </Table>}
+
+
           </div>
         </DragMenu>
           {county &&< Button onClick={() => setCounty(null)} className='button-back'> Volver </Button>}
           <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
-              {buildings&&buildings.filter( ({type}) => filteredTypes.includes(type)).filter(filterCondition).map( (building) => (
+              {buildings&&filteredBuildings.map( (building) => (
                   <Marker
                   icon={assests.icons.mapPoint( building.refColor )}
                   key={building.uuid}
