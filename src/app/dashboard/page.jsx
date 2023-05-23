@@ -96,8 +96,11 @@ export default function DashBoard(){
             success: 'Edificio modificado correctamente 👌',
             error: 'Hubo un error al modificar el edificio 🤯'
           }
-        )
-    
+        ).then(() => {
+            setSelectedBuildings([]);
+            archytecstApi.getBuildings().then(buildings => setBuildings(buildings)); // TODO: pido la lista devuelta o solo la actualizo localmente
+        }).then(() => setModify(false));
+        
       }
 
 
@@ -149,6 +152,7 @@ export default function DashBoard(){
                         <Input id="buildArchitect" placeholder="ingrese arquitecto" defaultValue={getBuilding(selectedBuildings[0]).architect}/><br/><br/>
                         <label>Estado</label>
                         <Input id="buildState" placeholder="ingrese estado"  defaultValue={getBuilding(selectedBuildings[0]).state}/><br/><br/>
+                        <Button onClick={(e)=> {e.preventDefault(); setModify(false)}} >volver</Button>
                         <Button type="send" className="right">Aplicar cambios</Button>
                     </form>
                 </div>}

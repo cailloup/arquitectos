@@ -71,7 +71,8 @@ export default function MainScreen(){
       <div className='main-map'>
         <DragMenu ref={dragMenu}>
           <div className='filters-container'>
-          {county &&<>< SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings?.filter(filterCondition)} ></SearchBar><br/></>}
+            
+          {county &&<><h1>Buscar edificio</h1> < SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings?.filter(filterCondition)} ></SearchBar><br/></>}
             <h1>Filtros </h1><br />
             <Select ref={selectorType} name="" id="selecttor" style={{width:"400px"}}>
               {assests.buildingTypes.map(type =><option key={type} value={type}>{type}</option> )  }
@@ -90,7 +91,8 @@ export default function MainScreen(){
                   label={{
                     text: building.name,
                     fontSize: '24px',
-                    color:"black",
+                    color:"white",
+                    className:"markerLabel"
                   }}
                   position={building.location}
                   onClick={() => setSelectedBuilding(building)}
