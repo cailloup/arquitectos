@@ -9,7 +9,7 @@ import Map from "@/components/map";
 import { DragMenu } from '@/components/dragMenu';
 import ArchytecstApi, { Building, assignColor } from '@/apis/builddingsApi';
 import { assests } from "@/data/assest";
-import { Button,Select } from "@/components/Assests";
+import { Button,Select,Input } from "@/components/Assests";
 import { useTheme } from 'styled-components';
 
 export default function MainScreen(){
@@ -19,14 +19,16 @@ export default function MainScreen(){
     const [buildings,setBuildings] = useState((/** @type {[Building] || null} */ (null)))
     const [map, setMap] = useState(/** @type google.maps.Map */ (null))
     const [filterCondition, setFilterCondition] = useState( () => (building) => true);
-    const selectorType = useRef( /** @type {HTMLInputElement} */ (null))
     const dragMenu = useRef(/** @type {DragMenu | null} */ (null) ); 
     const archytecstApi = new ArchytecstApi()
     const theme = useTheme();
 
     useEffect(() => { //se CountyChange
-      if(!county?.name)
-        return  
+      if(!county?.name){
+        dragMenu.current.setHide(true)
+        return 
+      }
+         
       toast.promise(
         archytecstApi.getBuildingsByCity(county.name)
         .then( buildings => setBuildings(buildings) ),
@@ -35,7 +37,7 @@ export default function MainScreen(){
           success: 'edificios encontrados correctamente 👌',
           error: 'Hubo un error al obtener los edificios 🤯'
         }
-      )
+      ).then(()=>{dragMenu.current.setHide(false);dragMenu.current.setOpen(true)})
     }, [county]);
       
     useEffect(() => { //onBuildChange
@@ -67,24 +69,36 @@ export default function MainScreen(){
         return count
       }
 
+    const [filteredTypes,setFilteredTypes] = useState(assests.buildingTypes);
+
+    function toggleType(type){
+      const index = filteredTypes.indexOf(type);
+      if (index !== -1) {
+        // El tipo ya está presente, lo eliminamos
+        const updatedTypes = [...filteredTypes];
+        updatedTypes.splice(index, 1);
+        setFilteredTypes(updatedTypes);
+      } else {
+        // El tipo no está presente, lo insertamos
+        setFilteredTypes([...filteredTypes, type]);
+      }
+
+     
+    };
+
     return (
       <div className='main-map'>
-        <DragMenu ref={dragMenu}>
+        <DragMenu ref={dragMenu} defaultWidth={600}>
           <div className='filters-container'>
             
-          {county &&<><h1>Buscar edificio</h1> < SearchBar setSelectedPlace={setSelectedBuilding} buildings={buildings?.filter(filterCondition)} ></SearchBar><br/></>}
-            <h1>Filtros </h1><br />
-            <Select ref={selectorType} name="" id="selecttor" style={{width:"400px"}}>
-              {assests.buildingTypes.map(type =><option key={type} value={type}>{type}</option> )  }
-              <option value="Todos">Todos</option>
-            </Select><br /><br />
-            <Button onClick={() => setFilterCondition( () => (building) => building.type==selectorType.current.value ||selectorType.current.value =="Todos" )}  style={{float:"unset"}}> Filtrar </Button>
-            <br /><br />
+          {county &&<><h1>Buscar edificio</h1><br/><br/> <Input placeholder="Ingrese nombre del edificio"></Input><br/></>}
+            
+            <br/><br/>
           </div>
         </DragMenu>
           {county &&< Button onClick={() => setCounty(null)} className='button-back'> Volver </Button>}
           <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
-              {buildings&&buildings.filter(filterCondition).map( (building) => (
+              {buildings&&buildings.filter( ({type}) => filteredTypes.includes(type)).filter(filterCondition).map( (building) => (
                   <Marker
                   icon={assests.icons.mapPoint( building.refColor )}
                   key={building.uuid}
@@ -112,7 +126,7 @@ export default function MainScreen(){
          {(county && buildings?.length>0) && <div className="referencesContainer" style={{backgroundColor:theme.primary}}>
                 { assests.buildingTypes.filter(type => getQuantityTypes(type)>0).map( reference => 
                   <div key={reference} className="reference">
-                    <div className="referencesSquare" style={ {backgroundColor: assignColor(reference)}}>  </div>
+                    <div onClick={() => toggleType(reference)} className="referencesSquare" style={ {borderColor:assignColor(reference),  backgroundColor: filteredTypes.includes(reference)?assignColor(reference):"transparent"}}>  </div>
                     <p style={{color: assignColor(reference)}}>{reference}: {getQuantityTypes(reference)}</p>
                   </div> )
                   }

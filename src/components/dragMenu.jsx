@@ -1,58 +1,31 @@
 "use client"
 /**
  * @typedef {Object} DragMenu
- * @property {function} setLeft - seter.
+ * @property {function} setOpen - seter.
+ * @property {function} setHide - seter.
  */
 
 import styles from "@/styles/components/dragMenu.module.css"
 import React, { useState,forwardRef, useImperativeHandle } from 'react';
 import { Container,LeftBar,LeftBarLine } from "./Assests";
-export const DragMenu = forwardRef((props,ref) => {
+
+export const DragMenu = forwardRef(({defaultWidth,...props},ref) => {
     const componentRef = React.useRef();
-    const [left, setLeft] = useState(window.innerWidth - 20);
-    const [isdraggin, setdraggin] = useState(false);
-    const [transition,setTransition] = useState('all 800ms cubic-bezier(.2,.85,.49,.91)')
+    const [open, setOpen] = useState(false);
+    const [hide, setHide] = useState(true);
+    
     function togleForm(){
-        if(isdraggin)
-            return
-        if(left<window.innerWidth/2){
-            setLeft(window.innerWidth - 20)
-        }else{
-            setLeft(0)
-        }
+        setOpen(!open);
     }
 
-    const handleMouseMove = (event) => {
-        const clientX = event.type == 'mousemove'?event.clientX:event.touches[0].clientX
-        setLeft( clientX);
-        setdraggin(true)
-        setTransition("all 0ms")
-    };
-  
-    const handleMouseUp = () => {
-        setdraggin(false)
-        setTransition("all 800ms cubic-bezier(.2,.85,.49,.91)")
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
-
-        window.removeEventListener('touchmove', handleMouseMove);
-        window.removeEventListener('touchend', handleMouseUp);
-    };
-  
-    const handleMouseDown = () => {
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
-
-        window.addEventListener('touchmove', handleMouseMove);
-        window.addEventListener('touchend', handleMouseUp);
-    };
-
     useImperativeHandle(ref, () => ({
-        setLeft,
+        setOpen,
+        setHide,
     }));
+
     return (
-        <Container className={styles.menuContainer} style={ {transition:transition, left: `max(0px,min(${left}px,calc(100vw - 20px)))` } }>
-            <LeftBar  className={styles.leftBar}  onMouseDown={handleMouseDown}  onTouchStart={handleMouseDown} onMouseUp={togleForm}>
+        <Container  style={{width: defaultWidth}} className={`${styles.menuContainer}  ${open?styles.open:''} ${hide?styles.hide:''} `} >
+            <LeftBar  className={styles.leftBar}  onClick={togleForm}>
                 <LeftBarLine className={styles.leftBarLine}/> 
             </LeftBar>
             {props.children}
