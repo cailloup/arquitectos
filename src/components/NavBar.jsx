@@ -21,7 +21,6 @@ export default function NavBar({children}) {
   const options = [
     {name:"Mapa", route:""},
     {name:"Registrar edificio", route:"register"},
-    {name:"Contacto", route:"contact"},
     {name:"Panel", route:"dashboard"},
     {name:"Temas", route:"themes"},
   ]
