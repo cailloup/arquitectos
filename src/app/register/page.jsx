@@ -8,7 +8,7 @@ import {Marker,Autocomplete} from "@react-google-maps/api";
 import ArchytecstApi from '@/apis/builddingsApi';
 import { Button,Container,Input,LeftBar,LeftBarLine,Select } from '@/components/Assests';
 
-const buildingTypes = ["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"]
+const buildingTypes = ["C. C. Municipal","Comercial","Educativo","Esparcimiento","Histórico","Hotelera","Municipal","Público","Religioso","Urbano","Vivienda","Otro"]
 const buildingStyles = ["Centro Europeo","Modernismo","Prefabricado","Tradicional","Otro"]
 
 export default function Register() {
@@ -184,26 +184,26 @@ export default function Register() {
             
             <br/>
             
-            <label> Direccion</label><br/>
+            <label> Dirección</label><br/>
             <InputMap 
                 onTextChange={handleMapChanges}
                 bounds={county?.bounds}
             >
-              <Input id="address"   onKeyPress={handleEnterPress} ref={inputRef}   type="text" required placeholder="Ingrese una direccion"  />
+              <Input id="address"   onKeyPress={handleEnterPress} ref={inputRef}   type="text" required placeholder="Ingrese una dirección"  />
             </InputMap>
             <br/>
             <label> Nombre</label><br/>
-            <Input id="buildName" className="formInput" type="text" required placeholder="ingrese nombre del edificio" />
+            <Input id="buildName" className="formInput" type="text" required placeholder="Ingrese nombre del edificio" />
             <br/><br/>
             <label> Arquitecto</label><br/>
             <div className="form-row-2Columns">
-              <Input id="archytectName" className="formInput" type="text"  placeholder="nombre" />
-              <Input id="archytectSurname" className="formInput" type="text"  placeholder="apellido" />
+              <Input id="archytectName" className="formInput" type="text"  placeholder="Nombre" />
+              <Input id="archytectSurname" className="formInput" type="text"  placeholder="Apellido" />
             </div>
             
             <br/>
             
-            <label> Imagen del edificio</label><br/><br/>
+            <label>Imagen del edificio</label><br/><br/>
               <Button secondary onClick={(event) => {event.preventDefault();fileInputRef.current.click()}} > Selecciona una imagen  </Button>
               <label> {fileInputRef?.current?.value?fileInputRef.current.value.split('\\').pop():'Imagen sin seleccionar'}</label>
               <Input ref={fileInputRef} onChange={handleFileChange}  id="image" notDisplay  accept="image/*" type="file"  title="Seleccionar imagen"/>
@@ -211,21 +211,21 @@ export default function Register() {
           
             <div className="form-row-2Columns">
               <div>
-                <label>Tipologia</label>
+                <label>Tipología</label>
                 <Select className="formSelect" name="tipo de edificio" id="buildType" placeholder=' Tipo de edificio'>
                   {buildingTypes.map( (buildingType) => <option key={buildingType}  value={buildingType}>{buildingType}</option>)}
                 </Select>
               </div>
               <div>
-                <label> Estilo</label>
-                <Select className="formSelect" name="estilo de edificio" id="buildStyle">
+                <label>Estilo</label>
+                <Select className="formSelect" name="Estilo de edificio" id="buildStyle">
                   {buildingStyles.map( (buildingStyle) => <option key={buildingStyle} value={buildingStyle}>{buildingStyle}</option>)}
                 </Select>
               </div>
             </div>
             <br/>
             <label>Estado</label><br/>
-            <Input id="buildState" className="formInput" type="text"  placeholder="ingrese estado del edificio" />
+            <Input id="buildState" className="formInput" type="text"  placeholder="Ingrese estado del edificio" />
             <br/><br/>
             <div style={{   display: "flex",
                             flexDirection: "row",
@@ -239,8 +239,8 @@ export default function Register() {
             min="1800-01-01" max={new Date().toISOString().split("T")[0]}/>
             
             <br/><br/>
-            <label>Epoca</label>
-            <Input id="buildPeriod" className="formInput" type="text" required placeholder="ingrese epoca del edificio" />
+            <label>Época</label>
+            <Input id="buildPeriod" className="formInput" type="text" required placeholder="Ingrese época del edificio" />
             
             <br/><br/>
             <Button type="submit" className="right" >Agregar edificio</Button>

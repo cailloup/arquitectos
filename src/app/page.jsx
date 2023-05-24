@@ -36,7 +36,7 @@ export default function MainScreen(){
         .then( buildings => setBuildings(buildings) ),
         {
           pending: 'Buscando edificios',
-          success: 'edificios encontrados correctamente 👌',
+          success: 'Edificios encontrados correctamente 👌',
           error: 'Hubo un error al obtener los edificios 🤯'
         }
       )

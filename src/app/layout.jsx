@@ -6,7 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'Map(IA)',
+  title: 'Mapa Virtual Arquitectura Patrimonial',
   description: 'lorem',
 }
 

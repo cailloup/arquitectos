@@ -14,7 +14,7 @@ export default function DashBoard(){
     const archytecstApi = new ArchytecstApi();
     const columns = [
         {field:"name",label:"Nombre"}, 
-        {field:"address",label:"Direccion"},
+        {field:"address",label:"Dirección"},
         {field:"architect",label:"Arquitecto"},
         {field:"city",label:"Localidad"},
         ]
@@ -62,7 +62,7 @@ export default function DashBoard(){
 
     function deleteAllBuildingsSelecteds(){
         if (filteredSelectedBuildings.length==0){
-            toast.error('Error: debe seleccionar edificios para eleminar', {
+            toast.error('Error: debe seleccionar edificios para eliminar', {
                 position: "top-center",
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -147,12 +147,12 @@ export default function DashBoard(){
                 < div className={"tableContainer"} style={{ transform: modify?``:`translateX(${-window.screen.width}px)`  }} >
                     <form onSubmit={handleSubmit}>
                         <label>Nombre</label>
-                        <Input id="buildName" placeholder="ingrese nombre" defaultValue={getBuilding(selectedBuildings[0]).name}/> <br/><br/>
+                        <Input id="buildName" placeholder="Ingrese nombre" defaultValue={getBuilding(selectedBuildings[0]).name}/> <br/><br/>
                         <label>Arquitecto</label>
-                        <Input id="buildArchitect" placeholder="ingrese arquitecto" defaultValue={getBuilding(selectedBuildings[0]).architect}/><br/><br/>
+                        <Input id="buildArchitect" placeholder="Ingrese arquitecto" defaultValue={getBuilding(selectedBuildings[0]).architect}/><br/><br/>
                         <label>Estado</label>
-                        <Input id="buildState" placeholder="ingrese estado"  defaultValue={getBuilding(selectedBuildings[0]).state}/><br/><br/>
-                        <Button onClick={(e)=> {e.preventDefault(); setModify(false)}} >volver</Button>
+                        <Input id="buildState" placeholder="Ingrese estado"  defaultValue={getBuilding(selectedBuildings[0]).state}/><br/><br/>
+                        <Button onClick={(e)=> {e.preventDefault(); setModify(false)}} >Volver</Button>
                         <Button type="send" className="right">Aplicar cambios</Button>
                     </form>
                 </div>}

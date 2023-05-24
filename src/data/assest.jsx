@@ -11,9 +11,15 @@ export const assests = {
                                 blue:"#128aed",
                                 puple:"#943ddb",
                                 yellow:"#e6d925" ,
-                                orange:"#d45500"
+                                orange:"#d45500",
+								pink:"#FF80F9",
+								seagreen: "#2DD5C6",
+								darkgreen: "#1C6F68",
+								lightblue: "#86B4FF",
+								beige: "#FFF1E2",
+								lilac: "#C8C7EE"
                             },
-                            buildingTypes:["C. C. Municipal","Comercial","Educativo","Esparcimiento","Historico","Hotelera","Municipal","Publico","Religioso","Urbano","Vivienda","Otro"],
+                            buildingTypes:["C. C. Municipal","Comercial","Educativo","Esparcimiento","Histórico","Hotelera","Municipal","Público","Religioso","Urbano","Vivienda","Otro"],
                             icons:{
                                 mapPoint: (color) => {
                                     return {

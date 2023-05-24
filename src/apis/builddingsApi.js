@@ -229,8 +229,35 @@ export function assignColor(type){
     if (type === "Religioso"){
         return assests.colors.blue
     }
-    if (type === "Publico"){
+    if (type === "Público"){
         return assests.colors.red
+    }
+	if (type === "C. C. Municipal"){
+        return assests.colors.green
+    }
+    if (type === "Comercial"){
+        return assests.colors.purple
+    }
+    if (type === "Educativo"){
+        return assests.colors.yellow
+    }
+	    if (type === "Esparcimiento"){
+        return assests.colors.pink
+    }
+    if (type === "Histórico"){
+        return assests.colors.seagreen
+    }
+    if (type === "Hotelera"){
+        return assests.colors.darkgreen
+    }
+	if (type === "Municipal"){
+        return assests.colors.lightblue
+    }
+    if (type === "Urbano"){
+        return assests.colors.beige
+    }
+    if (type === "Otro"){
+        return assests.colors.lilac
     }
     return assests.colors.puple 
 }
