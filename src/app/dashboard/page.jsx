@@ -19,7 +19,15 @@ export default function DashBoard(){
         {field:"city",label:"Localidad"},
         ]
     useEffect(() => { //onPageLoad
-        archytecstApi.getBuildings().then(buildings => setBuildings(buildings))
+        
+        toast.promise(
+            () => archytecstApi.getBuildings().then(buildings => setBuildings(buildings)),
+            {
+              pending: 'obteniendo edificios',
+              success: 'Edificios cargados correctamente 👌',
+              error: 'Hubo un error al cargar los edificios 🤯'
+            }
+          );
     }, []);
 
     function deleteBuilding(id) {
@@ -81,7 +89,7 @@ export default function DashBoard(){
     }
 
     const filteredBuildings = buildings.filter((building) =>
-        building.name.toLowerCase().startsWith(searchValue.toLowerCase())
+        building.name.toLowerCase().includes(searchValue.toLowerCase())
     );
 
     const filteredSelectedBuildings = selectedBuildings.filter((buildingId) => filteredBuildings.map((building) => building.uuid).includes(buildingId) )
