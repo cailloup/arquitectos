@@ -1,6 +1,6 @@
 "use client"
 import { useState, useEffect, useRef } from "react";
-import { Marker, InfoWindow } from "@react-google-maps/api";
+import { Marker, InfoWindow, StreetViewPanorama } from "@react-google-maps/api";
 import Autosuggest from 'react-autosuggest';
 import { toast } from "react-toastify";
 import '@/styles/pages/map.css';
@@ -143,6 +143,7 @@ export default function MainScreen(){
           {county &&< Button onClick={() => setCounty(null)} className='button-back'> Volver </Button>}
           <div className="containermap" style={{width: county?"60%":"100%", height:"100%"}}>
           <Map onCountySelect={setCounty} onLoad={onLoad}  geocoder={geocoder} setSelectedCounty={setCounty} selectedCounty={county}>
+          {selectedBuilding && <StreetViewPanorama position={selectedBuilding.location} visible={true} />}
               {buildings&&filteredBuildings.map( (building) => (
                   <Marker
                   icon={assests.icons.mapPoint( building.refColor )}
