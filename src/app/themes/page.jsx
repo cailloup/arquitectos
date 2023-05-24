@@ -7,7 +7,7 @@ export default function test(){
     return(
         <>
             <div style={{padding:"50px"}}>
-                <h1>Assests Test</h1>
+                <h1>Cambiar Tema</h1> <br /><br />
 
                
                 
