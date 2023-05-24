@@ -41,6 +41,7 @@ export default function DashBoard(){
             }
           ).then(() => {
             archytecstApi.getBuildings().then(buildings => setBuildings(buildings)) // TODO: pido la lista devuelta o solo la actualizo localmente
+            setSelectedBuildings([])
           });
 
     }
@@ -151,15 +152,15 @@ export default function DashBoard(){
            
             </div>
             <div>
-                {selectedBuildings.length==1 && 
+                {(selectedBuildings.length==1) && 
                 < div className={"tableContainer"} style={{ transform: modify?``:`translateX(${-window.screen.width}px)`  }} >
                     <form onSubmit={handleSubmit}>
                         <label>Nombre</label>
-                        <Input id="buildName" placeholder="Ingrese nombre" defaultValue={getBuilding(selectedBuildings[0]).name}/> <br/><br/>
+                        <Input id="buildName" placeholder="Ingrese nombre" defaultValue={ modify?getBuilding(selectedBuildings[0]).name:''}/> <br/><br/>
                         <label>Arquitecto</label>
-                        <Input id="buildArchitect" placeholder="Ingrese arquitecto" defaultValue={getBuilding(selectedBuildings[0]).architect}/><br/><br/>
+                        <Input id="buildArchitect" placeholder="Ingrese arquitecto" defaultValue={modify?getBuilding(selectedBuildings[0]).architect:''}/><br/><br/>
                         <label>Estado</label>
-                        <Input id="buildState" placeholder="Ingrese estado"  defaultValue={getBuilding(selectedBuildings[0]).state}/><br/><br/>
+                        <Input id="buildState" placeholder="Ingrese estado"  defaultValue={modify?getBuilding(selectedBuildings[0]).state:''}/><br/><br/>
                         <Button onClick={(e)=> {e.preventDefault(); setModify(false)}} >Volver</Button>
                         <Button type="send" className="right">Aplicar cambios</Button>
                     </form>
