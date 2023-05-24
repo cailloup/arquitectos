@@ -23,7 +23,7 @@ export default function NavBar({children}) {
     {name:"Registrar edificio", route:"register"},
     {name:"Contacto", route:"contact"},
     {name:"Panel", route:"dashboard"},
-    {name:"Assests", route:"assests"},
+    {name:"Temas", route:"themes"},
   ]
     
   function handleClick(id) {
@@ -77,7 +77,7 @@ export default function NavBar({children}) {
         <div>
           <div className={styles.logoContainer}>
             <Link href="/">
-              <h2 className={styles.logo}>MAP(IA)</h2>
+              <h2 className={styles.logo}>Mapa Virtual Arquitectura Patrimonial</h2>
             </Link>
             <div className={styles.hamburgerButton}>
               <button
