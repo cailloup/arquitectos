@@ -9,7 +9,7 @@ export const assests = {
                                 red:"#C33149",
                                 green:"#1fbd93",
                                 blue:"#128aed",
-                                puple:"#943ddb",
+                                purple:"#943ddb",
                                 yellow:"#e6d925" ,
                                 orange:"#d45500",
 								pink:"#FF80F9",
