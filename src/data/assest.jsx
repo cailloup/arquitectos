@@ -6,18 +6,18 @@ export const assests = {
                                     },
 
                             colors: {
-                                red:"#C33149",
-                                green:"#1fbd93",
-                                blue:"#128aed",
-                                purple:"#943ddb",
-                                yellow:"#e6d925" ,
-                                orange:"#d45500",
-								pink:"#FF80F9",
-								seagreen: "#2DD5C6",
-								darkgreen: "#1C6F68",
-								lightblue: "#86B4FF",
-								beige: "#FFF1E2",
-								lilac: "#C8C7EE"
+                                red:"#FAEDCB",
+                                green:"#C9E4DE",
+                                blue:"#C6DEF1",
+                                purple:"#DBCDF0",
+                                yellow:"#F2C6DE" ,
+                                orange:"#FFADAD",
+				pink:"#F7D9C4",
+				seagreen: "#E4F1EE",
+				darkgreen: "#FFD6A5",
+				lightblue: "#FDFFB6",
+				beige: "#D9EDF8",
+				lilac: "#DEDAF4"
                             },
                             buildingTypes:["C. C. Municipal","Comercial","Educativo","Esparcimiento","Histórico","Hotelera","Municipal","Público","Religioso","Urbano","Vivienda","Otro"],
                             icons:{
