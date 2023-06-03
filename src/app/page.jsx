@@ -127,7 +127,7 @@ export default function MainScreen(){
             {buildings &&<Table style={{width:"100%"}}>
               <tbody>
                   <tr> 
-                    <th onClick={() => toggleSort("name")}>nombre</th>
+                    <th onClick={() => toggleSort("name")}>Nombre</th>
                   </tr>
                   {filteredBuildings.filter( ({type}) => filteredTypes.includes(type)).filter(filterCondition).map((building) => 
                   <tr key={building.uuid} onClick={()=> toggleBuild(building)}  className={selectedBuilding?.uuid== building.uuid? "tr-selected" : ""}>
